@@ -1,0 +1,56 @@
+# Ignore build artifacts
+/build/
+
+# Ignore compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+Makefile
+
+# Ignore IDE-specific files and directories
+.idea/
+.vscode/
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# Ignore editor backups and temporary files
+*~
+*.swp
+*.swo
+*.swn
+*.swm
+*.swl
+.DS_Store
+
+# Ignore build output directories
+bin/
+lib/
+out/
+output/
+dist/
+__pycache__/
+*.egg-info/
+node_modules/
+.cache/
+cmake-build-debug/
+cmake-build-debug-event-trace/
+
+# Ignore user-specific settings files
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Ignore macOS system files
+.AppleDouble
+
+# Ignore Visual Studio Code settings folder
