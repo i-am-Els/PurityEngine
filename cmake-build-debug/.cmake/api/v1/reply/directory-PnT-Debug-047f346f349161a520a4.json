@@ -1,0 +1,57 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"PnT/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief/shared/include",
+			"paths" : 
+			[
+				"PnT/include/global.h",
+				"PnT/include/input.h",
+				"PnT/include/input_def.h",
+				"PnT/include/log.h",
+				"PnT/include/math/entity.h",
+				"PnT/include/math/transform.h",
+				"PnT/include/math/vector2.h",
+				"PnT/include/pnt.h",
+				"PnT/include/renderer/renderer.h",
+				"PnT/vendors/GLEW/include/eglew.h",
+				"PnT/vendors/GLEW/include/glew.h",
+				"PnT/vendors/GLEW/include/glxew.h",
+				"PnT/vendors/GLEW/include/wglew.h",
+				"PnT/vendors/GLFW/include/glfw3.h",
+				"PnT/vendors/GLFW/include/glfw3native.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "PnT",
+		"source" : "PnT"
+	}
+}

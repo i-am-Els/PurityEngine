@@ -1,0 +1,103 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "PnT",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-PnT-Debug-047f346f349161a520a4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "PnT",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "game",
+					"jsonFile" : "directory-game-Debug-b67dffe3df9019a6d767.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "game",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "Police_n_Thief",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "Game::@0c53ff3c4131f9152fd3",
+					"jsonFile" : "target-Game-Debug-7d0eb17ebcfadbe5dd18.json",
+					"name" : "Game",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "PnT::@246580241e5d12eebcb6",
+					"jsonFile" : "target-PnT-Debug-987975104140fff7ff01.json",
+					"name" : "PnT",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief/cmake-build-debug",
+		"source" : "C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}

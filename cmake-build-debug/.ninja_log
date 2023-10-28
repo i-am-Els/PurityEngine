@@ -1,0 +1,27 @@
+# ninja log v5
+69	938	7199772676162586	PnT/CMakeFiles/PnT.dir/src/log.cpp.obj	1d676e9c7be30092
+12	1130	7199772678089437	PnT/CMakeFiles/PnT.dir/src/entity.cpp.obj	d25ae83f39f9e9e7
+36	1110	7199772677883991	PnT/CMakeFiles/PnT.dir/src/renderer.cpp.obj	7da9183f6f98d136
+10	220	7202086875252787	C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief/shared/lib/libPnT.a	e82e81d450242666
+2	186	7202088824634782	build.ninja	e354f9e0d38ac941
+23	1138	7199772678166668	PnT/CMakeFiles/PnT.dir/src/transform.cpp.obj	fe2faf8f3f4d6cd8
+49	3409	7199772700882853	PnT/CMakeFiles/PnT.dir/src/input.cpp.obj	3d9c630010cbcdf3
+5901	6067	7199742070149930	PnT/libPnT.a	c396a891cc6123eb
+7	4437	7202088638823754	game/CMakeFiles/Game.dir/application.cpp.obj	8f0191876bc6b9be
+4438	7651	7202088670761204	game/Game.exe	1a7622a4f5dbdbd8
+7	4677	7202090075565142	game/CMakeFiles/Game.dir/application.cpp.obj	8f0191876bc6b9be
+4678	7018	7202090098915939	game/Game.exe	1a7622a4f5dbdbd8
+15	5252	7202090733337368	game/CMakeFiles/Game.dir/application.cpp.obj	8f0191876bc6b9be
+5253	7551	7202090756258340	game/Game.exe	1a7622a4f5dbdbd8
+18	944	7202100720857680	PnT/CMakeFiles/PnT.dir/src/log.cpp.obj	1d676e9c7be30092
+10	1114	7202100722622411	PnT/CMakeFiles/PnT.dir/src/renderer.cpp.obj	7da9183f6f98d136
+29	2940	7202100740896395	PnT/CMakeFiles/PnT.dir/src/input.cpp.obj	3d9c630010cbcdf3
+2941	3054	7202100742035893	C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief/shared/lib/libPnT.a	e82e81d450242666
+40	3399	7202100745491842	game/CMakeFiles/Game.dir/application.cpp.obj	8f0191876bc6b9be
+3400	5815	7202100769289074	game/Game.exe	1a7622a4f5dbdbd8
+6	875	7202101155262513	PnT/CMakeFiles/PnT.dir/src/renderer.cpp.obj	7da9183f6f98d136
+875	981	7202101156316700	C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief/shared/lib/libPnT.a	e82e81d450242666
+981	4061	7202101187067304	game/Game.exe	1a7622a4f5dbdbd8
+6	1060	7202102288696669	PnT/CMakeFiles/PnT.dir/src/renderer.cpp.obj	7da9183f6f98d136
+1061	1152	7202102289601835	C:/Users/Eniola Olawale/Documents/Els/Dev/Git/Police_n_Thief/shared/lib/libPnT.a	e82e81d450242666
+1152	3372	7202102311752057	game/Game.exe	1a7622a4f5dbdbd8
