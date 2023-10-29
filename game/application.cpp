@@ -51,9 +51,9 @@ int main(){
 
     pnt::graphics::Renderer::bind();
 
-//    while(!Input::isKeyPressed(P_KEY_R)){
-//        Log::echoMessage("please terminate with R", LogLevel::Info);
-//    }
+    while(!Input::isKeyPressed(P_KEY_R)){
+        Log::echoMessage("please terminate with R", LogLevel::Info);
+    }
 
     return 0;
 }
