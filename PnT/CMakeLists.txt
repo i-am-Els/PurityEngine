@@ -8,8 +8,8 @@
 cmake_minimum_required(VERSION 3.26)
 project(Police_n_Thief)
 
+# Set the C++ standard/version that should be used
 set(CMAKE_CXX_STANDARD 17)
-
 
 # Define your source files in src/
 file(GLOB SOURCES "src/*.cpp")
@@ -24,11 +24,11 @@ target_include_directories(PnT PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include/rende
 target_include_directories(PnT PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLEW/include)
 target_include_directories(PnT PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLFW/include)
 
-target_link_directories(PnT INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLEW/lib)
-target_link_directories(PnT INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLFW/lib)
+target_link_directories(PnT PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLEW/lib)
+target_link_directories(PnT PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLFW/lib)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT INTERFACE glew32s glfw3 opengl32)
+target_link_libraries(PnT PRIVATE glew32s glfw3 opengl32)
 
 # Specify header files to include (all .h files in the include directory)
 file(GLOB_RECURSE HEADER_FILES
@@ -45,4 +45,4 @@ set_target_properties(PnT PROPERTIES
 
 
 # Install header files to shared/include directory
-install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_SOURCE_DIR}/shared/include)
+install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/shared/include)

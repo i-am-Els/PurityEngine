@@ -17,7 +17,7 @@ file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 add_executable(Game ${SOURCES})
 
 # Add the include directory for the PnT library
-target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/include)
+target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/shared/include)
 #target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/vendors/GLEW/include)
 #target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/vendors/GLFW/include)
 
