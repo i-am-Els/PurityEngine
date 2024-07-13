@@ -115,7 +115,7 @@
 #if defined(_WIN32)
 
 /*
- * include does not include <windows.h> to avoid name space pollution.
+ * core does not core <windows.h> to avoid name space pollution.
  * GL needs GLAPI and GLAPIENTRY, GLU needs APIENTRY, CALLBACK, and wchar_t
  * defined properly.
  */
@@ -1212,7 +1212,7 @@ GLAPI void GLAPIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei heigh
 #endif
 
 #ifndef GLEW_NO_GLU
-/* this is where we can safely include GLU */
+/* this is where we can safely core GLU */
 #  if defined(__APPLE__) && defined(__MACH__)
 #    include <OpenGL/glu.h>
 #  else
@@ -26375,7 +26375,7 @@ GLEW_VAR_EXPORT GLboolean __GLEW_WIN_swap_hint;
 
 /* ------------------------------------------------------------------------- */
 
-/* include version info */
+/* core version info */
 
 /*
 VERSION 2.2.0
