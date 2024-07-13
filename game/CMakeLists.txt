@@ -8,18 +8,24 @@
 cmake_minimum_required(VERSION 3.26)
 project(Police_n_Thief)
 
-
 set(CMAKE_CXX_STANDARD 17)
 
 # Define your source files in src/
-file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-add_executable(Game ${SOURCES})
+add_executable(Game ${SOURCES}
+        src/application.cpp
+        src/application.h)
 
-# Add the include directory for the PnT library
-target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/shared/include)
-#target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/vendors/GLEW/include)
-#target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/vendors/GLFW/include)
+# Add the core directory for the PnT library
+target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
 target_link_libraries(Game PRIVATE PnT)
+
+
+add_custom_command(TARGET Game POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/PnT/vendors/isle_math/lib/libislemath.dll  # Copy libislemath.dll to output directory
+        $<TARGET_FILE_DIR:Game>  # Destination directory for libisle.dll
+)
