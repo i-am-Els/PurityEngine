@@ -27,8 +27,8 @@ namespace pnt::ecs{
                 Vector3f(-.5f, -.5f, 0.f), Vector3f(-.5f, .5f, 0.f), Vector3f(.5f, .5f, 0.f), Vector3f(.5f, -.5f, 0.f)
                 };
         std::vector<unsigned int> m_indices = {
-                0, 1, 3,
-                1, 2, 3
+                0, 1, 2,
+                2, 3, 0
         };
         ElementBuffer m_elementBuffer;
         VertexBuffer m_vertexBuffer;
