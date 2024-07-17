@@ -9,7 +9,6 @@
 
 namespace pnt::graphics
 {
-
     enum ShaderType{
         VertexShader = 0, FragmentShader, GeometryShader
     };
@@ -24,8 +23,18 @@ namespace pnt::graphics
     public:
         PShader();
         ~PShader();
+        /// @brief Extract Source code from Shader file.
+        /// @param path - The relative path to the shader.
+        /// @return A std::string contained in the file.
+        /// @note Works with Absolute paths too.
         static std::string extractSourceFromFile(const char* path);
+
+        /// @brief Creates a Program out of the shader sources.
+        /// @param vertexSource - The vertex shader source string.
+        /// @param fragmentSource - The fragment shader source string.
+        /// @return std::unique_ptr Shader program of type PShader
         static std::unique_ptr<PShader> createShaders(const std::string& vertexSource, const std::string& fragmentSource);
+
         void bindShader() const;
         static void unbindShader();
         [[nodiscard]] unsigned int GetShaderProgramID() const;

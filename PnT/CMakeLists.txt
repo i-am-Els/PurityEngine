@@ -14,6 +14,11 @@ set(CMAKE_CXX_STANDARD 17)
 # Define your source files in src/
 file(GLOB_RECURSE SOURCES "*.cpp")
 
+option(ON_HACK "Turn on Hack Mode" ON)
+if(ON_HACK)
+    add_compile_definitions(HACK_)
+endif()
+
 # Specify header files to core (all .h files in the core directory)
 file(GLOB_RECURSE HEADERS
         "${CMAKE_CURRENT_SOURCE_DIR}/core/*.h"
@@ -58,6 +63,9 @@ add_library(PnT STATIC
         core/service_base.h
         core/service_locator.h
         renderer/include/render_service.h
+        geometry/include/mesh_data_system.h
+        geometry/src/mesh_data_system.cpp
+        geometry/include/mesh_service.h
 )
 
 # Add the core directories for your library and dependencies
@@ -67,6 +75,7 @@ target_include_directories(PnT PUBLIC
         ecs/include
         io/include
         renderer/include
+        geometry/include
         vendors/GLEW/include
         vendors/GLFW/include
         vendors/GLM

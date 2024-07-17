@@ -3,6 +3,9 @@
 //
 
 #pragma once
+
+#define HACK_
+
 #include "pnt.h"
 
 using namespace pnt;
@@ -25,7 +28,9 @@ public:
 
     void exit() override;
 
-    PEntity* triangle;
+    void start() override;
+
+    PEntity* quad;
 };
 
 namespace pnt{

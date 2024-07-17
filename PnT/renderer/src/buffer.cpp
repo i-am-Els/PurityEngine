@@ -19,12 +19,21 @@ namespace pnt::graphics{
     void VertexBuffer::initBuffer() {
         glGenBuffers(1, &m_bufferID);
         bindBuffer();
-        glBufferData(GL_ARRAY_BUFFER, (long long)(m_itemCount * 3 * sizeof(float)), m_data.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(Vector3f)), nullptr, GL_DYNAMIC_DRAW);
     }
 
-    void VertexBuffer::bindBuffer() const { glBindBuffer(GL_ARRAY_BUFFER, m_bufferID); }
+    void VertexBuffer::updateBuffer() {
+        bindBuffer();
+        glBufferData(GL_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(Vector3f)), m_data.data(), GL_DYNAMIC_DRAW);
+    }
 
-    void VertexBuffer::unbindBuffer() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+    void VertexBuffer::bindBuffer() const {
+        glBindBuffer(GL_ARRAY_BUFFER, m_bufferID);
+    }
+
+    void VertexBuffer::unbindBuffer() const {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 
     unsigned int ElementBuffer::s_count = 0;
 
@@ -40,10 +49,19 @@ namespace pnt::graphics{
     void ElementBuffer::initBuffer() {
         glGenBuffers(1, &m_bufferID);
         bindBuffer();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(unsigned int)), m_data.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(unsigned int)), nullptr, GL_DYNAMIC_DRAW);
     }
 
-    void ElementBuffer::bindBuffer() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID); }
+    void ElementBuffer::updateBuffer() {
+        bindBuffer();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(unsigned int)), m_data.data(), GL_DYNAMIC_DRAW);
+    }
 
-    void ElementBuffer::unbindBuffer() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+    void ElementBuffer::bindBuffer() const {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
+    }
+
+    void ElementBuffer::unbindBuffer() const {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
 }

@@ -12,6 +12,7 @@
 using namespace isle_engine::math;
 
 namespace pnt::graphics{
+
     enum class BufferType{
         ElementBuffer, VertexBuffer
     };
@@ -55,6 +56,8 @@ namespace pnt::graphics{
         void bindBuffer() const override;
         void unbindBuffer() const override;
 
+        void updateBuffer();
+
         inline std::vector<Vector3f> getBufferData() {
             return m_data;
         }
@@ -66,6 +69,7 @@ namespace pnt::graphics{
     private:
         std::vector<Vector3f> m_data;
         static unsigned int s_count;
+
     };
 
     class ElementBuffer : public Buffer {
@@ -76,6 +80,8 @@ namespace pnt::graphics{
         void initBuffer() override;
         void bindBuffer() const override;
         void unbindBuffer() const override;
+
+        void updateBuffer();
 
         inline std::vector<unsigned int > getBufferData() {
             return m_data;
