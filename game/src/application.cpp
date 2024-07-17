@@ -3,6 +3,9 @@
 //
 
 #include "application.h"
+#ifdef HACK_
+#include "opengl_renderer.h"
+#endif //HACK_
 
 void Application::render() {
     PApplication::render();
@@ -19,10 +22,13 @@ void Application::update(float deltaTime) {
 void Application::init() {
     PApplication::init();
 
-    triangle = new PEntity("Triangle");
+    quad = new PEntity("Triangle");
 
-    auto mesh = triangle->AddComponent<PMeshComponent>();
-    PLog::echoValue(triangle->GetComponent<PTransformComponent>()->m_up);
+    auto mesh = quad->AddComponent<PMeshComponent>();
+#ifdef HACK_
+    dynamic_cast<POpenGLRenderSS*>(serviceLocator->getService<IRenderService>().get())->SetHackMesh(mesh->getVBO(), mesh->getEBO());
+#endif //HACK_
+    PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up);
 
 //    std::unique_ptr<PShader> newOffsetShader = PShader::createShaders(
 //            PShader::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_Inv_vert"]),
@@ -30,17 +36,22 @@ void Application::init() {
 //            );
 }
 
+void Application::start() {
+    PApplication::start();
+}
+
 void Application::destroy() {
     PApplication::destroy();
 }
 
 Application::Application(const std::string &title, int width, int height) : PApplication(title, width, height) {
-    triangle = nullptr;
+    quad = nullptr;
 }
 
 void Application::exit() {
     PApplication::exit();
-    delete triangle;
+    delete quad;
 }
+
 
 

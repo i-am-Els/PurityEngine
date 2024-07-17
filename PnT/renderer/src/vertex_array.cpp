@@ -4,6 +4,7 @@
 
 #include "vertex_array.h"
 #include "glew.h"
+#include "log.h"
 
 namespace pnt::graphics{
     unsigned int VertexArray::vaoCount = 0;
@@ -12,12 +13,12 @@ namespace pnt::graphics{
     void VertexArray::init()  {
         vaoID = vaoCount++;
         glGenVertexArrays(1, &vaoID);
-//        bindVAO();
+        bindVAO();
         attribCount = 0;
     }
 
 
-    void VertexArray::addAttributes(unsigned int index, int countPerVertex, int sizePerVertex, const void* stridePtr, bool transpose){
+    void VertexArray::addAttribute(unsigned int index, int countPerVertex, int sizePerVertex, const void* stridePtr, bool transpose){
         if (transpose) {
             glVertexAttribPointer(index, countPerVertex, GL_FLOAT, GL_TRUE, sizePerVertex, stridePtr);
         }
@@ -30,6 +31,7 @@ namespace pnt::graphics{
 
     void VertexArray::bindVAO() const{
         glBindVertexArray(vaoID);
+//        PLog::echoMessage("VAO Bound");
     }
 
     void VertexArray::unbindVAO(){

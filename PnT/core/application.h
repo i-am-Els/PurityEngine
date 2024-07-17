@@ -19,10 +19,11 @@ namespace pnt{
     public:
         std::unique_ptr<PWindow> window;
 
+        virtual void init();
+        virtual void start();
         virtual void process();
         virtual void update(float deltaTime);
         virtual void render();
-        virtual void init();
         virtual void destroy();
         virtual void exit();
 

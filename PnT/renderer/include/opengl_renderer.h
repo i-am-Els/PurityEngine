@@ -14,13 +14,19 @@
 #include "render_service.h"
 #include "service_base.h"
 
+
+#ifdef HACK_
+#include "buffer.h"
+#include "mesh.h"
+#endif //HACK_
+
 using namespace isle_engine::math;
 using namespace pnt::ecs;
 using namespace pnt::ds;
 
 namespace pnt::graphics{
 
-    class POpenGLRenderSS : public PServiceBase<IRenderService>, public ISystem{
+    class POpenGLRenderSS : public PServiceBase<IRenderService>, ISystem{
     public:
         explicit POpenGLRenderSS(GLFWwindow*& window);
         ~POpenGLRenderSS() override;
@@ -28,16 +34,29 @@ namespace pnt::graphics{
         POpenGLRenderSS(POpenGLRenderSS&& renderer) = default;
 
         void init() override;
+        void start() override;
         void process() override;
         void update(float deltaTime) override;
         void render() override;
         void destroy() override;
 
         void setUpShader() override;
-        void clearWindow(GLbitfield masks, graphics::Color color);
         void SwapBuffers() override;
 
+        /// TODO - Hack - To be scraped
+#ifdef HACK_
+            VertexBuffer *_vbo;
+            ElementBuffer *_ebo;
+
+            inline void SetHackMesh(VertexBuffer* vbo, ElementBuffer* ebo){
+                _vbo = vbo;
+                _ebo = ebo;
+            }
+#endif //HACK_
+            // Hack - To be scraped
+
     private:
+        void clearWindow(GLbitfield masks, graphics::Color color);
         GLFWwindow* _window;
         std::unique_ptr<PShader> shader;
         std::vector<PRenderComponent*> renderComponents;
@@ -49,5 +68,6 @@ namespace pnt::graphics{
 
         static void SetUniformVec2(int uniformID, Vector2f vec2);
         static void SetUniformVec3(int uniformID, Vector3f vec3);
+
     };
 }

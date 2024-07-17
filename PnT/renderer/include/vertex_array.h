@@ -11,7 +11,7 @@ namespace pnt::graphics{
         ~VertexArray();
         void init();
         void bindVAO() const;
-        void addAttributes(unsigned int index, int countPerVertex, int sizePerVertex, const void* stridePtr, bool transpose=false);
+        void addAttribute(unsigned int index, int countPerVertex, int sizePerVertex, const void* stridePtr, bool transpose=false);
         static void enableAttributes(unsigned int index);
         static void unbindVAO();
     private:

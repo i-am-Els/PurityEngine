@@ -41,14 +41,10 @@
  *
  * */
 
-#include "application.h"
 #include <iostream>
 
-#include "islemath.h"
+#include "application.h"
 #include "entity.h"
-#include "mesh.h"
-#include "log.h"
-#include "vertex_array.h"
 #include "input.h"
 #include "opengl_renderer.h"
 
@@ -63,6 +59,7 @@ int main(){
     pnt::PApplication* application = pnt::CreateApplication();
 
     application->init();
+    application->start();  // TODO - HACK added
     while(!application->window->windowClose())
     {
         // Poll PInput
@@ -127,5 +124,11 @@ namespace pnt{
     void PApplication::exit() {
         // nothing for now
         PWindow::unbind();
+    }
+
+    void PApplication::start() {
+#ifdef HACK_
+        dynamic_cast<POpenGLRenderSS*>(serviceLocator->getService<IRenderService>().get())->start();
+#endif //HACK_
     }
 }

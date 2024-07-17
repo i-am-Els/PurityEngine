@@ -32,17 +32,22 @@ std::unique_ptr<PShader> PShader::createShaders(const std::string& vertexSource,
     int linkStat;
     glGetProgramiv(programID, GL_LINK_STATUS, &linkStat);
     if (linkStat != GL_TRUE){
-        PLog::echoMessage(LogLevel::Error, "Linking  Error");
+        PLog::echoMessage(LogLevel::Error, "Linking Error");
+    }
+
+    int validateStat;
+    glGetProgramiv(programID, GL_VALIDATE_STATUS, &validateStat);
+    if (validateStat != GL_TRUE){
+        PLog::echoMessage(LogLevel::Error, "Validation Error");
     }
 
     glDeleteShader(vs);
     glDeleteShader(fs);
 
-    PLog::echoMessage("PShader setup is successful!");
-
     if (programID){
         shader->shaderProgramID = programID;
-        return shader;
+        PLog::echoMessage("PShader setup is successful!");
+        return std::move(shader);
     }
     return nullptr;
 }
@@ -59,6 +64,11 @@ unsigned int PShader::GetShaderProgramID() const {
     return shaderProgramID;
 }
 
+/// @brief Setup a shader
+/// @param type - ShaderType enum value, the type of shader.
+/// @param source - Shader source string defining shader code.
+/// @returns 0 - if error occurs.
+/// @returns ID <unsigned integer> - No error occurred.
 unsigned int PShader::setUpShader(ShaderType type, const std::string& source)
 {
     unsigned int ID = 1;
@@ -79,6 +89,7 @@ unsigned int PShader::setUpShader(ShaderType type, const std::string& source)
     const char* sourceData = source.c_str();
     glShaderSource(ID, 1, &sourceData, nullptr);
 
+
     if (compileShader(type, ID)) // returns 1 - Success || returns 0 - Failed
     {
         return ID; // succeeded
@@ -87,12 +98,18 @@ unsigned int PShader::setUpShader(ShaderType type, const std::string& source)
 
 }
 
+/// @brief Compiles a shader
+/// @param type - ShaderType enum value, the type of shader to compile.
+/// @param id - Shader ID used to locate shader to compile.
+/// @returns 0 - if error occurs.
+/// @returns 1 - No error occurred.
 unsigned int PShader::compileShader(pnt::graphics::ShaderType type, unsigned int id)
 {
     glCompileShader(id);
 
     int result;
     glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+
     if (result == GL_FALSE)
     {
         int length;
