@@ -5,6 +5,10 @@
 #include "application.h"
 #ifdef HACK_
 #include "opengl_renderer.h"
+#include "ecs_service.h"
+#include "ecs_main.h"
+
+using namespace pnt;
 #endif //HACK_
 
 void Application::render() {
@@ -22,11 +26,19 @@ void Application::update(float deltaTime) {
 void Application::init() {
     PApplication::init();
 
-    quad = new PEntity("Triangle");
+    quad = new PEntity("Quad");
 
     auto mesh = quad->AddComponent<PMeshComponent>();
 #ifdef HACK_
-    dynamic_cast<POpenGLRenderSS*>(serviceLocator->getService<IRenderService>().get())->SetHackMesh(mesh->getVBO(), mesh->getEBO());
+    try{
+        auto item = dynamic_cast<PECSService *>(serviceLocator->getService<IECSService>().get());
+        if (item == nullptr)
+            throw "Invalid Service";
+        auto renderer = dynamic_cast<POpenGLRenderSS*>(item->renderSystem.get());
+        renderer->SetHackMeshBuffers(mesh->getVBO(), mesh->getEBO());
+    }catch(const char* msg){
+        std::cerr << "Error: " << msg << std::endl;
+    }
 #endif //HACK_
     PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up);
 

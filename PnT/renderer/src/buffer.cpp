@@ -19,7 +19,8 @@ namespace pnt::graphics{
     void VertexBuffer::initBuffer() {
         glGenBuffers(1, &m_bufferID);
         bindBuffer();
-        glBufferData(GL_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(Vector3f)), nullptr, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(Vector3f)), m_data.data(), GL_DYNAMIC_DRAW);
+//        glBufferData(GL_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(Vector3f)), nullptr, GL_DYNAMIC_DRAW);
     }
 
     void VertexBuffer::updateBuffer() {
@@ -49,7 +50,8 @@ namespace pnt::graphics{
     void ElementBuffer::initBuffer() {
         glGenBuffers(1, &m_bufferID);
         bindBuffer();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(unsigned int)), nullptr, GL_DYNAMIC_DRAW);
+//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(unsigned int)), nullptr, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long long)(m_itemCount * sizeof(unsigned int)), m_data.data(), GL_DYNAMIC_DRAW);
     }
 
     void ElementBuffer::updateBuffer() {

@@ -47,6 +47,7 @@
 #include "entity.h"
 #include "input.h"
 #include "opengl_renderer.h"
+#include "ecs_main.h"
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
@@ -84,19 +85,19 @@ int main(){
 namespace pnt{
 
     void PApplication::process() {
-        // Call the process method on all the systems
-        serviceLocator->getService<IRenderService>()->process();
+        // Call the process method on all the services
+        serviceLocator->getService<IECSService>()->process();
         PInput::PollEvents();
     }
 
     void PApplication::update(float deltaTime) {
-        // Call the update method on all the systems
-        serviceLocator->getService<IRenderService>()->update(1.0f);
+        // Call the update method on all the services
+        serviceLocator->getService<IECSService>()->update(1.0f);
     }
 
     void PApplication::render() {
-        // Call the render method on all the systems
-        serviceLocator->getService<IRenderService>()->render();
+        // Call the render method on all the services
+        serviceLocator->getService<IECSService>()->render();
     }
 
     void PApplication::init() {
@@ -105,20 +106,20 @@ namespace pnt{
         window = PWindow::createWindow(applicationInfo.width, applicationInfo.height, applicationInfo.title.c_str());
 
         // Create all Services
-        auto renderService = std::make_shared<POpenGLRenderSS>(window->getWindow());
+        auto ecsService = std::make_shared<PECSService>(window.get());
 
         // Register Services
-        serviceLocator->registerService(renderService);
+        serviceLocator->registerService(ecsService);
 
-        // Call the init method on all the systems
-        serviceLocator->getService<IRenderService>()->init();
+        // Call the init method on all the services
+        serviceLocator->getService<IECSService>()->init();
 
     }
 
     void PApplication::destroy() {
-        // Call the destroy method on all the systems
+        // Call the destroy method on all the services
 
-        serviceLocator->getService<IRenderService>()->destroy();
+        serviceLocator->getService<IECSService>()->destroy();
     }
 
     void PApplication::exit() {
@@ -128,7 +129,7 @@ namespace pnt{
 
     void PApplication::start() {
 #ifdef HACK_
-        dynamic_cast<POpenGLRenderSS*>(serviceLocator->getService<IRenderService>().get())->start();
+        dynamic_cast<PECSService*>(serviceLocator->getService<IECSService>().get())->start();
 #endif //HACK_
     }
 }

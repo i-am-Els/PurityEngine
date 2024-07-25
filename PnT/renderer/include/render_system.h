@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "iservices.h"
+#include "isystems.h"
 
 namespace pnt{
-    class IRenderService : public IService{
+class IRenderSystem : public ecs::ISystem{
     public:
         virtual void SwapBuffers() = 0;
         virtual void setUpShader() =  0;

@@ -24,7 +24,7 @@ namespace pnt {
     void PLog::echoMessage(LogLevel _level, const char *message, ...) {
         va_list args;
         va_start(args, message);
-        printf("%s: ", stringifyLogLevel(_level).c_str());
+        printf("[%s]: ", stringifyLogLevel(_level).c_str());
         vprintf(message, args);
         printf("\n");
         va_end(args);
