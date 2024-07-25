@@ -41,42 +41,17 @@ namespace pnt::graphics{
         shader = std::make_unique<PShader>();
         setUpShader();
 
-        vertexArray->init(); // setup vao, bind and configure it
-        // TODO - bind vbo here;
-//        // _vbo->bindBuffer();
-//        // _ebo->bindBuffer();
-//#ifdef HACK_
-//        _vbo->bindBuffer();
-//        _ebo->bindBuffer();
-//#endif //HACK_
-//        vertexArray->addAttribute(0, 3, sizeof(float) * 3, nullptr); // add attribute to vao
-//        glEnable(GL_DEPTH_TEST);
-//        // TODO - unbind vbo here
-//        // _vbo->unbindBuffer();
-//        // _ebo->unbindBuffer();
-//#ifdef HACK_
-//        _vbo->unbindBuffer();
-//        _ebo->unbindBuffer();
-//#endif //HACK_
     }
 
     void POpenGLRenderSS::start() {
-        // TODO - bind vbo here;
-        // _vbo->bindBuffer();
-        // _ebo->bindBuffer();
+        vertexArray->init(); // setup vao, bind and configure it
 #ifdef HACK_
         _vbo->bindBuffer();
         _ebo->bindBuffer();
 #endif //HACK_
         vertexArray->addAttribute(0, 3, sizeof(float) * 3, nullptr); // add attribute to vao
         glEnable(GL_DEPTH_TEST);
-        // TODO - unbind vbo here
-        // _vbo->unbindBuffer();
-        // _ebo->unbindBuffer();
-#ifdef HACK_
-        _vbo->unbindBuffer();
-        _ebo->unbindBuffer();
-#endif //HACK_
+
     }
 
     void POpenGLRenderSS::process() {
@@ -91,13 +66,6 @@ namespace pnt::graphics{
     void POpenGLRenderSS::render() {
         clearWindow(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, Color(.5f, .5f, .2f));
 
-        // TODO - update VBO and EBO here
-        // _vbo->updateBuffer();
-        // _ebo->updateBuffer();
-#ifdef HACK_
-        _vbo->updateBuffer();
-        _ebo->updateBuffer();
-#endif //HACK_
         shader->bindShader();
         vertexArray->bindVAO();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -129,6 +97,10 @@ namespace pnt::graphics{
 
     POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* & window) : _window(window){
         vertexArray = new VertexArray();
+//#ifdef HACK_
+//        _vbo = nullptr;
+//        _ebo = nullptr;
+//#endif //HACK_
     }
 
     POpenGLRenderSS::~POpenGLRenderSS() {

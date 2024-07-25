@@ -52,6 +52,7 @@ namespace pnt::graphics{
         VertexBuffer() = default;
         VertexBuffer(std::vector<Vector3f> &data, unsigned int vertexCount);
         ~VertexBuffer();
+
         void initBuffer() override;
         void bindBuffer() const override;
         void unbindBuffer() const override;
@@ -77,6 +78,7 @@ namespace pnt::graphics{
         ElementBuffer() = default;
         ElementBuffer(std::vector<unsigned int> &data, unsigned int vertexCount);
         ~ElementBuffer();
+
         void initBuffer() override;
         void bindBuffer() const override;
         void unbindBuffer() const override;

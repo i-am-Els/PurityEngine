@@ -8,17 +8,19 @@ namespace pnt::ecs{
 
     class ISystem{
     public:
-//        virtual void init() = 0;
+        virtual void init() = 0;
 
         virtual void start() = 0;
 //
-//        virtual void process() = 0;
+        virtual void process() = 0;
 //
-//        virtual void render() = 0;
+        virtual void render() = 0;
 //
-//        virtual void update(float deltaTime) = 0;
+        virtual void update(float deltaTime) = 0;
 //
-//        virtual void destroy() = 0;
+        virtual void destroy() = 0;
+
+        virtual ~ISystem() = default;
     };
 
 }

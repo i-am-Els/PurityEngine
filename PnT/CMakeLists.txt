@@ -21,7 +21,7 @@ endif()
 
 # Specify header files to core (all .h files in the core directory)
 file(GLOB_RECURSE HEADERS
-        "${CMAKE_CURRENT_SOURCE_DIR}/core/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/core/include/*.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLEW/include/*.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLFW/include/*.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/vendors/isle_math/include/*.h"
@@ -53,25 +53,27 @@ add_library(PnT STATIC
         ecs/include/renderer.h
         ecs/include/renderer.h
         ecs/include/renderer.h
-        core/linkedList.h
-        core/application.h
+        core/include/linkedList.h
+        core/include/application.h
         ecs/src/scripting.cpp
         ecs/include/scripting.h
         renderer/include/buffer.h
         ecs/include/isystems.h
-        core/iservices.h
-        core/service_base.h
-        core/service_locator.h
-        renderer/include/render_service.h
+        core/include/iservices.h
+        core/include/service_base.h
+        core/include/service_locator.h
+        renderer/include/render_system.h
         geometry/include/mesh_data_system.h
         geometry/src/mesh_data_system.cpp
         geometry/include/mesh_service.h
+        ecs/include/ecs_service.h
+        ecs/include/ecs_main.h
 )
 
 # Add the core directories for your library and dependencies
 target_include_directories(PnT PUBLIC
         artifacts
-        core
+        core/include
         ecs/include
         io/include
         renderer/include

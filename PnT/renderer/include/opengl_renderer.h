@@ -11,7 +11,7 @@
 #include "color.h"
 #include "glfw3.h"
 #include "vertex_array.h"
-#include "render_service.h"
+#include "render_system.h"
 #include "service_base.h"
 
 
@@ -26,7 +26,7 @@ using namespace pnt::ds;
 
 namespace pnt::graphics{
 
-    class POpenGLRenderSS : public PServiceBase<IRenderService>, ISystem{
+    class POpenGLRenderSS : public IRenderSystem{
     public:
         explicit POpenGLRenderSS(GLFWwindow*& window);
         ~POpenGLRenderSS() override;
@@ -45,12 +45,21 @@ namespace pnt::graphics{
 
         /// TODO - Hack - To be scraped
 #ifdef HACK_
-            VertexBuffer *_vbo;
-            ElementBuffer *_ebo;
+            VertexBuffer* _vbo;
+            ElementBuffer* _ebo;
 
-            inline void SetHackMesh(VertexBuffer* vbo, ElementBuffer* ebo){
-                _vbo = vbo;
-                _ebo = ebo;
+            inline void SetHackMeshBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
+                try{
+                    if (vbo == nullptr || ebo == nullptr){
+                        throw -1;
+                    }
+
+                    this->_vbo = vbo;
+                    this->_ebo = ebo;
+                }
+                catch (int e){
+                    PLog::echoMessage(LogLevel::Error, "Null Incoming Buffers");
+                }
             }
 #endif //HACK_
             // Hack - To be scraped
