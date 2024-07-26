@@ -96,32 +96,32 @@
             /**
              * @brief Predefined vector representing the up direction (0, 1).
              */
-            static const Vector2<T> up;
+            static Vector2<T> up(){ return Vector2<T>(T(0), T(1)); }
 
             /**
              * @brief Predefined vector representing the right direction (1, 0).
              */
-            static const Vector2<T> right;
+            static Vector2<T> right() { return Vector2<T>(T(1), T(0)); }
 
             /**
              * @brief Predefined vector representing the zero vector (0, 0).
              */
-            static const Vector2<T> zero;
+            static Vector2<T> zero() { return Vector2<T>(T(0), T(0)); }
 
             /**
              * @brief Predefined vector representing the one vector (1, 1).
              */
-            static const Vector2<T> one;
+            static Vector2<T> one() {return Vector2<T>(T(1), T(1)); }
 
             /**
              * @brief Predefined vector representing the up direction (0, -1).
              */
-            static const Vector2<T> down;
+            static Vector2<T> down() { return Vector2<T>(T(0), T(-1)); }
 
             /**
              * @brief Predefined vector representing the right direction (-1, 0).
              */
-            static const Vector2<T> left;
+            static Vector2<T> left() { return Vector2<T>(T(-1), T(0)); }
 
             Vector2<T> operator*(const T& s) const;
             Vector2<T> operator*=(const T& s);
@@ -205,24 +205,6 @@
         T Vector2<T>::magnitude() {
             return (sqrt((*this).squaredMagnitude()));
         }
-
-        template <class T>
-        const Vector2<T> Vector2<T>::zero = Vector2<T>(T(0), T(0));
-
-        template <class T>
-        const Vector2<T> Vector2<T>::one = Vector2<T>(T(1), T(1));
-
-        template <class T>
-        const Vector2<T> Vector2<T>::up = Vector2<T>(T(0), T(1));
-
-        template <class T>
-        const Vector2<T> Vector2<T>::right = Vector2<T>(T(1), T(0));
-
-        template <class T>
-        const Vector2<T> Vector2<T>::down = Vector2<T>(T(0), T(-1));
-
-        template <class T>
-        const Vector2<T> Vector2<T>::left = Vector2<T>(T(-1), T(0));
 
         template <class T>
         Vector2<T> Vector2<T>::operator*(const T& s) const {

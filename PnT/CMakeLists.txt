@@ -83,8 +83,8 @@ target_include_directories(PnT PUBLIC
         vendors/GLM
         vendors/isle_math/include
         vendors/isle_math/include/math
-        vendors/isle_math/include/math/matrix
         vendors/isle_math/include/math/vector
+        vendors/isle_math/include/math/matrix
 )
 
 target_link_directories(PnT PUBLIC
