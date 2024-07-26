@@ -245,7 +245,7 @@
 
         template<class T>
         Quaternion<T> Quaternion<T>::s_createIdentity() {
-            return Quaternion<T>(T(1), Vector3<T>::zero);
+            return Quaternion<T>(T(1), Vector3<T>::zero());
         }
 
         template<class T>

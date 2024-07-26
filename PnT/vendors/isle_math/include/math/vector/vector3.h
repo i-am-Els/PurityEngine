@@ -107,42 +107,42 @@
 			/**
 			 * @brief Predefined vector representing the up direction (0, 1, 0).
 			 */
-			static const Vector3<T> up;
+			static Vector3<T> up() { return Vector3<T>(T(0), T(1), T(0)); }
 
 			/**
 			 * @brief Predefined vector representing the forward direction (0, 0, 1).
 			 */
-			static const Vector3<T> forward;
+			static Vector3<T> forward() { return Vector3<T>(T(0), T(0), T(1)); }
 
 			/**
 			 * @brief Predefined vector representing the right direction (1, 0, 0).
 			 */
-			static const Vector3<T> right;
+			static Vector3<T> right() { return Vector3<T>(T(1), T(0), T(0)); }
 
 			/**
 			 * @brief Predefined vector representing the zero vector (0, 0, 0).
 			 */
-			static const Vector3<T> zero;
+			static Vector3<T> zero() { return Vector3<T>(T(0), T(0), T(0)); }
 
 			/**
 			 * @brief Predefined vector representing the one vector (1, 1, 1).
 			 */
-			static const Vector3<T> one;
+			static Vector3<T> one() { return Vector3<T>(T(1), T(1), T(1)); }
 
 			/**
 			 * @brief Predefined vector representing the up direction (0, -1, 0).
 			 */
-			static const Vector3<T> down;
+			static Vector3<T> down() { return Vector3<T>(T(0), T(-1), T(0)); }
 
 			/**
 			 * @brief Predefined vector representing the forward direction (0, 0, -1).
 			 */
-			static const Vector3<T> back;
+			static Vector3<T> back() { return Vector3<T>(T(0), T(0), T(-1)); }
 
 			/**
 			 * @brief Predefined vector representing the right direction (-1, 0, 0).
 			 */
-			static const Vector3<T> left;
+			static Vector3<T> left() { return Vector3<T>(T(-1), T(0), T(0)); }
 
 			Vector3<T> operator/(const T& s) const;
 			Vector3<T> operator/=(const T& s);
@@ -238,30 +238,6 @@
 		T Vector3<T>::magnitude() {
 			return (sqrt((*this).squaredMagnitude()));
 		}
-
-		template <class T>
-		const Vector3<T> Vector3<T>::zero = Vector3<T>(T(0), T(0), T(0));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::one = Vector3<T>(T(1), T(1), T(1));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::up = Vector3<T>(T(0), T(1), T(0));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::forward = Vector3<T>(T(0), T(0), T(1));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::right = Vector3<T>(T(1), T(0), T(0));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::down = Vector3<T>(T(0), T(-1), T(0));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::back = Vector3<T>(T(0), T(0), T(-1));
-
-		template <class T>
-		const Vector3<T> Vector3<T>::left = Vector3<T>(T(-1), T(0), T(0));
 
 		template <class T>
 		Vector3<T> Vector3<T>::operator*(const T& s) const {
