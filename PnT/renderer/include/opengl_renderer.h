@@ -68,15 +68,15 @@ namespace pnt::graphics{
         void clearWindow(GLbitfield masks, graphics::Color color);
         GLFWwindow* _window;
         std::unique_ptr<PShader> shader;
-        std::vector<PRenderComponent*> renderComponents;
+        std::vector<PRenderComponent> renderComponents;
         VertexArray* vertexArray;
 
         bool switchShader(std::unique_ptr<PShader> shaderProgram);
-        void AddRenderable(PRenderComponent &comp);
-        void RemoveRenderable(PRenderComponent &comp);
+        PRenderComponent* AddRenderable() override;
+        PRenderComponent* GetRenderable() override;
+        void RemoveRenderable(PRenderComponent* component) override;
 
         static void SetUniformVec2(int uniformID, Vector2f vec2);
         static void SetUniformVec3(int uniformID, Vector3f vec3);
-
     };
 }

@@ -29,6 +29,7 @@ void Application::init() {
     quad = new PEntity("Quad");
 
     auto mesh = quad->AddComponent<PMeshComponent>();
+    auto render = quad->AddComponent<PRenderComponent>();
 #ifdef HACK_
     try{
         auto item = dynamic_cast<PECSService *>(serviceLocator->getService<IECSService>().get());
@@ -42,10 +43,6 @@ void Application::init() {
 #endif //HACK_
     PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up);
 
-//    std::unique_ptr<PShader> newOffsetShader = PShader::createShaders(
-//            PShader::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_Inv_vert"]),
-//            PShader::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_Inv_frag"])
-//            );
 }
 
 void Application::start() {

@@ -15,6 +15,13 @@
 #include "islemath.h"
 #include "include/application.h"
 
+// ecs
+#include "mesh.h"
+#include "transform_ecs.h"
+#include "camera.h"
+#include "renderer.h"
+
+
 using namespace pnt;
 using namespace pnt::graphics;
 

@@ -6,8 +6,10 @@
 
 namespace pnt::ecs
 {
-    PCameraComponent::PCameraComponent(PEntity *entity) : PComponent(entity) {
+    unsigned int PCameraComponent::s_count = 0;
 
+    PCameraComponent::PCameraComponent(PEntity *entity) : PComponent(entity) {
+    m_id = ++s_count;
     }
 
     PCameraComponent::PCameraComponent(PEntity *entity, unsigned int _width, unsigned int _height, int xPos, int yPos)

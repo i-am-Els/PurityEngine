@@ -25,9 +25,13 @@ namespace pnt::ecs{
 #ifdef HACK_
     inline VertexBuffer* getVBO() { return &m_vertexBuffer; }
     inline ElementBuffer* getEBO() { return &m_elementBuffer; }
+
 #endif //HACK_
 
+
     private:
+        static unsigned int s_count; // All components must have this
+
         std::vector<Vector3f> m_vertices = {
                 Vector3f(-.5f, -.5f, 0.f),
                 Vector3f(-.5f, .5f, 0.f),

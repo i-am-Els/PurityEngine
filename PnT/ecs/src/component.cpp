@@ -6,8 +6,7 @@
 #include "entity.h"
 
 namespace pnt::ecs {
-    unsigned int PComponent::s_count = 0;
 
-    PComponent::PComponent(PEntity *entity) : m_entity(entity) , m_id(++s_count) {}
+    PComponent::PComponent(PEntity *entity) : m_entity(entity){}
 
 }

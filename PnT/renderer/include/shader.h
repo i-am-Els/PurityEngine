@@ -23,11 +23,6 @@ namespace pnt::graphics
     public:
         PShader();
         ~PShader();
-        /// @brief Extract Source code from Shader file.
-        /// @param path - The relative path to the shader.
-        /// @return A std::string contained in the file.
-        /// @note Works with Absolute paths too.
-        static std::string extractSourceFromFile(const char* path);
 
         /// @brief Creates a Program out of the shader sources.
         /// @param vertexSource - The vertex shader source string.
