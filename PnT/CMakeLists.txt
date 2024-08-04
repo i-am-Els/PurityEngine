@@ -68,6 +68,9 @@ add_library(PnT STATIC
         geometry/include/mesh_service.h
         ecs/include/ecs_service.h
         ecs/include/ecs_main.h
+        io/src/fileio.cpp
+        io/include/fileio.h
+        ecs/include/component_traits.h
 )
 
 # Add the core directories for your library and dependencies

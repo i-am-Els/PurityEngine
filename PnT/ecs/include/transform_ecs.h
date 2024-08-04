@@ -67,6 +67,8 @@ namespace pnt::ecs{
         void start() override;
 
     private:
+        static unsigned int s_count; // All components must have this
+
         MatrixNM<4, 4, float> m_worldToLocalTransform;
         MatrixNM<4, 4, float> m_localToWorldTransform; // Model Matrix
     };

@@ -28,6 +28,7 @@ namespace pnt::ecs{
         PCameraComponent& operator=(const PCameraComponent && _camera) = delete;
         ~PCameraComponent() override { PLog::echoMessage("Destroying Camera");};
     private:
+        static unsigned int s_count; // All components must have this
         unsigned int width, height;
         Vector2i position;
     };

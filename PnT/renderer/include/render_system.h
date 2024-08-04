@@ -6,11 +6,15 @@
 
 #include "isystems.h"
 
-namespace pnt{
-class IRenderSystem : public ecs::ISystem{
-    public:
-        virtual void SwapBuffers() = 0;
-        virtual void setUpShader() =  0;
+namespace pnt::ecs{
+    class IRenderSystem : public ISystem{
+        public:
+            virtual void SwapBuffers() = 0;
+            virtual void setUpShader() =  0;
+
+            virtual PRenderComponent* AddRenderable() = 0;
+            virtual PRenderComponent* GetRenderable() = 0;
+            virtual void RemoveRenderable(PRenderComponent* component) = 0;
 
     };
 }

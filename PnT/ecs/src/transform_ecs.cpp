@@ -5,8 +5,10 @@
 #include "transform_ecs.h"
 
 namespace pnt::ecs{
+    unsigned int PTransformComponent::s_count = 0;
 
     PTransformComponent::PTransformComponent(PEntity *entity) : PComponent(entity) {
+        m_id = ++s_count;
         m_parent = nullptr;
     }
 

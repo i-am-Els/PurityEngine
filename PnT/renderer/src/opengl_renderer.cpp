@@ -5,12 +5,13 @@
 #include "opengl_renderer.h"
 #include "log.h"
 #include "data_hash_table.h"
+#include "fileio.h"
 
 namespace pnt::graphics{
 
     void POpenGLRenderSS::setUpShader() {
-        auto vert = PShader::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_vert"]);
-        auto frag = PShader::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_frag"]);
+        auto vert = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_vert"]);
+        auto frag = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_frag"]);
         shader = PShader::createShaders(vert, frag);
         if (shader->GetShaderProgramID())
             PLog::echoMessage("PShader Up and Running!");
@@ -78,12 +79,16 @@ namespace pnt::graphics{
 
     }
 
-    void POpenGLRenderSS::AddRenderable(PRenderComponent &comp) {
-        renderComponents.push_back(&comp);
+    PRenderComponent* POpenGLRenderSS::AddRenderable() {
+//        renderComponents.push_back();
     }
 
-    void POpenGLRenderSS::RemoveRenderable(PRenderComponent &comp) {
-        std::remove(renderComponents.begin(), renderComponents.end(), &comp);
+    PRenderComponent* POpenGLRenderSS::GetRenderable() {
+//        renderComponents.push_back();
+    }
+
+    void POpenGLRenderSS::RemoveRenderable(PRenderComponent* component) {
+
     }
 
     void POpenGLRenderSS::clearWindow(GLbitfield masks, graphics::Color color){
@@ -97,10 +102,10 @@ namespace pnt::graphics{
 
     POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* & window) : _window(window){
         vertexArray = new VertexArray();
-//#ifdef HACK_
-//        _vbo = nullptr;
-//        _ebo = nullptr;
-//#endif //HACK_
+        renderComponents.reserve(100);
+        PRenderComponent::SetAddComponentCallback(AddRenderable());
+        PRenderComponent::SetGetComponentCallback(GetRenderable());
+        PRenderComponent::SetRemoveComponentCallback(RemoveRenderable());
     }
 
     POpenGLRenderSS::~POpenGLRenderSS() {

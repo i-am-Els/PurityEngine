@@ -3,3 +3,20 @@
 //
 
 #include "scripting.h"
+
+namespace pnt::ecs{
+    unsigned int PBehaviourScriptComponent::s_count = 0;
+
+    PBehaviourScriptComponent::PBehaviourScriptComponent(PEntity *entity) : PComponent(entity) {
+        m_id = ++s_count;
+    }
+
+    void PBehaviourScriptComponent::update(float deltaTime) {
+        PComponent::update(deltaTime);
+    }
+
+    void PBehaviourScriptComponent::start() {
+        PComponent::start();
+    }
+
+}

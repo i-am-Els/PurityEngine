@@ -6,7 +6,6 @@
 #include "glew.h"
 #include "log.h"
 #include <iostream>
-#include <fstream>
 #include <memory>
 
 using namespace pnt::graphics;
@@ -124,22 +123,6 @@ unsigned int PShader::compileShader(pnt::graphics::ShaderType type, unsigned int
         return 0;
     }
     return 1;
-}
-
-std::string PShader::extractSourceFromFile(const char *path) {
-    std::fstream file(path);
-    std::string source;
-
-    if(file.is_open())
-    {
-        std::string line;
-        while(std::getline(file, line)){
-            source += line + "\n";
-        }
-    }
-    file.close();
-    PLog::echoMessage(source.c_str());
-    return source;
 }
 
 int PShader::getUniformLocation(const char *name) const {
