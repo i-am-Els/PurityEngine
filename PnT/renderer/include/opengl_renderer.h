@@ -61,22 +61,40 @@ namespace pnt::graphics{
                     PLog::echoMessage(LogLevel::Error, "Null Incoming Buffers");
                 }
             }
+
+        PRenderComponent *AddComponent(PEntity* entity) override;
+
+        PRenderComponent *GetComponent(unsigned int id) override;
+
+        void RemoveComponent(PEntity* entity, PComponent *component) override;
+
+        void RemoveComponents(PEntity* entity, PComponent *component) override;
+
+        void RemoveComponentByTag(PEntity* entity, PComponent *component, std::string tag) override;
+
+        void RemoveComponentsByTag(PEntity* entity, std::string tag) override;
+
+        PRenderComponent *FindComponentByTag(PEntity* entity, std::string tag) override;
+
+        std::vector<PComponent *> FindComponentsByTag(PEntity* entity, std::string tag) override;
+
 #endif //HACK_
             // Hack - To be scraped
 
     private:
+        std::vector<std::unique_ptr<PRenderComponent>> renderComponents;
+
+
         void clearWindow(GLbitfield masks, graphics::Color color);
         GLFWwindow* _window;
         std::unique_ptr<PShader> shader;
-        std::vector<PRenderComponent> renderComponents;
         VertexArray* vertexArray;
 
         bool switchShader(std::unique_ptr<PShader> shaderProgram);
-        PRenderComponent* AddRenderable() override;
-        PRenderComponent* GetRenderable() override;
-        void RemoveRenderable(PRenderComponent* component) override;
 
         static void SetUniformVec2(int uniformID, Vector2f vec2);
         static void SetUniformVec3(int uniformID, Vector3f vec3);
+
+
     };
 }

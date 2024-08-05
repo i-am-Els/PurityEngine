@@ -47,7 +47,7 @@ add_library(PnT STATIC
         artifacts/tags.h
         renderer/src/opengl_renderer.cpp
         renderer/include/opengl_renderer.h
-        ecs/include/IEntity.h
+        ecs/include/components_behavior.h
         ecs/src/renderer.cpp
         ecs/include/renderer.h
         ecs/include/renderer.h
@@ -65,12 +65,12 @@ add_library(PnT STATIC
         renderer/include/render_system.h
         geometry/include/mesh_data_system.h
         geometry/src/mesh_data_system.cpp
-        geometry/include/mesh_service.h
+        geometry/include/mesh_system.h
         ecs/include/ecs_service.h
         ecs/include/ecs_main.h
         io/src/fileio.cpp
         io/include/fileio.h
-        ecs/include/component_traits.h
+        ecs/src/components_behavior.cpp
 )
 
 # Add the core directories for your library and dependencies

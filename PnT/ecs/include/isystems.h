@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "component.h"
+
 namespace pnt::ecs{
 
     class ISystem{
@@ -21,6 +23,16 @@ namespace pnt::ecs{
         virtual void destroy() = 0;
 
         virtual ~ISystem() = default;
+
+        virtual PComponent* AddComponent(PEntity* entity) = 0;
+        virtual PComponent* GetComponent(unsigned int id) = 0;
+        virtual void RemoveComponent(PEntity* entity, PComponent* component) = 0;
+        virtual void RemoveComponents(PEntity* entity, PComponent* component) = 0;
+        virtual void RemoveComponentByTag(PEntity* entity, PComponent* component, std::string tag) = 0;
+        virtual void RemoveComponentsByTag(PEntity* entity, std::string tag) = 0;
+        virtual PComponent* FindComponentByTag(PEntity* entity, std::string tag) = 0;
+        virtual std::vector<PComponent*> FindComponentsByTag(PEntity* entity, std::string tag) = 0;
+
     };
 
 }

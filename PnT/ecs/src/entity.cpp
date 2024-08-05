@@ -24,19 +24,5 @@ namespace pnt::ecs{
     PEntity::PEntity(const PEntity &entity) {
         // Implement Cloning
     }
-
-    // Explicit instantiation of GetComponent for PTransformComponent
-    template<>
-    PTransformComponent* PEntity::GetComponent<PTransformComponent>(){
-        return m_transform.get();
-    }
-
-    // Explicit instantiation of AddComponent for PTransformComponent
-    template<>
-    PTransformComponent* PEntity::AddComponent() {
-        static_assert(std::is_base_of_v<PComponent, PTransformComponent>, "T must be a subclass of PComponent");
-        m_transform = std::make_unique<PTransformComponent>(std::forward<PEntity*>(this));
-        return m_transform.get();
-    }
 }
 

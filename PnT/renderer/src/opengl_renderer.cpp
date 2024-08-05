@@ -7,7 +7,7 @@
 #include "data_hash_table.h"
 #include "fileio.h"
 
-namespace pnt::graphics{
+namespace pnt::graphics {
 
     void POpenGLRenderSS::setUpShader() {
         auto vert = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_vert"]);
@@ -18,6 +18,7 @@ namespace pnt::graphics{
         else PLog::echoMessage("PShader Set up failed!");
 
     }
+
     /// @brief The shader needs to have been built in order for this to work correctly
     /// @param shaderProgram - a std::unique_ptr PShader
     /// @return bool - True or False concerning the success of the switch operation.
@@ -30,11 +31,11 @@ namespace pnt::graphics{
     }
 
     void POpenGLRenderSS::SetUniformVec2(int uniformID, Vector2f vec2) {
-        glUniform2fv(uniformID, 1, static_cast<float*>(vec2));
+        glUniform2fv(uniformID, 1, static_cast<float *>(vec2));
     }
 
     void POpenGLRenderSS::SetUniformVec3(int uniformID, Vector3f vec3) {
-        glUniform3fv(uniformID, 1, static_cast<float*>(vec3));
+        glUniform3fv(uniformID, 1, static_cast<float *>(vec3));
     }
 
 
@@ -79,19 +80,7 @@ namespace pnt::graphics{
 
     }
 
-    PRenderComponent* POpenGLRenderSS::AddRenderable() {
-//        renderComponents.push_back();
-    }
-
-    PRenderComponent* POpenGLRenderSS::GetRenderable() {
-//        renderComponents.push_back();
-    }
-
-    void POpenGLRenderSS::RemoveRenderable(PRenderComponent* component) {
-
-    }
-
-    void POpenGLRenderSS::clearWindow(GLbitfield masks, graphics::Color color){
+    void POpenGLRenderSS::clearWindow(GLbitfield masks, graphics::Color color) {
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(masks);
     }
@@ -100,16 +89,60 @@ namespace pnt::graphics{
         glfwSwapBuffers(_window);
     }
 
-    POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* & window) : _window(window){
+    POpenGLRenderSS::POpenGLRenderSS(GLFWwindow *&window) : _window(window) {
         vertexArray = new VertexArray();
         renderComponents.reserve(100);
-        PRenderComponent::SetAddComponentCallback(AddRenderable());
-        PRenderComponent::SetGetComponentCallback(GetRenderable());
-        PRenderComponent::SetRemoveComponentCallback(RemoveRenderable());
     }
 
     POpenGLRenderSS::~POpenGLRenderSS() {
         delete vertexArray;
     }
 
+    PRenderComponent *POpenGLRenderSS::AddComponent(PEntity *entity) {
+        try {
+            renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity));
+            return renderComponents.back().get();
+        } catch (...) {
+            PLog::echoMessage(LogLevel::Error, "Add Comp Generic Assertion failed");
+        }
+        return nullptr;
+    }
+
+    PRenderComponent *POpenGLRenderSS::GetComponent(unsigned int id) {
+        try{
+            for (const auto& component : renderComponents) {
+                if (component->getID() == id) {
+                    return component.get();
+                }
+            }
+        }catch(...){
+            PLog::echoMessage(LogLevel::Error, "Get Comp Generic Assertion failed");
+        }
+        return nullptr; // Return null pointer if component not found
+
+    }
+
+    void POpenGLRenderSS::RemoveComponent(PEntity *entity, PComponent *component) {
+
+    }
+
+    void POpenGLRenderSS::RemoveComponents(PEntity *entity, PComponent *component) {
+
+    }
+
+    void POpenGLRenderSS::RemoveComponentByTag(PEntity *entity, PComponent *component, std::string tag) {
+
+    }
+
+    void POpenGLRenderSS::RemoveComponentsByTag(PEntity *entity, std::string tag) {
+
+    }
+
+    PRenderComponent *POpenGLRenderSS::FindComponentByTag(PEntity *entity, std::string tag) {
+        return nullptr;
+    }
+
+    std::vector<PComponent *> POpenGLRenderSS::FindComponentsByTag(PEntity *entity, std::string tag) {
+        return std::vector<PComponent *>();
+    }
 }

@@ -5,8 +5,6 @@
 
 #pragma once
 #include "log.h"
-#include "isystems.h"
-#include "component_traits.h"
 
 namespace pnt::ecs {
 
@@ -16,23 +14,17 @@ namespace pnt::ecs {
     class PComponent {
     public:
 
-        using Traits = ComponentTraits<PComponent>;
-
         explicit PComponent(PEntity *entity);
         virtual ~PComponent(){ PLog::echoMessage("Destroying component base"); }
 
         virtual void update(float deltaTime){}
         virtual void start(){}
 
+        [[nodiscard]] inline unsigned int getID() const{ return m_id; }
 
         PEntity* m_entity;
     protected:
         unsigned int m_id;
-
-    public:
-        virtual void SetAddComponentCallback(typename Traits::AddComponentCallback callback) = 0;
-        virtual void SetGetComponentCallback(typename Traits::GetComponentCallback callback) = 0;
-        virtual void SetRemoveComponentCallback(typename Traits::RemoveComponentCallback callback) = 0;
     };
 
 }
