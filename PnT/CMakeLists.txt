@@ -45,9 +45,9 @@ add_library(PnT STATIC
         ecs/src/transform_ecs.cpp
         ecs/src/mesh.cpp
         artifacts/tags.h
-        renderer/src/opengl_renderer.cpp
-        renderer/include/opengl_renderer.h
-        ecs/include/IEntity.h
+        renderer/src/render_system_conc.cpp
+        renderer/include/render_system_conc.h
+        ecs/include/components_behavior.h
         ecs/src/renderer.cpp
         ecs/include/renderer.h
         ecs/include/renderer.h
@@ -58,19 +58,25 @@ add_library(PnT STATIC
         ecs/src/scripting.cpp
         ecs/include/scripting.h
         renderer/include/buffer.h
+        renderer/src/buffer.cpp
         ecs/include/isystems.h
         core/include/iservices.h
         core/include/service_base.h
         core/include/service_locator.h
         renderer/include/render_system.h
-        geometry/include/mesh_data_system.h
-        geometry/src/mesh_data_system.cpp
-        geometry/include/mesh_service.h
+        geometry/include/mesh_system_conc.h
+        geometry/src/mesh_system_conc.cpp
+        geometry/include/mesh_system.h
         ecs/include/ecs_service.h
-        ecs/include/ecs_main.h
+        ecs/include/ecs_service_conc.h
         io/src/fileio.cpp
         io/include/fileio.h
-        ecs/include/component_traits.h
+        ecs/src/components_behavior.cpp
+        ecs/src/ecs_service_conc.cpp
+        scene/include/transform_system.h
+        scene/src/transform_system_conc.cpp
+        scene/include/transform_system_conc.h
+        ecs/include/entity_base.h
 )
 
 # Add the core directories for your library and dependencies
@@ -79,8 +85,9 @@ target_include_directories(PnT PUBLIC
         core/include
         ecs/include
         io/include
-        renderer/include
         geometry/include
+        renderer/include
+        scene/include
         vendors/GLEW/include
         vendors/GLFW/include
         vendors/GLM

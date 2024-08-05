@@ -5,9 +5,10 @@
 #pragma once
 
 #include "component.h"
+#include "components_behavior.h"
 
 namespace pnt::ecs{
-    class PBehaviourScriptComponent : public PComponent{
+    class PBehaviourScriptComponent : public PComponent, public ManipulativeBehaviour{
         explicit PBehaviourScriptComponent(PEntity *entity);
 
     public:
@@ -16,12 +17,6 @@ namespace pnt::ecs{
         void update(float deltaTime) override;
 
         void start() override;
-
-        template<typename T>
-        T* GetComponent();
-
-        template<typename T>
-        T* AddComponent();
     private:
         static unsigned int s_count; // All components must have this
     };

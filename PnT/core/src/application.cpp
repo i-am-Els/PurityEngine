@@ -46,8 +46,8 @@
 #include "application.h"
 #include "entity.h"
 #include "input.h"
-#include "opengl_renderer.h"
-#include "ecs_main.h"
+#include "render_system_conc.h"
+#include "ecs_service_conc.h"
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
@@ -109,7 +109,7 @@ namespace pnt{
         auto ecsService = std::make_shared<PECSService>(window.get());
 
         // Register Services
-        serviceLocator->registerService(ecsService);
+        serviceLocator->registerService<IECSService>(ecsService);
 
         // Call the init method on all the services
         serviceLocator->getService<IECSService>()->init();

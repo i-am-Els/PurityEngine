@@ -9,34 +9,21 @@ namespace pnt::ecs{
 
     unsigned int PEntity::s_count = 0;
 
-    PEntity::PEntity() : m_tags(ETags::Default), m_instanceID(++s_count) {
+    PEntity::PEntity() : PEntityBase(++s_count), m_tags(ETags::Default) {
         std::stringstream ss;
         ss << m_instanceID;
         m_name = "PEntity" + ss.str() ;
         PLog::echoMessage(m_name.c_str());
-        AddComponent<PTransformComponent>(); // sets m_transform implicitly
+        initTransform();
+        // sets m_transform
     }
 
-    PEntity::PEntity(const char* name) : m_name(name), m_tags(ETags::Default), m_instanceID(++s_count) {
-        AddComponent<PTransformComponent>(); // sets m_transform implicitly
+    void PEntity::initTransform() {
+        m_transform = AddComponent<PTransformComponent>();
     }
 
-    PEntity::PEntity(const PEntity &entity) {
-        // Implement Cloning
-    }
-
-    // Explicit instantiation of GetComponent for PTransformComponent
-    template<>
-    PTransformComponent* PEntity::GetComponent<PTransformComponent>(){
-        return m_transform.get();
-    }
-
-    // Explicit instantiation of AddComponent for PTransformComponent
-    template<>
-    PTransformComponent* PEntity::AddComponent() {
-        static_assert(std::is_base_of_v<PComponent, PTransformComponent>, "T must be a subclass of PComponent");
-        m_transform = std::make_unique<PTransformComponent>(std::forward<PEntity*>(this));
-        return m_transform.get();
+    PEntity::PEntity(const char* name) : PEntityBase(++s_count), m_name(name), m_tags(ETags::Default) {
+        initTransform(); // sets m_transform
     }
 }
 
