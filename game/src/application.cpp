@@ -4,9 +4,9 @@
 
 #include "application.h"
 #ifdef HACK_
-#include "opengl_renderer.h"
+#include "render_system_conc.h"
 #include "ecs_service.h"
-#include "ecs_main.h"
+#include "ecs_service_conc.h"
 
 using namespace pnt;
 #endif //HACK_
@@ -35,8 +35,10 @@ void Application::init() {
         auto item = dynamic_cast<PECSService *>(serviceLocator->getService<IECSService>().get());
         if (item == nullptr)
             throw "Invalid Service";
-        auto renderer = dynamic_cast<POpenGLRenderSS*>(item->renderSystem.get());
-        renderer->SetHackMeshBuffers(mesh->getVBO(), mesh->getEBO());
+        auto r = PECSService::s_getSystem<PRenderComponent>();
+        auto renderer = dynamic_cast<POpenGLRenderSS*>(r);
+        renderer->SetHackMeshBuffers(mesh->getVBO(), mesh->getEBO());   // TODO - Prevent segfault caused because mesh is null at this point.
+        // TODO - Implement the mesh systems functions for all Manipulative Behaviours
     }catch(const char* msg){
         std::cerr << "Error: " << msg << std::endl;
     }
