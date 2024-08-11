@@ -103,7 +103,7 @@ namespace pnt::graphics {
             renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity));
             return renderComponents.back().get();
         } catch (...) {
-            PLog::echoMessage(LogLevel::Error, "Add Comp Generic Assertion failed");
+            PLog::echoMessage(LogLevel::Error, "Add Render Comp Generic Assertion failed");
         }
         return nullptr;
     }
@@ -116,10 +116,9 @@ namespace pnt::graphics {
                 }
             }
         }catch(...){
-            PLog::echoMessage(LogLevel::Error, "Get Comp Generic Assertion failed");
+            PLog::echoMessage(LogLevel::Error, "Get Render Comp Generic Assertion failed");
         }
         return nullptr; // Return null pointer if component not found
-
     }
 
     void POpenGLRenderSS::RemoveComponent(PEntity *entity, PRenderComponent *component) {

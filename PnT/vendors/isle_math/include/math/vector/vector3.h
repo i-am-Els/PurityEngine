@@ -107,42 +107,50 @@
 			/**
 			 * @brief Predefined vector representing the up direction (0, 1, 0).
 			 */
-			static Vector3<T> up() { return Vector3<T>(T(0), T(1), T(0)); }
+//			static Vector3<T> up() { return Vector3<T>(T(0), T(1), T(0)); }
+			static const Vector3<T> up;
 
 			/**
 			 * @brief Predefined vector representing the forward direction (0, 0, 1).
 			 */
-			static Vector3<T> forward() { return Vector3<T>(T(0), T(0), T(1)); }
+//			static Vector3<T> forward() { return Vector3<T>(T(0), T(0), T(1)); }
+			static const Vector3<T> forward;
 
 			/**
 			 * @brief Predefined vector representing the right direction (1, 0, 0).
 			 */
-			static Vector3<T> right() { return Vector3<T>(T(1), T(0), T(0)); }
+//			static Vector3<T> right() { return Vector3<T>(T(1), T(0), T(0)); }
+			static const Vector3<T> right;
 
 			/**
 			 * @brief Predefined vector representing the zero vector (0, 0, 0).
 			 */
-			static Vector3<T> zero() { return Vector3<T>(T(0), T(0), T(0)); }
+//			static Vector3<T> zero() { return Vector3<T>(T(0), T(0), T(0)); }
+			static const Vector3<T> zero;
 
 			/**
 			 * @brief Predefined vector representing the one vector (1, 1, 1).
 			 */
-			static Vector3<T> one() { return Vector3<T>(T(1), T(1), T(1)); }
+//			static Vector3<T> one() { return Vector3<T>(T(1), T(1), T(1)); }
+			static const Vector3<T> one;
 
 			/**
 			 * @brief Predefined vector representing the up direction (0, -1, 0).
 			 */
-			static Vector3<T> down() { return Vector3<T>(T(0), T(-1), T(0)); }
+//			static Vector3<T> down() { return Vector3<T>(T(0), T(-1), T(0)); }
+			static const Vector3<T> down;
 
 			/**
 			 * @brief Predefined vector representing the forward direction (0, 0, -1).
 			 */
-			static Vector3<T> back() { return Vector3<T>(T(0), T(0), T(-1)); }
+//			static Vector3<T> back() { return Vector3<T>(T(0), T(0), T(-1)); }
+			static const Vector3<T> back;
 
 			/**
 			 * @brief Predefined vector representing the right direction (-1, 0, 0).
 			 */
-			static Vector3<T> left() { return Vector3<T>(T(-1), T(0), T(0)); }
+//			static Vector3<T> left() { return Vector3<T>(T(-1), T(0), T(0)); }
+			static const Vector3<T> left;
 
 			Vector3<T> operator/(const T& s) const;
 			Vector3<T> operator/=(const T& s);
@@ -360,7 +368,33 @@
 			return stream;
 		}
 
+
+        template <class T>
+        const Vector3<T> Vector3<T>::zero = Vector3<T>(T(0), T(0), T(0));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::one = Vector3<T>(T(1), T(1), T(1));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::up = Vector3<T>(T(0), T(1), T(0));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::forward = Vector3<T>(T(0), T(0), T(1));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::right = Vector3<T>(T(1), T(0), T(0));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::down = Vector3<T>(T(0), T(-1), T(0));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::back = Vector3<T>(T(0), T(0), T(-1));
+
+        template <class T>
+        const Vector3<T> Vector3<T>::left = Vector3<T>(T(-1), T(0), T(0));
+
 		typedef Vector3<int> Vector3i;
 		typedef Vector3<float> Vector3f;
 		typedef Vector3<double> Vector3d;
-	}
+
+    }

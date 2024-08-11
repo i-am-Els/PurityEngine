@@ -29,11 +29,26 @@ void pnt::scene::PTransformSS::destroy() {
 }
 
 PTransformComponent *pnt::scene::PTransformSS::AddComponent(PEntity *entity) {
+    try {
+        transformComponents.emplace_back(std::make_unique<PTransformComponent>(entity));
+        return transformComponents.back().get();
+    } catch (...) {
+        PLog::echoMessage(LogLevel::Error, "Add Transform Comp Generic Assertion failed");
+    }
     return nullptr;
 }
 
 PTransformComponent *pnt::scene::PTransformSS::GetComponent(unsigned int id) {
-    return nullptr;
+    try{
+        for (const auto& component : transformComponents) {
+            if (component->getID() == id) {
+                return component.get();
+            }
+        }
+    }catch(...){
+        PLog::echoMessage(LogLevel::Error, "Get Transform Comp Generic Assertion failed");
+    }
+    return nullptr; // Return null pointer if component not found
 }
 
 void pnt::scene::PTransformSS::RemoveComponent(PEntity *entity, PTransformComponent *component) {
