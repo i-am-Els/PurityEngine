@@ -43,7 +43,7 @@ void Application::init() {
         std::cerr << "Error: " << msg << std::endl;
     }
 #endif //HACK_
-    PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up);
+    PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
 
 }
 

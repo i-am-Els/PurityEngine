@@ -34,11 +34,26 @@ namespace pnt::mesh{
     }
 
     PMeshComponent *P3DGeometricMeshSS::AddComponent(PEntity *entity) {
+        try {
+            meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity));
+            return meshComponents.back().get();
+        } catch (...) {
+            PLog::echoMessage(LogLevel::Error, "Add Mesh Comp Generic Assertion failed");
+        }
         return nullptr;
     }
 
     PMeshComponent *P3DGeometricMeshSS::GetComponent(unsigned int id) {
-        return nullptr;
+        try{
+            for (const auto& component : meshComponents) {
+                if (component->getID() == id) {
+                    return component.get();
+                }
+            }
+        }catch(...){
+            PLog::echoMessage(LogLevel::Error, "Get Mesh Comp Generic Assertion failed");
+        }
+        return nullptr; // Return null pointer if component not found
     }
 
     void P3DGeometricMeshSS::RemoveComponent(PEntity *entity, PMeshComponent *component) {
