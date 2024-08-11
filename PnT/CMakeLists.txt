@@ -103,7 +103,7 @@ target_link_directories(PnT PUBLIC
         vendors/isle_math/lib
 )
 
-target_compile_definitions(PnT PUBLIC GLEW_STATIC ISLE_PLATFORM_WINDOWS)
+target_compile_definitions(PnT PUBLIC GLEW_STATIC ISLE_PLATFORM_WINDOWS ISLE_BUILD_DLL)
 
 # Link against GLFW and GLEW libraries
 target_link_libraries(PnT PUBLIC glew32s glfw3 opengl32 islemath)

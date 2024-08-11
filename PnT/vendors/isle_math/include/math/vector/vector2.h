@@ -96,32 +96,32 @@
             /**
              * @brief Predefined vector representing the up direction (0, 1).
              */
-            static Vector2<T> up(){ return Vector2<T>(T(0), T(1)); }
+            static const Vector2<T> up;
 
             /**
              * @brief Predefined vector representing the right direction (1, 0).
              */
-            static Vector2<T> right() { return Vector2<T>(T(1), T(0)); }
+            static const Vector2<T> right;
 
             /**
              * @brief Predefined vector representing the zero vector (0, 0).
              */
-            static Vector2<T> zero() { return Vector2<T>(T(0), T(0)); }
+            static const Vector2<T> zero;
 
             /**
              * @brief Predefined vector representing the one vector (1, 1).
              */
-            static Vector2<T> one() {return Vector2<T>(T(1), T(1)); }
+            static const Vector2<T> one;
 
             /**
              * @brief Predefined vector representing the up direction (0, -1).
              */
-            static Vector2<T> down() { return Vector2<T>(T(0), T(-1)); }
+            static const Vector2<T> down;
 
             /**
              * @brief Predefined vector representing the right direction (-1, 0).
              */
-            static Vector2<T> left() { return Vector2<T>(T(-1), T(0)); }
+            static const Vector2<T> left;
 
             Vector2<T> operator*(const T& s) const;
             Vector2<T> operator*=(const T& s);
@@ -318,6 +318,24 @@
             stream << "(" << v.x << ", " << v.y << ")\n";
             return stream;
         }
+
+        template <class T>
+        const Vector2<T> Vector2<T>::zero = Vector2<T>(T(0), T(0));
+
+        template <class T>
+        const Vector2<T> Vector2<T>::one = Vector2<T>(T(1), T(1));
+
+        template <class T>
+        const Vector2<T> Vector2<T>::up = Vector2<T>(T(0), T(1));
+
+        template <class T>
+        const Vector2<T> Vector2<T>::right = Vector2<T>(T(1), T(0));
+
+        template <class T>
+        const Vector2<T> Vector2<T>::down = Vector2<T>(T(0), T(-1));
+
+        template <class T>
+        const Vector2<T> Vector2<T>::left = Vector2<T>(T(-1), T(0));
 
         typedef Vector2<int> Vector2i;
         typedef Vector2<float> Vector2f;
