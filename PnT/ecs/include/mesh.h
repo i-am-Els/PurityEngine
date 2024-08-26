@@ -22,6 +22,8 @@ namespace pnt::ecs{
 
         void initBuffers();
 
+        P_GET_COMPONENT_TYPE(PComponentType::PMeshComponent)
+
 #ifdef HACK_
     inline VertexBuffer* getVBO() { return &m_vertexBuffer; }
     inline ElementBuffer* getEBO() { return &m_elementBuffer; }

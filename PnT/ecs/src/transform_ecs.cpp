@@ -35,4 +35,5 @@ namespace pnt::ecs{
     void PTransformComponent::start() {
         PComponent::start();
     }
+
 }

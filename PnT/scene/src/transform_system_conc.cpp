@@ -3,6 +3,7 @@
 //
 
 #include "transform_system_conc.h"
+#include "entity.h"
 
 void pnt::scene::PTransformSS::init() {
 
@@ -30,6 +31,12 @@ void pnt::scene::PTransformSS::destroy() {
 
 PTransformComponent *pnt::scene::PTransformSS::AddComponent(PEntity *entity) {
     try {
+        // Avoid multiple transform components on one entity
+        for (const auto& component : transformComponents){
+            if (component->getID() == entity->getInstanceId()) {
+                return component.get();
+            }
+        }
         transformComponents.emplace_back(std::make_unique<PTransformComponent>(entity));
         return transformComponents.back().get();
     } catch (...) {

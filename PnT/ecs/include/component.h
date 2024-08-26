@@ -6,10 +6,22 @@
 #pragma once
 #include "log.h"
 
+#define P_GET_COMPONENT_TYPE(type) static PComponentType s_GetStaticType() { return type; } \
+                                virtual PComponentType getComponentType() const override { return s_GetStaticType(); } \
+                                virtual const char* getName() const override { return #type; }  \
+
+
+
 namespace pnt::ecs {
 
     class PEntity; // Forward declaration
 
+    enum class PComponentType{
+        PTransformComponent,
+        PRenderComponent,
+        PMeshComponent,
+        PBehaviourScriptComponent
+    };
 
     class PComponent {
     public:
@@ -22,7 +34,12 @@ namespace pnt::ecs {
 
         [[nodiscard]] inline unsigned int getID() const{ return m_id; }
 
+        virtual PComponentType getComponentType() const = 0;
+
+        virtual const char* getName() const = 0;
+
         PEntity* m_entity;
+
     protected:
         unsigned int m_id;
     };

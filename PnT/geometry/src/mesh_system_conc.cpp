@@ -3,6 +3,7 @@
 //
 
 #include "mesh_system_conc.h"
+#include "entity.h"
 
 namespace pnt::mesh{
     void P3DGeometricMeshSS::init() {
@@ -35,6 +36,12 @@ namespace pnt::mesh{
 
     PMeshComponent *P3DGeometricMeshSS::AddComponent(PEntity *entity) {
         try {
+            // Avoid multiple mesh components on one entity
+            for (const auto& component : meshComponents){
+                if (component->getID() == entity->getInstanceId()) {
+                    return component.get();
+                }
+            }
             meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity));
             return meshComponents.back().get();
         } catch (...) {
