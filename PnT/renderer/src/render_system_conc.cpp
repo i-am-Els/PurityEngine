@@ -6,6 +6,7 @@
 #include "log.h"
 #include "data_hash_table.h"
 #include "fileio.h"
+#include "entity.h"
 
 namespace pnt::graphics {
 
@@ -100,6 +101,12 @@ namespace pnt::graphics {
 
     PRenderComponent *POpenGLRenderSS::AddComponent(PEntity *entity) {
         try {
+            // Avoid multiple render components on one entity
+            for (const auto& component : renderComponents){
+                if (component->getID() == entity->getInstanceId()) {
+                    return component.get();
+                }
+            }
             renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity));
             return renderComponents.back().get();
         } catch (...) {
@@ -110,6 +117,7 @@ namespace pnt::graphics {
 
     PRenderComponent *POpenGLRenderSS::GetComponent(unsigned int id) {
         try{
+            // Get the Component that has the same id as the entity, we use that because only one component type can be on the entity.
             for (const auto& component : renderComponents) {
                 if (component->getID() == id) {
                     return component.get();
@@ -138,6 +146,6 @@ namespace pnt::graphics {
     }
 
     std::vector<PRenderComponent *> POpenGLRenderSS::FindComponentsByTag(PEntity *entity, std::string tag) {
-        return std::vector<PRenderComponent *>();
+        return {};
     }
 }

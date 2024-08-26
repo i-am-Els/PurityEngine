@@ -41,13 +41,18 @@ namespace pnt::ecs{
         PEntity* getEntity();
         unsigned int getIDFromEntity(PEntity* entity);
         PEntity* getEntityFromBehaviour();
-        PEntityBase *getEntityBase(PEntity *entity) const;
+        PEntityBase* getEntityBase(PEntity *entity) const;
+        PTransformComponent* getTransform(PEntity* entity) const;
 
         template<typename T>
-        T *getComp(ISystem<T> *pSystem, PEntity *entity, const char *exception_message);
+        T* getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message);
 
         template<typename T>
-        void removeComponentFromEntity(PEntityBase *entity_base, T *component) const;
+        void removeComponentFromEntityContainer(PEntityBase *entity_base, T *component) const;
+
+        template<typename T>
+        inline T* getComponentFromEntityContainer(PEntity *entity);
+
     };
 
     template<typename T>
@@ -104,12 +109,12 @@ namespace pnt::ecs{
         auto entity = getEntity();
         if (entity != nullptr) {
             pSystem->RemoveComponentByTag(entity, component, tag);
-            removeComponentFromEntity(getEntityBase(entity), component);
+            removeComponentFromEntityContainer(getEntityBase(entity), component);
         }else {
             entity = getEntityFromBehaviour();
             if (entity != nullptr) {
                 pSystem->RemoveComponentByTag(entity, component, tag);
-                removeComponentFromEntity(getEntityBase(entity), component);
+                removeComponentFromEntityContainer(getEntityBase(entity), component);
             }
         }
     }
@@ -121,12 +126,12 @@ namespace pnt::ecs{
         auto entity = getEntity();
         if (entity != nullptr && component != nullptr) {
             pSystem->RemoveComponent(entity, component);
-            removeComponentFromEntity(getEntityBase(entity), component);
+            removeComponentFromEntityContainer(getEntityBase(entity), component);
         }else {
             entity = getEntityFromBehaviour();
             if (entity != nullptr && component != nullptr) {
                 pSystem->RemoveComponent(entity, component);
-                removeComponentFromEntity(getEntityBase(entity), component);
+                removeComponentFromEntityContainer(getEntityBase(entity), component);
             }
         }
     }
@@ -134,18 +139,19 @@ namespace pnt::ecs{
     template<typename T>
     T *ManipulativeBehaviour::GetComponent() {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
-        ISystem<T>* pSystem = PECSService::s_getSystem<T>();
         auto entity = getEntity();
         if (entity != nullptr) {
-            return pSystem->GetComponent(getIDFromEntity(entity));
+            return getComponentFromEntityContainer<T>(entity);
         }else {
             entity = getEntityFromBehaviour();
             if (entity != nullptr) {
-                return pSystem->GetComponent(getIDFromEntity(entity));
+                return getComponentFromEntityContainer<T>(entity);
             }
         }
         return nullptr;
+
     }
+
 
     template<typename T>
     T *ManipulativeBehaviour::AddComponent() {
@@ -153,14 +159,17 @@ namespace pnt::ecs{
         ISystem<T>* pSystem = PECSService::s_getSystem<T>();
 
         try{
-            auto entity = getEntity();
+            PEntity *entity;
+            entity = getEntity();
             if (entity != nullptr) {
-                return getComp<T>(pSystem, entity, "Component from entity call is not valid");
+                return getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
+                                                                   "Component from entity call is not valid");
             }
             else {
                 entity = getEntityFromBehaviour();
                 if (entity != nullptr) {
-                    return getComp<T>(pSystem, entity, "Component from script call is not valid");
+                    return getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
+                                                                       "Component from script call is not valid");
                 }
             }
         }catch(const char* e) {
@@ -171,7 +180,7 @@ namespace pnt::ecs{
     }
 
     template<typename T>
-    T *ManipulativeBehaviour::getComp(ISystem<T> *pSystem, PEntity *entity, const char *exception_message) {
+    T *ManipulativeBehaviour::getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message) {
         auto comp = pSystem->AddComponent(entity);
         if (comp == nullptr)
             throw exception_message;
@@ -181,11 +190,47 @@ namespace pnt::ecs{
     }
 
     template<typename T>
-    void ManipulativeBehaviour::removeComponentFromEntity(PEntityBase *entity_base, T *component) const {
+    void ManipulativeBehaviour::removeComponentFromEntityContainer(PEntityBase *entity_base, T *component) const {
         auto it = std::find(entity_base->m_components.begin(), entity_base->m_components.end(), component);
         if (it != entity_base->m_components.end()) {
             entity_base->m_components.erase(it);
         }
+    }
+
+    template<typename T>
+    inline T *ManipulativeBehaviour::getComponentFromEntityContainer(PEntity *entity) {
+        auto entityBase = getEntityBase(entity);
+        try{
+            for (const auto& component : entityBase->m_components) {
+                auto derived = dynamic_cast<T*>(component);
+                if (derived == nullptr) continue;
+                return derived;
+            }
+        }catch(...){
+            PLog::echoMessage(LogLevel::Error, "Get Generic Comp from Entity Container Assertion failed");
+        }
+        return nullptr;
+    }
+
+    template<>
+    inline PTransformComponent *ManipulativeBehaviour::getComponentFromEntityContainer(PEntity *entity) {
+        PTransformComponent* transform = getTransform(entity);
+        if (transform != nullptr)
+        {
+            return transform;
+        }
+
+        auto entityBase = getEntityBase(entity);
+        try{
+            for (const auto& component : entityBase->m_components) {
+                auto derived = dynamic_cast<PTransformComponent*>(component);
+                if (derived == nullptr) continue;
+                return derived;
+            }
+        }catch(...){
+            PLog::echoMessage(LogLevel::Error, "Get Generic Comp from Entity Container Assertion failed");
+        }
+        return nullptr;
     }
 }
 

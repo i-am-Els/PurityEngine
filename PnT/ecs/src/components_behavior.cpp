@@ -23,4 +23,8 @@ namespace pnt::ecs{
     PEntityBase *ManipulativeBehaviour::getEntityBase(PEntity *entity) const {
         return dynamic_cast<PEntityBase*>(entity);
     }
+
+    PTransformComponent *ManipulativeBehaviour::getTransform(PEntity *entity) const {
+        return entity->m_transform;
+    }
 }
