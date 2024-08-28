@@ -38,20 +38,25 @@ namespace pnt::ecs{
         T *AddComponent();
 
     private:
-        PEntity* getEntity();
-        unsigned int getIDFromEntity(PEntity* entity);
-        PEntity* getEntityFromBehaviour();
-        PEntityBase* getEntityBase(PEntity *entity) const;
-        PTransformComponent* getTransform(PEntity* entity) const;
+        class PImpl_ComponentBehaviour{
+        public:
+            PEntity* getEntity(ManipulativeBehaviour* behaviourOwner);
+            unsigned int getIDFromEntity(PEntity* entity);
+            PEntity* getEntityFromBehaviour(ManipulativeBehaviour* behaviourOwner);
+            PEntityBase* getEntityBase(PEntity *entity) const;
+            PTransformComponent* getTransform(PEntity* entity) const;
 
-        template<typename T>
-        T* getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message);
+            template<typename T>
+            T* getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message);
 
-        template<typename T>
-        void removeComponentFromEntityContainer(PEntityBase *entity_base, T *component) const;
+            template<typename T>
+            void removeComponentFromEntityContainer(PEntityBase *entity_base, T *component) const;
 
-        template<typename T>
-        inline T* getComponentFromEntityContainer(PEntity *entity);
+            template<typename T>
+            inline T* getComponentFromEntityContainer(PEntity *entity);
+        };
+
+        PImpl_ComponentBehaviour behaviour;
 
     };
 
@@ -59,11 +64,11 @@ namespace pnt::ecs{
     std::vector<T *>ManipulativeBehaviour::FindComponentsByTag(const std::string &tag) {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
         ISystem<T>* pSystem = PECSService::s_getSystem<T>();
-        auto entity = getEntity();
+        auto entity = behaviour.getEntity(this);
         if (entity != nullptr) {
             return pSystem->FindComponentsByTag(entity, tag);
         }else {
-            entity = getEntityFromBehaviour();
+            entity = behaviour.getEntityFromBehaviour(this);
             if (entity != nullptr) {
                 return pSystem->FindComponentsByTag(entity, tag);
             }
@@ -75,11 +80,11 @@ namespace pnt::ecs{
     T *ManipulativeBehaviour::FindComponentByTag(const std::string & tag) {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
         ISystem<T>* pSystem = PECSService::s_getSystem<T>();
-        auto entity = getEntity();
+        auto entity = behaviour.getEntity(this);
         if (entity != nullptr) {
             return pSystem->FindComponentByTag(entity, tag);
         }else {
-            entity = getEntityFromBehaviour();
+            entity = behaviour.getEntityFromBehaviour(this);
             if (entity != nullptr) {
                 return pSystem->FindComponentByTag(entity, tag);
             }
@@ -91,11 +96,11 @@ namespace pnt::ecs{
     void ManipulativeBehaviour::RemoveComponentsByTag(const std::string & tag) {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
         ISystem<T>* pSystem = PECSService::s_getSystem<T>();
-        auto entity = getEntity();
+        auto entity = behaviour.getEntity(this);
         if (entity != nullptr) {
             pSystem->RemoveComponentsByTag(entity, tag);
         }else {
-            entity = getEntityFromBehaviour();
+            entity = behaviour.getEntityFromBehaviour(this);
             if (entity != nullptr) {
                 pSystem->RemoveComponentsByTag(entity, tag);
             }
@@ -106,15 +111,15 @@ namespace pnt::ecs{
     void ManipulativeBehaviour::RemoveComponentByTag(T *component, const std::string &tag) {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
         ISystem<T>* pSystem = PECSService::s_getSystem<T>();
-        auto entity = getEntity();
+        auto entity = behaviour.getEntity(this);
         if (entity != nullptr) {
             pSystem->RemoveComponentByTag(entity, component, tag);
-            removeComponentFromEntityContainer(getEntityBase(entity), component);
+            removeComponentFromEntityContainer(behaviour.getEntityBase(entity), component);
         }else {
-            entity = getEntityFromBehaviour();
+            entity = behaviour.getEntityFromBehaviour(this);
             if (entity != nullptr) {
                 pSystem->RemoveComponentByTag(entity, component, tag);
-                removeComponentFromEntityContainer(getEntityBase(entity), component);
+                removeComponentFromEntityContainer(behaviour.getEntityBase(entity), component);
             }
         }
     }
@@ -123,15 +128,15 @@ namespace pnt::ecs{
     void ManipulativeBehaviour::RemoveComponent(T *component) {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
         ISystem<T>* pSystem = PECSService::s_getSystem<T>();
-        auto entity = getEntity();
+        auto entity = behaviour.getEntity(this);
         if (entity != nullptr && component != nullptr) {
             pSystem->RemoveComponent(entity, component);
-            removeComponentFromEntityContainer(getEntityBase(entity), component);
+            removeComponentFromEntityContainer(behaviour.getEntityBase(entity), component);
         }else {
-            entity = getEntityFromBehaviour();
+            entity = behaviour.getEntityFromBehaviour(this);
             if (entity != nullptr && component != nullptr) {
                 pSystem->RemoveComponent(entity, component);
-                removeComponentFromEntityContainer(getEntityBase(entity), component);
+                removeComponentFromEntityContainer(behaviour.getEntityBase(entity), component);
             }
         }
     }
@@ -139,19 +144,18 @@ namespace pnt::ecs{
     template<typename T>
     T *ManipulativeBehaviour::GetComponent() {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
-        auto entity = getEntity();
+        auto entity = behaviour.getEntity(this);
         if (entity != nullptr) {
-            return getComponentFromEntityContainer<T>(entity);
+            return behaviour.getComponentFromEntityContainer<T>(entity);
         }else {
-            entity = getEntityFromBehaviour();
+            entity = behaviour.getEntityFromBehaviour(this);
             if (entity != nullptr) {
-                return getComponentFromEntityContainer<T>(entity);
+                return behaviour.getComponentFromEntityContainer<T>(entity);
             }
         }
         return nullptr;
 
     }
-
 
     template<typename T>
     T *ManipulativeBehaviour::AddComponent() {
@@ -160,15 +164,15 @@ namespace pnt::ecs{
 
         try{
             PEntity *entity;
-            entity = getEntity();
+            entity = behaviour.getEntity(this);
             if (entity != nullptr) {
-                return getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
+                return behaviour.getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
                                                                    "Component from entity call is not valid");
             }
             else {
-                entity = getEntityFromBehaviour();
+                entity = behaviour.getEntityFromBehaviour(this);
                 if (entity != nullptr) {
-                    return getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
+                    return behaviour.getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
                                                                        "Component from script call is not valid");
                 }
             }
@@ -180,7 +184,7 @@ namespace pnt::ecs{
     }
 
     template<typename T>
-    T *ManipulativeBehaviour::getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message) {
+    T *ManipulativeBehaviour::PImpl_ComponentBehaviour::getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message) {
         auto comp = pSystem->AddComponent(entity);
         if (comp == nullptr)
             throw exception_message;
@@ -190,7 +194,7 @@ namespace pnt::ecs{
     }
 
     template<typename T>
-    void ManipulativeBehaviour::removeComponentFromEntityContainer(PEntityBase *entity_base, T *component) const {
+    void ManipulativeBehaviour::PImpl_ComponentBehaviour::removeComponentFromEntityContainer(PEntityBase *entity_base, T *component) const {
         auto it = std::find(entity_base->m_components.begin(), entity_base->m_components.end(), component);
         if (it != entity_base->m_components.end()) {
             entity_base->m_components.erase(it);
@@ -198,7 +202,7 @@ namespace pnt::ecs{
     }
 
     template<typename T>
-    inline T *ManipulativeBehaviour::getComponentFromEntityContainer(PEntity *entity) {
+    inline T *ManipulativeBehaviour::PImpl_ComponentBehaviour::getComponentFromEntityContainer(PEntity *entity) {
         auto entityBase = getEntityBase(entity);
         try{
             for (const auto& component : entityBase->m_components) {
@@ -213,7 +217,7 @@ namespace pnt::ecs{
     }
 
     template<>
-    inline PTransformComponent *ManipulativeBehaviour::getComponentFromEntityContainer(PEntity *entity) {
+    inline PTransformComponent *ManipulativeBehaviour::PImpl_ComponentBehaviour::getComponentFromEntityContainer(PEntity *entity) {
         PTransformComponent* transform = getTransform(entity);
         if (transform != nullptr)
         {
