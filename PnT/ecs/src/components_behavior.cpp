@@ -8,23 +8,23 @@
 
 namespace pnt::ecs{
 
-    PEntity *ManipulativeBehaviour::getEntity() {
-        return dynamic_cast<PEntity*>(this);
+    PEntity *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntity(ManipulativeBehaviour* behaviourOwner) {
+        return dynamic_cast<PEntity*>(behaviourOwner);
     }
 
-    PEntity *ManipulativeBehaviour::getEntityFromBehaviour() {
-        return dynamic_cast<PBehaviourScriptComponent*>(this)->m_entity;
+    PEntity *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityFromBehaviour(ManipulativeBehaviour* behaviourOwner) {
+        return dynamic_cast<PBehaviourScriptComponent*>(behaviourOwner)->m_entity;
     }
 
-    unsigned int ManipulativeBehaviour::getIDFromEntity(PEntity* entity) {
+    unsigned int ManipulativeBehaviour::PImpl_ComponentBehaviour::getIDFromEntity(PEntity* entity) {
         return entity->getInstanceId();
     }
 
-    PEntityBase *ManipulativeBehaviour::getEntityBase(PEntity *entity) const {
+    PEntityBase *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityBase(PEntity *entity) const {
         return dynamic_cast<PEntityBase*>(entity);
     }
 
-    PTransformComponent *ManipulativeBehaviour::getTransform(PEntity *entity) const {
+    PTransformComponent *ManipulativeBehaviour::PImpl_ComponentBehaviour::getTransform(PEntity *entity) const {
         return entity->m_transform;
     }
 }
