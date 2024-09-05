@@ -3,7 +3,7 @@
 //
 
 #include "vertex_array.h"
-#include "glew.h"
+#include "glad/glad.h"
 #include "log.h"
 
 namespace pnt::graphics{

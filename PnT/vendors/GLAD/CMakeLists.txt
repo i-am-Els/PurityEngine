@@ -5,18 +5,17 @@
 # Tasks are added as separate sub-projects so as compilation errors in
 # one task don't affect another task.
 
-# Minimum required version of CMake
 cmake_minimum_required(VERSION 3.26)
-
-# Define the project name
 project(Police_n_Thief)
 
-
-# Set the C++ standard (adjust as needed)
 set(CMAKE_CXX_STANDARD 17)
 
-# Add the "PnT" library subdirectory
-add_subdirectory(PnT)
+# Build the math src to static library
+add_library(
+        glad
+        SHARED
+        include/glad/glad.h
+        src/glad.c
+)
 
-# Add the "game" executable subdirectory
-add_subdirectory(game)
+target_include_directories(glad PUBLIC include)

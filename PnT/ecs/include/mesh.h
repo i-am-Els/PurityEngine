@@ -12,9 +12,13 @@
 using namespace pnt::graphics;
 
 namespace pnt::ecs{
+    struct SMeshProfile{
+        bool isVisible;
+    };
+
     class PMeshComponent : public PComponent{
     public:
-        explicit PMeshComponent(PEntity *entity);
+        explicit PMeshComponent(PEntity *entity, SMeshProfile profile);
         ~PMeshComponent() override { PLog::echoMessage("Destroying mesh"); }
 
         void update(float deltaTime) override;
@@ -23,6 +27,7 @@ namespace pnt::ecs{
         void initBuffers();
 
         P_GET_COMPONENT_TYPE(PComponentType::PMeshComponent)
+        SMeshProfile m_MeshProfile;
 
 #ifdef HACK_
     inline VertexBuffer* getVBO() { return &m_vertexBuffer; }

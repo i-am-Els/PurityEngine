@@ -22,10 +22,3 @@ target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
 target_link_libraries(Game PRIVATE PnT)
-
-
-add_custom_command(TARGET Game POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_SOURCE_DIR}/PnT/vendors/isle_math/lib/libislemath.dll  # Copy libislemath.dll to output directory
-        $<TARGET_FILE_DIR:Game>  # Destination directory for libisle.dll
-)

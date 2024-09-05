@@ -9,8 +9,9 @@ namespace pnt::ecs{
 
     unsigned int PRenderComponent::s_count = 0;
 
-    PRenderComponent::PRenderComponent(PEntity *entity) : PComponent(entity) {
+    PRenderComponent::PRenderComponent(PEntity *entity, SRenderProfile profile) : PComponent(entity) {
         m_id = ++s_count;
+        m_RenderProfile = profile;
     }
 
     void PRenderComponent::update(float deltaTime) {

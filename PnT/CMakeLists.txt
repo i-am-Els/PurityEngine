@@ -12,20 +12,28 @@ project(Police_n_Thief)
 set(CMAKE_CXX_STANDARD 17)
 
 # Define your source files in src/
-file(GLOB_RECURSE SOURCES "*.cpp")
+file(GLOB_RECURSE SOURCES "*.cpp" "*.c")
 
 option(ON_HACK "Turn on Hack Mode" ON)
 if(ON_HACK)
     add_compile_definitions(HACK_)
 endif()
 
+option(PNT_ACTIVATE_ASSERTION "Use assertions" ON)
+if (PNT_ACTIVATE_ASSERTION)
+    add_compile_definitions(PNT_ENABLE_ASSERT)
+endif()
+
+add_subdirectory(vendors/GLAD)
+add_subdirectory(vendors/isle_math)
+
 # Specify header files to core (all .h files in the core directory)
-file(GLOB_RECURSE HEADERS
-        "${CMAKE_CURRENT_SOURCE_DIR}/core/include/*.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLEW/include/*.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLFW/include/*.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/isle_math/include/*.h"
-)
+#file(GLOB_RECURSE HEADERS
+#        "${CMAKE_CURRENT_SOURCE_DIR}/core/include/*.h"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLAD/include/*.h"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLFW/include/*.h"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/isle_math/include/*.h"
+#)
 
 # Create the PnT library
 add_library(PnT STATIC
@@ -77,6 +85,8 @@ add_library(PnT STATIC
         scene/src/transform_system_conc.cpp
         scene/include/transform_system_conc.h
         ecs/include/entity_base.h
+        core/include/core_macros.h
+        core/include/pnt_core_pch.h
 )
 
 # Add the core directories for your library and dependencies
@@ -88,25 +98,21 @@ target_include_directories(PnT PUBLIC
         geometry/include
         renderer/include
         scene/include
-        vendors/GLEW/include
+        vendors/GLAD/include
         vendors/GLFW/include
-        vendors/GLM
-        vendors/isle_math/include
-        vendors/isle_math/include/math
-        vendors/isle_math/include/math/vector
-        vendors/isle_math/include/math/matrix
+#        vendors/GLM
+#        vendors/isle_math/include
+#        vendors/isle_math/include/math
+#        vendors/isle_math/include/math/vector
+#        vendors/isle_math/include/math/matrix
 )
 
-target_link_directories(PnT PUBLIC
-        vendors/GLEW/lib
-        vendors/GLFW/lib
-        vendors/isle_math/lib
-)
-
-target_compile_definitions(PnT PUBLIC GLEW_STATIC ISLE_PLATFORM_WINDOWS ISLE_BUILD_DLL)
+target_compile_definitions(PnT PUBLIC ISLE_PLATFORM_WINDOWS ISLE_BUILD_DLL GLFW_INCLUDE_NONE)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT PUBLIC glew32s glfw3 opengl32 islemath)
+target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath)
+
+target_precompile_headers(PnT INTERFACE core/include/pnt_core_pch.h)
 
 # Set the output directory for the library
 set_target_properties(PnT PROPERTIES
@@ -115,10 +121,20 @@ set_target_properties(PnT PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/shared/lib
 )
 
+include(FetchContent)
+# Fetch GLFW
+FetchContent_Declare(
+        glfw
+        GIT_REPOSITORY https://github.com/glfw/glfw
+        GIT_TAG 3.3.1
+)
+
+FetchContent_MakeAvailable(glfw)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
 # Install header files to shared/core directory
 install(FILES ${HEADERS} DESTINATION ${CMAKE_SOURCE_DIR}/shared/include)
 
-### ISLE MATH definitions
-target_precompile_headers(PnT PUBLIC
-        vendors/isle_math/include/isle_pch.h
-)

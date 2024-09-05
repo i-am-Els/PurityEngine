@@ -107,7 +107,8 @@ namespace pnt::graphics {
                     return component.get();
                 }
             }
-            renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity));
+            SRenderProfile profile = {true}; // Set the profile of the render component, through the DTO
+            renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity, profile));
             return renderComponents.back().get();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Render Comp Generic Assertion failed");

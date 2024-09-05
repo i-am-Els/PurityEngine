@@ -5,7 +5,7 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "glew.h"
+#include "glad/glad.h"
 
 namespace pnt::graphics
 {

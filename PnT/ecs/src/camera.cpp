@@ -17,7 +17,7 @@ namespace pnt::ecs
 
     }
 
-    PCameraComponent::PCameraComponent(PEntity *entity, const pnt::ecs::CameraProperties &prop) : PComponent(entity),
+    PCameraComponent::PCameraComponent(PEntity *entity, const pnt::ecs::SCameraProfile &prop) : PComponent(entity),
                                                                                                   width(prop.width),
                                                                                                   height(prop.height),
                                                                                                   position(prop.position)

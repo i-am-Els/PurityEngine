@@ -38,11 +38,12 @@ namespace pnt::mesh{
         try {
             // Avoid multiple mesh components on one entity
             for (const auto& component : meshComponents){
-                if (component->getID() == entity->getInstanceId()) {
+                if (component != nullptr && component->getID() == entity->getInstanceId()) {
                     return component.get();
                 }
             }
-            meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity));
+            SMeshProfile profile = {true};
+            meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity, profile));
             return meshComponents.back().get();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Mesh Comp Generic Assertion failed");

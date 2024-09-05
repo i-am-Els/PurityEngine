@@ -30,7 +30,6 @@ namespace pnt::graphics{
     public:
         explicit POpenGLRenderSS(GLFWwindow*& window);
         ~POpenGLRenderSS() override;
-//        POpenGLRenderSS(const POpenGLRenderSS& renderer) = delete; // Can't copy because shader here is a unique ptr
         POpenGLRenderSS(POpenGLRenderSS&& renderer) = default;
 
         void init() override;
@@ -43,24 +42,22 @@ namespace pnt::graphics{
         void setUpShader() override;
         void SwapBuffers() override;
 
-        /// TODO - Hack - To be scraped
-#ifdef HACK_
-            VertexBuffer* _vbo;
-            ElementBuffer* _ebo;
+        VertexBuffer* _vbo;
+        ElementBuffer* _ebo;
 
-            inline void SetHackMeshBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
-                try{
-                    if (vbo == nullptr || ebo == nullptr){
-                        throw -1;
-                    }
+        inline void SetHackMeshBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
+            try{
+                if (vbo == nullptr || ebo == nullptr){
+                    throw -1;
+                }
 
-                    this->_vbo = vbo;
-                    this->_ebo = ebo;
-                }
-                catch (int e){
-                    PLog::echoMessage(LogLevel::Error, "Null Incoming Buffers");
-                }
+                this->_vbo = vbo;
+                this->_ebo = ebo;
             }
+            catch (int e){
+                PLog::echoMessage(LogLevel::Error, "Null Incoming Buffers");
+            }
+        }
 
         PRenderComponent *AddComponent(PEntity* entity) override;
 
@@ -75,9 +72,6 @@ namespace pnt::graphics{
         PRenderComponent *FindComponentByTag(PEntity* entity, std::string tag) override;
 
         std::vector<PRenderComponent *> FindComponentsByTag(PEntity* entity, std::string tag) override;
-
-#endif //HACK_
-            // Hack - To be scraped
 
     private:
         std::vector<std::unique_ptr<PRenderComponent>> renderComponents;
