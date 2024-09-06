@@ -4,13 +4,15 @@
 
 #include "transform_ecs.h"
 
+#include <utility>
+
 namespace pnt::ecs{
     unsigned int PTransformComponent::s_count = 0;
 
-    PTransformComponent::PTransformComponent(PEntity *entity, STransformProfile profile) : PComponent(entity) {
+    PTransformComponent::PTransformComponent(PEntity *entity, STransformProfile profile) : PComponent(entity) ,
+                                                                                           m_TransformProfile(std::move(profile)){
         m_id = ++s_count;
         m_parent = nullptr;
-        m_TransformProfile = profile;
     }
 
     void PTransformComponent::Translate(const Vector3f& delta, bool isWorld) {

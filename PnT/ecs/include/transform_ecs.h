@@ -15,7 +15,7 @@ namespace pnt::ecs{
         Vector3f Position;
         Vector3f Rotation;
         Vector3f Scale;
-//        Transform Parent;
+        Transform Parent;
     };
 
     class PTransformComponent : public PComponent {

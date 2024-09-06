@@ -37,8 +37,8 @@ PTransformComponent *pnt::scene::PTransformSS::AddComponent(PEntity *entity) {
                 return component.get();
             }
         }
-        STransformProfile profile = {Vector3f ::zero, Vector3f::zero, Vector3f::one};
-        transformComponents.emplace_back(std::make_unique<PTransformComponent>(entity, profile));
+
+        transformComponents.emplace_back(std::make_unique<PTransformComponent>(entity, STransformProfile{Vector3f ::zero, Vector3f::zero, Vector3f::one}));
         return transformComponents.back().get();
     } catch (...) {
         PLog::echoMessage(LogLevel::Error, "Add Transform Comp Generic Assertion failed");

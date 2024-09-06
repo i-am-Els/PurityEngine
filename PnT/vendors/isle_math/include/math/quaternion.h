@@ -24,13 +24,13 @@ namespace isle_engine::math
 
         Quaternion<T>& operator=(const Quaternion<T>& q);
         Quaternion<T> operator*(const Quaternion<T>& q) const;
-        Quaternion<T> operator*=(const Quaternion<T>& q) const;
+        Quaternion<T>& operator*=(const Quaternion<T>& q) const;
         Quaternion<T> operator*(T s);
-        Quaternion<T> operator*=(T s);
+        Quaternion<T>& operator*=(T s);
         Quaternion<T> operator+(const Quaternion<T>& q) const;
-        Quaternion<T> operator+=(const Quaternion<T>& q) const;
+        Quaternion<T>& operator+=(const Quaternion<T>& q) const;
         Quaternion<T> operator-(const Quaternion<T>& q) const;
-        Quaternion<T> operator-=(const Quaternion<T>& q) const;
+        Quaternion<T>& operator-=(const Quaternion<T>& q) const;
 
 
         void negate();
@@ -60,7 +60,6 @@ namespace isle_engine::math
 
     template<class T>
     Quaternion<T>::Quaternion() : w(T(0)), x(T(0)), y(T(0)), z(T(0)) {
-
     }
 
     template<class T>
@@ -107,12 +106,10 @@ namespace isle_engine::math
 
     template<class T>
     Quaternion<T>& Quaternion<T>::operator=(const Quaternion<T> &q) {
-        if (this == &q) {
-            return *this;
-        }
-
-        Quaternion<T> temp(q);
-        std::swap(*this, temp);
+        w = q.w;
+        x = q.x;
+        y = q.y;
+        z = q.z;
         return *this;
     }
 
@@ -122,7 +119,7 @@ namespace isle_engine::math
     }
 
     template<class T>
-    Quaternion<T> Quaternion<T>::operator*=(const Quaternion<T> &q) const{
+    Quaternion<T>& Quaternion<T>::operator*=(const Quaternion<T> &q) const{
         *this = s_multiply(*this, q);
         return *this;
     }
@@ -133,7 +130,7 @@ namespace isle_engine::math
     }
 
     template<class T>
-    Quaternion<T> Quaternion<T>::operator*=(T s) {
+    Quaternion<T>& Quaternion<T>::operator*=(T s) {
         w *= s;
         x *= s;
         y *= s;
@@ -147,7 +144,7 @@ namespace isle_engine::math
     }
 
     template<class T>
-    Quaternion<T> Quaternion<T>::operator+=(const Quaternion<T> &q) const{
+    Quaternion<T>& Quaternion<T>::operator+=(const Quaternion<T> &q) const{
         w += q.w;
         x += q.x;
         y += q.y;
@@ -161,7 +158,7 @@ namespace isle_engine::math
     }
 
     template<class T>
-    Quaternion<T> Quaternion<T>::operator-=(const Quaternion<T> &q) const{
+    Quaternion<T>& Quaternion<T>::operator-=(const Quaternion<T> &q) const{
         w -= q.w;
         x -= q.x;
         y -= q.y;
