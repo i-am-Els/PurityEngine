@@ -12,7 +12,7 @@ project(Police_n_Thief)
 set(CMAKE_CXX_STANDARD 17)
 
 # Define your source files in src/
-file(GLOB_RECURSE SOURCES "*.cpp" "*.c")
+file(GLOB_RECURSE SOURCES "*.cpp")
 
 option(ON_HACK "Turn on Hack Mode" ON)
 if(ON_HACK)
@@ -27,7 +27,7 @@ endif()
 add_subdirectory(vendors/GLAD)
 add_subdirectory(vendors/isle_math)
 
-# Specify header files to core (all .h files in the core directory)
+## Specify header files to core (all .h files in the core directory)
 #file(GLOB_RECURSE HEADERS
 #        "${CMAKE_CURRENT_SOURCE_DIR}/core/include/*.h"
 #        "${CMAKE_CURRENT_SOURCE_DIR}/vendors/GLAD/include/*.h"
@@ -37,6 +37,7 @@ add_subdirectory(vendors/isle_math)
 
 # Create the PnT library
 add_library(PnT STATIC
+        core/include/pnt_core_pch.h
         ${SOURCES}
         ${HEADERS}
         ecs/src/camera.cpp
@@ -86,7 +87,7 @@ add_library(PnT STATIC
         scene/include/transform_system_conc.h
         ecs/include/entity_base.h
         core/include/core_macros.h
-        core/include/pnt_core_pch.h
+        core/include/window_pnt.h
 )
 
 # Add the core directories for your library and dependencies
@@ -112,7 +113,7 @@ target_compile_definitions(PnT PUBLIC ISLE_PLATFORM_WINDOWS ISLE_BUILD_DLL GLFW_
 # Link against GLFW and GLEW libraries
 target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath)
 
-target_precompile_headers(PnT INTERFACE core/include/pnt_core_pch.h)
+target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
 # Set the output directory for the library
 set_target_properties(PnT PROPERTIES

@@ -12,13 +12,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 file(GLOB SOURCE_FILES
         "src/*.cpp"
-        "src/*.c"
 )
 
 # Build the math src to static library (library name = "islemath")
 add_library(
         islemath
         SHARED
+        include/isle_pch.h
         ${SOURCE_FILES}
         include/math/math_utils.h
         include/math/matrix/matrix2.h
@@ -39,7 +39,6 @@ add_library(
         include/math/islemath.h
         include/array_util.h
         include/core.h
-        include/isle_pch.h
         include/string_util.h
         src/isle_pch.cpp
         src/basis.cpp

@@ -3,7 +3,9 @@
 //
 
 #pragma once
+
 #include "pnt_core_pch.h"
+
 #include "core_macros.h"
 #include "glad/glad.h"
 #include "glfw3.h"
