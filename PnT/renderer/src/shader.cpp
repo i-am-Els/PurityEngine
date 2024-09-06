@@ -3,7 +3,6 @@
 //
 
 #include "shader.h"
-#include "glew.h"
 #include "log.h"
 #include <iostream>
 #include <memory>

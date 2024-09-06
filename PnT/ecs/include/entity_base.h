@@ -15,6 +15,7 @@ namespace pnt::ecs{
         explicit PEntityBase(unsigned int mInstanceId) : m_instanceID(mInstanceId) {}
 
         [[nodiscard]] inline unsigned int getInstanceId() const { return m_instanceID; };
+
     protected:
         unsigned int m_instanceID{};
         std::vector<PComponent*> m_components;

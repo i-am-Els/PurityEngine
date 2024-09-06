@@ -6,7 +6,7 @@
 
 #include <vector>
 #include "islemath.h"
-#include "glew.h"
+#include "glad/glad.h"
 #include "log.h"
 
 using namespace isle_engine::math;

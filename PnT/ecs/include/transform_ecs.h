@@ -10,9 +10,17 @@
 using namespace isle_engine::math;
 
 namespace pnt::ecs{
+
+    struct STransformProfile{
+        Vector3f Position;
+        Vector3f Rotation;
+        Vector3f Scale;
+//        Transform Parent;
+    };
+
     class PTransformComponent : public PComponent {
     public:
-        explicit PTransformComponent(PEntity *entity);
+        explicit PTransformComponent(PEntity *entity, STransformProfile profile);
 
         ~PTransformComponent() override { PLog::echoMessage("Destroying transform"); };
 
@@ -62,6 +70,8 @@ namespace pnt::ecs{
 
         /// @brief The Parent transform of the entity that this component is attached to
         PTransformComponent* m_parent;
+
+        STransformProfile m_TransformProfile;
 
         void update(float deltaTime) override;
         void start() override;

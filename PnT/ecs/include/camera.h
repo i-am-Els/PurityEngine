@@ -11,7 +11,7 @@ using namespace isle_engine::math;
 
 namespace pnt::ecs{
 
-    struct CameraProperties{
+    struct SCameraProfile{
         unsigned int width;
         unsigned int height;
         Vector2i position;
@@ -21,7 +21,7 @@ namespace pnt::ecs{
     public:
         explicit PCameraComponent(PEntity *entity);
         PCameraComponent(PEntity *entity, unsigned int _width, unsigned int _height, int xPos, int yPos);
-        PCameraComponent(PEntity *entity, const pnt::ecs::CameraProperties &prop);
+        PCameraComponent(PEntity *entity, const pnt::ecs::SCameraProfile &prop);
         PCameraComponent(const PCameraComponent & _camera) = default;
         PCameraComponent(const PCameraComponent && _camera) = delete;
         PCameraComponent& operator=(const PCameraComponent & _camera) = default;

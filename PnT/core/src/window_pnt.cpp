@@ -51,14 +51,9 @@ namespace pnt::graphics {
         }
 
         glfwMakeContextCurrent(window->window);
+        int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+        PNT_ASSERT_MSG(status, "Failed to initialize GLAD!");
 
-        if(glewInit() != GLEW_OK){
-            PLog::echoMessage("GLEW failed to initialized!", LogLevel::Error);
-            std::cout << glewGetErrorString(glGetError()) << std::endl;
-            return nullptr;
-        }else{
-            PLog::echoMessage("GLEW Initialized Successfully!");
-        }
         return std::move(window);
     }
 
