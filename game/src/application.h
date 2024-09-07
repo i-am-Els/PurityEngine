@@ -4,8 +4,6 @@
 
 #pragma once
 
-#define HACK_
-
 #include "pnt.h"
 
 using namespace pnt;

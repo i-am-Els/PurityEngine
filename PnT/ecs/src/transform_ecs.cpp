@@ -12,7 +12,6 @@ namespace pnt::ecs{
     PTransformComponent::PTransformComponent(PEntity *entity, STransformProfile profile) : PComponent(entity) ,
                                                                                            m_TransformProfile(std::move(profile)){
         m_id = ++s_count;
-        m_parent = nullptr;
     }
 
     void PTransformComponent::Translate(const Vector3f& delta, bool isWorld) {
@@ -23,12 +22,12 @@ namespace pnt::ecs{
 
     }
 
-    Matrix4f PTransformComponent::getModelTransformMatrix() {
-        return m_localToWorldTransform;
+    Matrix4f PTransformComponent::getModelTransformMatrix() const {
+        return m_localToWorldTransformMatrix;
     }
 
-    Matrix4f PTransformComponent::getLocalTransformMatrix() {
-        return m_worldToLocalTransform;
+    Matrix4f PTransformComponent::getLocalTransformMatrix() const {
+        return m_worldToLocalTransformMatrix;
     }
 
     void PTransformComponent::update(float deltaTime) {
@@ -37,6 +36,13 @@ namespace pnt::ecs{
 
     void PTransformComponent::start() {
         PComponent::start();
+    }
+
+    void PTransformComponent::Scale(const Vector3f &vector) {
+        Matrix4f scaleMat(1.0f, 0.0f, 0.0f, 0.0f,
+                          1.0f, 0.0f, 0.0f, 0.0f,
+                          1.0f, 0.0f, 0.0f, 0.0f,
+                          1.0f, 0.0f, 0.0f, 0.0f)
     }
 
 }

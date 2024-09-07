@@ -33,9 +33,9 @@ namespace isle_engine::math
     }
 
     void Transform::resetBasis() {
-        m_right = Vector3f(1.0f, 0.0f, 0.0f);
-        m_up = Vector3f(0.0f, 1.0f, 0.0f);
-        m_forward = Vector3f(0.0f, 0.0f, 1.0f);
+        m_right = Vector3f::right;
+        m_up = Vector3f::up;
+        m_forward = Vector3f::forward;
     }
 
     void Transform::resetPosition() {
@@ -54,5 +54,12 @@ namespace isle_engine::math
         // Call the scale function
     }
 
+    void Transform::setTransform(const Transform &t) {
+        m_position = t.m_position;
+        m_orientation = t.m_orientation;
+        m_scale = t.m_scale;
+    }
+
     Transform::~Transform() = default;
+
 }

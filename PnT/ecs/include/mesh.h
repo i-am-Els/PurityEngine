@@ -10,6 +10,9 @@
 #include "buffer.h"
 
 using namespace pnt::graphics;
+namespace pnt::mesh{
+    class P3DGeometricMeshSS;
+}
 
 namespace pnt::ecs{
     struct SMeshProfile{
@@ -24,35 +27,38 @@ namespace pnt::ecs{
         void update(float deltaTime) override;
         void start() override;
 
-        void initBuffers();
-
         P_GET_COMPONENT_TYPE(PComponentType::PMeshComponent)
         SMeshProfile m_MeshProfile;
-
-#ifdef HACK_
-    inline VertexBuffer* getVBO() { return &m_vertexBuffer; }
-    inline ElementBuffer* getEBO() { return &m_elementBuffer; }
-
-#endif //HACK_
-
 
     private:
         static unsigned int s_count; // All components must have this
 
+    protected:
         std::vector<Vector3f> m_vertices = {
                 Vector3f(-.5f, -.5f, 0.f),
                 Vector3f(-.5f, .5f, 0.f),
                 Vector3f(.5f, .5f, 0.f),
-                Vector3f(.5f, -.5f, 0.f)
+                Vector3f(.5f, -.5f, 0.f),
+                Vector3f(-.5f, -.5f, 1.f),
+                Vector3f(-.5f, .5f, 1.f),
+                Vector3f(.5f, .5f, 1.f),
+                Vector3f(.5f, -.5f, 1.f)
                 };
         std::vector<unsigned int> m_indices = {
-                0, 1, 2,
-                2, 3, 0
+                0, 1, 2, // Forward triangles
+                2, 3, 0,
+                3, 2, 6, // Right triangles
+                6, 7, 3,
+                7, 6, 5, // Back triangles
+                5, 4, 7,
+                4, 5, 1, // Left triangles
+                1, 0, 4,
+                1, 5, 6, // Top triangles
+                5, 2, 1,
+                4, 0, 3, // Bottom triangles
+                3, 7, 4
         };
-        ElementBuffer m_elementBuffer;
-        VertexBuffer m_vertexBuffer;
-//        VertexBuffer m_colorBuffer;
-
+        friend class pnt::mesh::P3DGeometricMeshSS;
 
     };
 }

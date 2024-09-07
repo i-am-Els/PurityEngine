@@ -48,10 +48,9 @@ namespace pnt::graphics {
 
     void POpenGLRenderSS::start() {
         vertexArray->init(); // setup vao, bind and configure it
-#ifdef HACK_
         _vbo->bindBuffer();
         _ebo->bindBuffer();
-#endif //HACK_
+
         vertexArray->addAttribute(0, 3, sizeof(float) * 3, nullptr); // add attribute to vao
         glEnable(GL_DEPTH_TEST);
 

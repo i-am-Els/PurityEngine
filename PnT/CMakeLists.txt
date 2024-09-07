@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Define your source files in src/
 file(GLOB_RECURSE SOURCES "*.cpp")
 
-option(ON_HACK "Turn on Hack Mode" ON)
+option(ON_HACK "Turn on Hack Mode" OFF)
 if(ON_HACK)
     add_compile_definitions(HACK_)
 endif()
@@ -88,6 +88,8 @@ add_library(PnT STATIC
         ecs/include/entity_base.h
         core/include/core_macros.h
         core/include/window_pnt.h
+        core/include/system_finder.h
+        core/src/system_finder.cpp
 )
 
 # Add the core directories for your library and dependencies

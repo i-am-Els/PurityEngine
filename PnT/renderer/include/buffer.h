@@ -13,6 +13,13 @@ using namespace isle_engine::math;
 
 namespace pnt::graphics{
 
+    struct Vertex{
+        Vector3f Position;
+        Vector2f TextCoord;
+        Vector3f Normal;
+    };
+
+
     enum class BufferType{
         ElementBuffer, VertexBuffer
     };

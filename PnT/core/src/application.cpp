@@ -43,10 +43,10 @@
 
 #include <iostream>
 
+#include "system_finder.h"
 #include "application.h"
 #include "entity.h"
 #include "input.h"
-#include "render_system_conc.h"
 #include "ecs_service_conc.h"
 
 using namespace isle_engine::math;
@@ -60,7 +60,7 @@ int main(){
     pnt::PApplication* application = pnt::CreateApplication();
 
     application->init();
-    application->start();  // TODO - HACK added
+    application->start();
     while(!application->window->windowClose())
     {
         // Poll PInput
@@ -101,6 +101,7 @@ namespace pnt{
     }
 
     void PApplication::init() {
+        pnt::PSystemFinder::application = this;
         // Set up window
         PWindow::bindWindowBackendAPI();
         window = PWindow::createWindow(applicationInfo.width, applicationInfo.height, applicationInfo.title.c_str());
@@ -128,8 +129,6 @@ namespace pnt{
     }
 
     void PApplication::start() {
-#ifdef HACK_
         dynamic_cast<PECSService*>(serviceLocator->getService<IECSService>().get())->start();
-#endif //HACK_
     }
 }
