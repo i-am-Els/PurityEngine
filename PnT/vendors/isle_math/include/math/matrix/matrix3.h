@@ -33,6 +33,7 @@ namespace isle_engine::math
         explicit Matrix3(const Vector3<T> &vector);
         ~Matrix3();
 
+        static Matrix3<T> identity();
 
         // Operator overloads----------------------------------------------
         T *operator[](int index);
@@ -61,6 +62,15 @@ namespace isle_engine::math
 
         Matrix3<T> transpose() const;
     };
+
+    template<typename T>
+    Matrix3<T> Matrix3<T>::identity() {
+        return Matrix3<T>(
+                1.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 1.0f
+                );
+    }
 
     template<typename T>
     Matrix3<T> Matrix3<T>::transpose() const {
@@ -127,7 +137,7 @@ namespace isle_engine::math
             return m_data[index];
         }
         catch(...){
-            pnt::PLog::echoMessage("Index out of Bounds!", pnt::LogLevel::Error);
+            std::cout << "Index out of Bounds!"<< std::endl;
         }
     }
 
@@ -137,7 +147,7 @@ namespace isle_engine::math
             return m_data[index];
         }
         catch(...){
-            pnt::PLog::echoMessage("Index out of Bounds!", pnt::LogLevel::Error);
+            std::cout << "Index out of Bounds!"<< std::endl;
         }
     }
 

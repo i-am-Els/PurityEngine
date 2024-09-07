@@ -32,6 +32,8 @@ namespace isle_engine::math
         explicit Matrix2(const Vector4<T> &vector);
         ~Matrix2();
 
+        static Matrix2<T> identity();
+
         // Operator overloads----------------------------------------------
         T *operator[](int index);
         const T *operator[](int index) const;
@@ -60,6 +62,12 @@ namespace isle_engine::math
 
         Matrix2<T> transpose() const;
     };
+
+    template<typename T>
+    Matrix2<T> Matrix2<T>::identity() {
+        return Matrix2<T>(1.0f, 0.0f,
+                          0.0f, 1.0f);
+    }
 
 
     template<typename T>
@@ -122,7 +130,7 @@ namespace isle_engine::math
             return m_data[index];
         }
         catch(...){
-            pnt::PLog::echoMessage("Index out of Bounds!", pnt::LogLevel::Error);
+            std::cout << "Index out of Bounds!"<< std::endl;
         }
     }
 
@@ -132,7 +140,7 @@ namespace isle_engine::math
             return m_data[index];
         }
         catch(...){
-            pnt::PLog::echoMessage("Index out of Bounds!", pnt::LogLevel::Error);
+            std::cout << "Index out of Bounds!"<< std::endl;
         }
     }
 

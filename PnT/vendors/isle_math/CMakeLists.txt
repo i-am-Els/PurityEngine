@@ -48,6 +48,7 @@ add_library(
         include/math/matrix/matrix3x2.h
         include/math/matrix/matrix2x4.h
         include/math/matrix/matrix4x2.h
+        include/math/matrix/matrix_typedef.h
 )
 
 target_compile_definitions(

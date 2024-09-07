@@ -7,7 +7,6 @@
 #include "vector2.h"
 #include "vector3.h"
 #include "core.h"
-#include "log.h"
 
 namespace isle_engine::math
 {
@@ -134,7 +133,7 @@ namespace isle_engine::math
             return m_data[index];
         }
         catch(...){
-            pnt::PLog::echoMessage("Index out of Bounds!", pnt::LogLevel::Error);
+            std::cout << "Index out of Bounds!"<< std::endl;
         }
     }
 
@@ -144,7 +143,7 @@ namespace isle_engine::math
             return m_data[index];
         }
         catch(...){
-            pnt::PLog::echoMessage("Index out of Bounds!", pnt::LogLevel::Error);
+            std::cout << "Index out of Bounds!"<< std::endl;
         }
     }
 

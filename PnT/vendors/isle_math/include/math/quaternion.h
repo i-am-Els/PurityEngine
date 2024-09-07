@@ -7,7 +7,7 @@
 #include "vector3.h"
 #include "global.h"
 #include "math_utils.h"
-#include "matrixNM.h"
+#include "matrix_typedef.h"
 
 
 namespace isle_engine::math

@@ -39,10 +39,7 @@ namespace pnt::ecs{
     }
 
     void PTransformComponent::Scale(const Vector3f &vector) {
-        Matrix4f scaleMat(1.0f, 0.0f, 0.0f, 0.0f,
-                          1.0f, 0.0f, 0.0f, 0.0f,
-                          1.0f, 0.0f, 0.0f, 0.0f,
-                          1.0f, 0.0f, 0.0f, 0.0f)
+        Matrix4f scaleMat = Matrix4f::identity();
     }
 
 }

@@ -77,25 +77,25 @@ namespace isle_engine::math
     T &operator+=(T & value_left, const MatrixNM<N, M, T>& matrix_right);
 
 
-    typedef MatrixNM<2, 2, short> Matrix2s;
-    typedef MatrixNM<2, 2, int> Matrix2i;
-    typedef MatrixNM<2, 2, float> Matrix2f;
-    typedef MatrixNM<2, 2, double> Matrix2d;
-
-    typedef MatrixNM<3, 3, short> Matrix3s;
-    typedef MatrixNM<3, 3, int> Matrix3i;
-    typedef MatrixNM<3, 3, float> Matrix3f;
-    typedef MatrixNM<3, 3, double> Matrix3d;
-
-    typedef MatrixNM<3, 4, short> Matrix34s;
-    typedef MatrixNM<3, 4, int> Matrix34i;
-    typedef MatrixNM<3, 4, float> Matrix34f;
-    typedef MatrixNM<3, 4, double> Matrix34d;
-
-    typedef MatrixNM<4, 4, short> Matrix4s;
-    typedef MatrixNM<4, 4, int> Matrix4i;
-    typedef MatrixNM<4, 4, float> Matrix4f;
-    typedef MatrixNM<4, 4, double> Matrix4d;
+//    typedef MatrixNM<2, 2, short> Matrix2s;
+//    typedef MatrixNM<2, 2, int> Matrix2i;
+//    typedef MatrixNM<2, 2, float> Matrix2f;
+//    typedef MatrixNM<2, 2, double> Matrix2d;
+//
+//    typedef MatrixNM<3, 3, short> Matrix3s;
+//    typedef MatrixNM<3, 3, int> Matrix3i;
+//    typedef MatrixNM<3, 3, float> Matrix3f;
+//    typedef MatrixNM<3, 3, double> Matrix3d;
+//
+//    typedef MatrixNM<3, 4, short> Matrix34s;
+//    typedef MatrixNM<3, 4, int> Matrix34i;
+//    typedef MatrixNM<3, 4, float> Matrix34f;
+//    typedef MatrixNM<3, 4, double> Matrix34d;
+//
+//    typedef MatrixNM<4, 4, short> Matrix4s;
+//    typedef MatrixNM<4, 4, int> Matrix4i;
+//    typedef MatrixNM<4, 4, float> Matrix4f;
+//    typedef MatrixNM<4, 4, double> Matrix4d;
 
 
     template<int N, int M, typename T>
