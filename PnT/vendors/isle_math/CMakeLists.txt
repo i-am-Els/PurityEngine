@@ -41,9 +41,14 @@ add_library(
         include/core.h
         include/string_util.h
         src/isle_pch.cpp
-        src/basis.cpp
-        src/fraction.cpp
-        src/transform.cpp
+        src/math/basis.cpp
+        src/math/fraction.cpp
+        src/math/transform.cpp
+        include/math/matrix/matrix2x3.h
+        include/math/matrix/matrix3x2.h
+        include/math/matrix/matrix2x4.h
+        include/math/matrix/matrix4x2.h
+        include/math/matrix/matrix_typedef.h
 )
 
 target_compile_definitions(

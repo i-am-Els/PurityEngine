@@ -9,16 +9,12 @@
 #include "linkedList.h"
 #include "isystems.h"
 #include "color.h"
-#include "glfw3.h"
+#include "GLFW/glfw3.h"
 #include "vertex_array.h"
 #include "render_system.h"
 #include "service_base.h"
-
-
-#ifdef HACK_
 #include "buffer.h"
-#include "mesh.h"
-#endif //HACK_
+
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
@@ -45,7 +41,7 @@ namespace pnt::graphics{
         VertexBuffer* _vbo;
         ElementBuffer* _ebo;
 
-        inline void SetHackMeshBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
+        inline void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
             try{
                 if (vbo == nullptr || ebo == nullptr){
                     throw -1;

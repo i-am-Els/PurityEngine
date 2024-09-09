@@ -12,10 +12,8 @@ using namespace isle_engine::math;
 namespace pnt::ecs{
 
     struct STransformProfile{
-        Vector3f Position;
-        Vector3f Rotation;
-        Vector3f Scale;
-//        Transform Parent;
+        Transform Transform_;
+        Transform Parent;
     };
 
     class PTransformComponent : public PComponent {
@@ -32,13 +30,18 @@ namespace pnt::ecs{
         /// @param euler - Vector3f that represents the theta in angles on all axes.
         void Rotate(const Vector3f& euler, bool isWorld=true);
 
+        /// @brief World Transform.Scale that scales the object relative to the world space
+        /// @param vector - Vector3f that represents the theta in angles on all axes.
+        void Scale(const Vector3f& vector);
+
+    protected:
         /// @brief A read only getter for the model matrix representing the transform
         /// @return Matrix4f - the m_localToWorldTransform matrix.
         /// @details The return matrix is the transforms local to world space transformation matrix
-        Matrix4f getModelTransformMatrix();
+        [[nodiscard]] Matrix4f getModelTransformMatrix() const;
 
         /// @brief The return matrix is the transforms world to local space transformation matrix
-        Matrix4f getLocalTransformMatrix();
+        [[nodiscard]] Matrix4f getLocalTransformMatrix() const;
 
     public:
         /// @brief Position - world position of the transform
@@ -68,20 +71,18 @@ namespace pnt::ecs{
         /// @brief Forward Vector - The +Z axis of the transform
         Vector3f m_forward = Vector3f::forward;
 
-        /// @brief The Parent transform of the entity that this component is attached to
-        PTransformComponent* m_parent;
-
+        /// @brief The transform profile of the entity that this component is attached to
+        /// @note Contains the raw transform class and its parent
         STransformProfile m_TransformProfile;
+    private:
+        Matrix4f m_worldToLocalTransformMatrix;
+        Matrix4f m_localToWorldTransformMatrix;
+        static unsigned int s_count; // All components must have this
 
+    public:
         void update(float deltaTime) override;
         void start() override;
 
-        P_GET_COMPONENT_TYPE(PComponentType::PTransformComponent)
-
-    private:
-        static unsigned int s_count; // All components must have this
-
-        MatrixNM<4, 4, float> m_worldToLocalTransform;
-        MatrixNM<4, 4, float> m_localToWorldTransform; // Model Matrix
+        P_GET_COMPONENT_TYPE(PComponentType::PTransformComponent);
     };
 }

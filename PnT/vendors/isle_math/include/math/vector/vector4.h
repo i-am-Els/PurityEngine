@@ -1,7 +1,7 @@
 #pragma once
 #include "core.h"
 #include "global.h"
-
+#include "vector3.h"
 
     namespace isle_engine::math
     {
@@ -96,6 +96,12 @@
              * @return The magnitude of the vector.
              */
             T magnitude();
+
+            // @brief Get a Vector 3 from the Homogenous vector.
+            Vector3<T> getVector3FromHomogenousVector(){
+                if (w == 0) { return Vector3<T>::zero; }
+                return Vector3<T>(x/w, y/w, z/w);
+            }
 
             Vector4<T> operator*(const T& s) const;
             Vector4<T> operator*=(const T& s);

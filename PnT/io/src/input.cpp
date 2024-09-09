@@ -3,8 +3,8 @@
 //
 
 
-#include "../include/input.h"
-#include "glfw3.h"
+#include "input.h"
+#include "GLFW/glfw3.h"
 
 namespace pnt {
 
