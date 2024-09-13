@@ -90,6 +90,12 @@ add_library(PnT STATIC
         core/include/window_pnt.h
         core/include/system_finder.h
         core/src/system_finder.cpp
+        assets/src/assetdb_service_conc.cpp
+        assets/include/assetdb_service_conc.h
+        assets/include/assetdb_service.h
+        io/include/handle_base.h
+        core/include/pobject.cpp
+        core/include/pobject.h
 )
 
 # Add the core directories for your library and dependencies

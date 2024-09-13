@@ -1,5 +1,5 @@
 ###### This Documentation is a property of Eniola Olawale
-##### Copyright &copy; Eniola Olawale 2024. All rights reseved.
+##### Copyright &copy; Eniola Olawale 2024. All rights reserved.
 
 <hr>
 
