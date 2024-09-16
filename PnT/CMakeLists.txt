@@ -94,13 +94,23 @@ add_library(PnT STATIC
         assets/include/assetdb_service_conc.h
         assets/include/assetdb_service.h
         io/include/handle_base.h
-        core/include/pobject.cpp
+        core/src/pobject.cpp
         core/include/pobject.h
+        assets/include/assetdb_enums.h
+        assets/include/assetdb_query_specs.h
+        assets/include/assetdb_type_strategy.h
+        assets/src/assetdb_type_strategy.cpp
+        assets/src/assetdb_utility.cpp
+        assets/include/assetdb_utility.h
+        core/include/pnt_exceptions.h
+        assets/src/assets_types.cpp
+        assets/include/assets_types.h
 )
 
 # Add the core directories for your library and dependencies
 target_include_directories(PnT PUBLIC
         artifacts
+        assets/include
         core/include
         ecs/include
         io/include

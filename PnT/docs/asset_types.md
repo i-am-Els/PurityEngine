@@ -59,6 +59,7 @@ Note: First line in any section takes priority in MVP phase.
 - MeshAsset (Animatable Mesh).
 - SkeletonAsset (Object Rig, can be extracted from a Mesh Asset, and applied to another).
 - StaticMeshAsset.
+- MaterialAsset.
 - SplineAsset.
 - PolygonMeshAsset.
 - SoundSourceAsset.

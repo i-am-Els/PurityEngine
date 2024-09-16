@@ -13,6 +13,7 @@
 #include <memory>
 #include <limits>
 #include <cmath>
+#include <exception>
 
 // Data structures
 #include <string>

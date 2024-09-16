@@ -15,7 +15,7 @@
 #include "render_system_conc.h"
 
 namespace pnt{
-    class PECSService : public PServiceBase<IECSService>{
+    class PECSService final : public PServiceBase<IECSService>{
     public:
         PECSService() = default;
 

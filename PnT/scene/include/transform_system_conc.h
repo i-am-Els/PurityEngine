@@ -8,7 +8,7 @@
 using namespace pnt::ecs;
 
 namespace pnt::scene{
-    class PTransformSS : public ITransformSystem {
+    class PTransformSS final : public ITransformSystem {
     public:
         void init() override;
 

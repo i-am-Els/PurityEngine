@@ -14,7 +14,7 @@
 using namespace pnt::ecs;
 
 namespace pnt::mesh{
-    class P3DGeometricMeshSS : public IMeshSystem{
+    class P3DGeometricMeshSS final : public IMeshSystem{
     public:
         P3DGeometricMeshSS();
 

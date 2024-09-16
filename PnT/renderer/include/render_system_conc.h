@@ -7,22 +7,22 @@
 #include "shader.h"
 #include "renderer.h"
 #include "linkedList.h"
-#include "isystems.h"
 #include "color.h"
 #include "GLFW/glfw3.h"
 #include "vertex_array.h"
 #include "render_system.h"
-#include "service_base.h"
 #include "buffer.h"
+#include "pnt_exceptions.h"
 
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
+using namespace pnt::exceptions;
 using namespace pnt::ds;
 
 namespace pnt::graphics{
 
-    class POpenGLRenderSS : public IRenderSystem{
+    class POpenGLRenderSS final : public IRenderSystem{
     public:
         explicit POpenGLRenderSS(GLFWwindow*& window);
         ~POpenGLRenderSS() override;
@@ -44,14 +44,14 @@ namespace pnt::graphics{
         inline void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
             try{
                 if (vbo == nullptr || ebo == nullptr){
-                    throw -1;
+                    throw NullBufferError();
                 }
 
                 this->_vbo = vbo;
                 this->_ebo = ebo;
             }
-            catch (int e){
-                PLog::echoMessage(LogLevel::Error, "Null Incoming Buffers");
+            catch (std::exception& e){
+                PLog::echoMessage(LogLevel::Error, e.what());
             }
         }
 
