@@ -18,7 +18,7 @@ PEntity* pnt::PScene::CreateEntityWithUUID(pnt::PUUID uuid, const std::string& n
     // Set ID
     id->setID(uuid);
     // Add Transform Component,
-    entity->m_transform = entity->AddComponent<PTransformComponent>();
+    entity->AddComponent<PTransformComponent>();
     // Add Tag Component
     auto tag = entity->AddComponent<PTagComponent>();
     // Add Entity to Entity Map

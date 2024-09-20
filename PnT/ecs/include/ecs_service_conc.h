@@ -33,36 +33,48 @@ namespace pnt{
         ~PECSService() override = default;
 
         void init() override {
+            s_getSystem<PIDComponent>()->init();
+            s_getSystem<PTagComponent>()->init();
             s_getSystem<PTransformComponent>()->init();
             s_getSystem<PMeshComponent>()->init();
             s_getSystem<PRenderComponent>()->init();
         }
 
         void start() {
+            s_getSystem<PIDComponent>()->start();
+            s_getSystem<PTagComponent>()->start();
             s_getSystem<PTransformComponent>()->start();
             s_getSystem<PMeshComponent>()->start();
             s_getSystem<PRenderComponent>()->start();
         }
 
         void process() {
+            s_getSystem<PIDComponent>()->process();
+            s_getSystem<PTagComponent>()->process();
             s_getSystem<PTransformComponent>()->process();
             s_getSystem<PMeshComponent>()->process();
             s_getSystem<PRenderComponent>()->process();
         }
 
         void render() {
+            s_getSystem<PIDComponent>()->render();
+            s_getSystem<PTagComponent>()->render();
             s_getSystem<PTransformComponent>()->render();
             s_getSystem<PMeshComponent>()->render();
             s_getSystem<PRenderComponent>()->render();
         }
 
         void update(float deltaTime) {
+            s_getSystem<PIDComponent>()->update(deltaTime);
+            s_getSystem<PTagComponent>()->update(deltaTime);
             s_getSystem<PTransformComponent>()->update(deltaTime);
             s_getSystem<PMeshComponent>()->update(deltaTime);
             s_getSystem<PRenderComponent>()->update(deltaTime);
         }
 
         void destroy() override{
+            s_getSystem<PIDComponent>()->destroy();
+            s_getSystem<PTagComponent>()->destroy();
             s_getSystem<PTransformComponent>()->destroy();
             s_getSystem<PMeshComponent>()->destroy();
             s_getSystem<PRenderComponent>()->destroy();
@@ -97,17 +109,6 @@ namespace pnt{
             }
             return dynamic_cast<ISystem<T>*>(it->second.get());
         }
-
-//        template<typename T>
-//        [[nodiscard]] ISystem<T>* getSystem() const {
-//            auto index = s_getTypeIndex<T>();
-//            auto it = system_map.find(index);
-//            if (it == system_map.end()) {
-//                throw std::runtime_error("System not found!");
-//            }
-//            // Ensure that the cast is valid; use dynamic_cast if necessary.
-//            return dynamic_cast<ISystem<T>*>(it->second.get());
-//        }
 
         template<typename T>
         static void setSystem(std::unique_ptr<ISystem<T>> system){

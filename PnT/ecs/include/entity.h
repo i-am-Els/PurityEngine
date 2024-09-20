@@ -24,9 +24,9 @@ namespace pnt::ecs {
         explicit PEntity(PUUID uuid);
 //        PEntity(const PEntity& entity) ;
         ~PEntity() override = default; // Destructor destroys all components
-
-    public:
-        PTransformComponent* m_transform;
+        [[nodiscard]] inline PUUID getInstanceID(){
+            return m_instanceID;
+        }
 
     private:
         std::string m_name{};

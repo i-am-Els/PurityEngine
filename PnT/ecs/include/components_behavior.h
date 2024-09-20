@@ -32,10 +32,8 @@ namespace pnt::ecs{
         class PImpl_ComponentBehaviour{
         public:
             PEntity* getEntity(ManipulativeBehaviour* behaviourOwner);
-            PUUID getIDFromEntity(PEntity* entity);
             PEntity* getEntityFromBehaviour(ManipulativeBehaviour* behaviourOwner);
             PEntityBase* getEntityBase(PEntity *entity) const;
-            PTransformComponent* getTransform(PEntity* entity) const;
 
             template<typename T>
             T* getAddComponentResultIntoEntityContainer(ISystem<T> *pSystem, PEntity *entity, const char *exception_message);

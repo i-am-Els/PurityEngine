@@ -20,8 +20,6 @@ namespace pnt::ecs{
         virtual ~PEntityBase() = default;
         explicit PEntityBase(PUUID mInstanceId) : m_instanceID(mInstanceId) {}
 
-        [[nodiscard]] inline PUUID getInstanceId() const { return m_instanceID; };
-
     protected:
         PUUID m_instanceID{0};
         std::vector<PComponent*> m_components;
