@@ -10,6 +10,8 @@
 namespace pnt::ecs{
     class PEntityRegistry{
     public:
+        PEntityRegistry() = default;
+        ~PEntityRegistry();
         [[nodiscard]]PEntity* Create();
         [[nodiscard]]PEntity* Create(const std::string& name);
         void Destroy();

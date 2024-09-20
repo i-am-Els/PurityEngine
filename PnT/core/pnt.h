@@ -13,13 +13,15 @@
 #include "input.h"
 #include "data_hash_table.h"
 #include "islemath.h"
-#include "application.h"
+#include "papplication.h"
 
 // ecs
 #include "mesh.h"
 #include "transform_ecs.h"
 #include "camera.h"
 #include "renderer.h"
+#include "id_comp.h"
+#include "scripting.h"
 
 
 using namespace pnt;

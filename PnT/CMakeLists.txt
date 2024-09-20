@@ -63,7 +63,7 @@ add_library(PnT STATIC
         ecs/include/renderer.h
         ecs/include/renderer.h
         core/include/linkedList.h
-        core/include/application.h
+        core/include/papplication.h
         ecs/src/scripting.cpp
         ecs/include/scripting.h
         renderer/include/buffer.h

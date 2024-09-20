@@ -44,11 +44,9 @@
 #include <iostream>
 
 #include "system_finder.h"
-#include "application.h"
-#include "entity.h"
+#include "papplication.h"
 #include "input.h"
 #include "ecs_service_conc.h"
-#include "assetdb_service_conc.h"
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;

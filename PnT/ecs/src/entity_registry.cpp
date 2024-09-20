@@ -46,5 +46,9 @@ namespace pnt::ecs{
         return entitiesWithTag;
     }
 
+    PEntityRegistry::~PEntityRegistry() {
+        entities.clear();
+    }
+
 }
 

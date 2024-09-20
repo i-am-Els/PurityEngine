@@ -23,7 +23,9 @@ namespace pnt::ecs {
         explicit PEntity(const std::string& name);
         explicit PEntity(PUUID uuid);
 //        PEntity(const PEntity& entity) ;
-        ~PEntity() override = default; // Destructor destroys all components
+        ~PEntity() override{
+            PLog::echoMessage("Destroying Entity...");
+        } // Destructor destroys all components
         [[nodiscard]] inline PUUID getInstanceID(){
             return m_instanceID;
         }

@@ -15,7 +15,9 @@ file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 add_executable(Game ${SOURCES}
         src/application.cpp
-        src/application.h)
+        src/application.h
+        src/quad_comp.cpp
+        src/quad_comp.h)
 
 # Add the core directory for the PnT library
 target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)

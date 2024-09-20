@@ -15,7 +15,7 @@ namespace pnt::ecs{
     };
 
 //    class IRenderSystem;
-    class PRenderComponent : public PComponent{
+    class PRenderComponent final : public PComponent{
     public:
         explicit PRenderComponent(PEntity *entity, SRenderProfile profile);
         ~PRenderComponent() override { PLog::echoMessage("Destroying renderComponent"); }

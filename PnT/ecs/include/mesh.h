@@ -19,7 +19,7 @@ namespace pnt::ecs{
         bool isVisible;
     };
 
-    class PMeshComponent : public PComponent{
+    class PMeshComponent final : public PComponent{
     public:
         explicit PMeshComponent(PEntity *entity, SMeshProfile profile);
         ~PMeshComponent() override { PLog::echoMessage("Destroying mesh"); }

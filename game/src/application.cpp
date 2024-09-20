@@ -3,6 +3,7 @@
 //
 
 #include "application.h"
+#include "quad_comp.h"
 
 using namespace pnt;
 
@@ -25,6 +26,7 @@ void Application::init() {
 
     auto mesh = quad->AddComponent<PMeshComponent>();
     auto render = quad->AddComponent<PRenderComponent>();
+
 
     PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
 
