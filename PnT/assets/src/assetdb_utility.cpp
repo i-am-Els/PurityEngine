@@ -3,3 +3,7 @@
 //
 
 #include "assetdb_utility.h"
+
+namespace pnt::assetDB{
+
+}

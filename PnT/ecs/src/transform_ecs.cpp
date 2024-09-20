@@ -11,7 +11,6 @@ namespace pnt::ecs{
 
     PTransformComponent::PTransformComponent(PEntity *entity, STransformProfile profile) : PComponent(entity) ,
                                                                                            m_TransformProfile(std::move(profile)){
-        m_id = ++s_count;
     }
 
     void PTransformComponent::Translate(const Vector3f& delta, bool isWorld) {

@@ -14,10 +14,12 @@
 #include <limits>
 #include <cmath>
 #include <exception>
+#include <random>
 
 // Data structures
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include <vector>
 #include <array>
 #include <unordered_map>
@@ -28,3 +30,5 @@
 #ifdef ISLE_PLATFORM_WINDOWS
 #include "windows.h"
 #endif
+
+#include "uuid.h"

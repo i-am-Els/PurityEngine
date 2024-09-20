@@ -4,22 +4,31 @@
 
 #pragma once
 
-#include <vector>
+#include "pnt_core_pch.h"
 //#include "component.h"
 
 namespace pnt::ecs{
     class ManipulativeBehaviour;
+    class PEntityRegistry;
+    class PIDManager;
+    class PIDComponent;
+
 
     class PEntityBase{
     public:
-        explicit PEntityBase(unsigned int mInstanceId) : m_instanceID(mInstanceId) {}
+        PEntityBase() = default;
+        virtual ~PEntityBase() = default;
+        explicit PEntityBase(PUUID mInstanceId) : m_instanceID(mInstanceId) {}
 
-        [[nodiscard]] inline unsigned int getInstanceId() const { return m_instanceID; };
+        [[nodiscard]] inline PUUID getInstanceId() const { return m_instanceID; };
 
     protected:
-        unsigned int m_instanceID{};
+        PUUID m_instanceID{0};
         std::vector<PComponent*> m_components;
 
         friend class ManipulativeBehaviour;
+        friend class PIDManager;
+        friend class PIDComponent;
+        friend class PEntityRegistry;
     };
 }

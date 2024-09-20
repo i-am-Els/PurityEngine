@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <cassert>
 #ifdef PNT_ENABLE_ASSERT
-#define PNT_ASSERT(expr) assert(expr)
-    #define PNT_ASSERT_MSG(expr, msg) assert(( (void)(msg), (expr) ))
-#else
+#include <cassert>
     #define PNT_ASSERT(expr) assert(expr)
     #define PNT_ASSERT_MSG(expr, msg) assert(( (void)(msg), (expr) ))
+#else
+    #define PNT_ASSERT(expr)
+    #define PNT_ASSERT_MSG(expr, msg)
 #endif

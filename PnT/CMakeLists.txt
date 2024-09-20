@@ -105,6 +105,19 @@ add_library(PnT STATIC
         core/include/pnt_exceptions.h
         assets/src/assets_types.cpp
         assets/include/assets_types.h
+        assets/src/uuid.cpp
+        assets/include/uuid.h
+        scene/src/scene.cpp
+        scene/include/scene.h
+        ecs/include/tag_comp.h
+        ecs/src/id_comp.cpp
+        ecs/include/id_comp.h
+        ecs/src/tag_comp.cpp
+        ecs/include/reg_system.h
+        ecs/src/entity_registry.cpp
+        ecs/include/entity_registry.h
+        ecs/src/reg_system_conc.cpp
+        ecs/include/reg_system_conc.h
 )
 
 # Add the core directories for your library and dependencies
@@ -118,7 +131,7 @@ target_include_directories(PnT PUBLIC
         renderer/include
         scene/include
         vendors/GLAD/include
-        vendors/GLFW/include
+#        vendors/GLFW/include
 #        vendors/GLM
 #        vendors/isle_math/include
 #        vendors/isle_math/include/math
@@ -147,7 +160,6 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/glfw/glfw
         GIT_TAG 3.3.1
 )
-
 FetchContent_MakeAvailable(glfw)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

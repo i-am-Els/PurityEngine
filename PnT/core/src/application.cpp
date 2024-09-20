@@ -48,6 +48,7 @@
 #include "entity.h"
 #include "input.h"
 #include "ecs_service_conc.h"
+#include "assetdb_service_conc.h"
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
@@ -86,18 +87,18 @@ namespace pnt{
 
     void PApplication::process() {
         // Call the process method on all the services
-        serviceLocator->getService<IECSService>()->process();
+        serviceLocator->getConcreteService<IECSService, PECSService>()->process();
         PInput::PollEvents();
     }
 
     void PApplication::update(float deltaTime) {
         // Call the update method on all the services
-        serviceLocator->getService<IECSService>()->update(1.0f);
+        serviceLocator->getConcreteService<IECSService, PECSService>()->update(1.0f);
     }
 
     void PApplication::render() {
         // Call the render method on all the services
-        serviceLocator->getService<IECSService>()->render();
+        serviceLocator->getConcreteService<IECSService, PECSService>()->render();
     }
 
     void PApplication::init() {
@@ -129,6 +130,6 @@ namespace pnt{
     }
 
     void PApplication::start() {
-        dynamic_cast<PECSService*>(serviceLocator->getService<IECSService>().get())->start();
+        serviceLocator->getConcreteService<IECSService, PECSService>()->start();
     }
 }

@@ -8,7 +8,6 @@ namespace pnt::ecs{
     unsigned int PBehaviourScriptComponent::s_count = 0;
 
     PBehaviourScriptComponent::PBehaviourScriptComponent(PEntity *entity) : PComponent(entity) {
-        m_id = ++s_count;
     }
 
     void PBehaviourScriptComponent::update(float deltaTime) {

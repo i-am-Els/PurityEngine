@@ -57,23 +57,13 @@ namespace pnt::graphics{
 
         PRenderComponent *AddComponent(PEntity* entity) override;
 
-        PRenderComponent *GetComponent(unsigned int id) override;
-
         void RemoveComponent(PEntity* entity, PRenderComponent *component) override;
-
-        void RemoveComponentByTag(PEntity* entity, PRenderComponent *component, std::string tag) override;
-
-        void RemoveComponentsByTag(PEntity* entity, std::string tag) override;
-
-        PRenderComponent *FindComponentByTag(PEntity* entity, std::string tag) override;
-
-        std::vector<PRenderComponent *> FindComponentsByTag(PEntity* entity, std::string tag) override;
 
     private:
         std::vector<std::unique_ptr<PRenderComponent>> renderComponents;
 
 
-        void clearWindow(GLbitfield masks, graphics::Color color);
+        static void clearWindow(GLbitfield masks, graphics::Color color);
         GLFWwindow* _window;
         std::unique_ptr<PShader> shader;
         VertexArray* vertexArray;

@@ -73,6 +73,7 @@ namespace pnt::ecs{
 
         /// @brief The transform profile of the entity that this component is attached to
         /// @note Contains the raw transform class and its parent
+        P_GET_COMPONENT_TYPE(PComponentType::PTransformComponent)
         STransformProfile m_TransformProfile;
     private:
         Matrix4f m_worldToLocalTransformMatrix;
@@ -83,6 +84,5 @@ namespace pnt::ecs{
         void update(float deltaTime) override;
         void start() override;
 
-        P_GET_COMPONENT_TYPE(PComponentType::PTransformComponent);
     };
 }

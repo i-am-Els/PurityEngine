@@ -86,7 +86,7 @@ namespace pnt::assetDB
         }
 
         ~QueryTextureAssetSpec() override = default;
-        QueryAssetType m_type = QueryAssetType::MeshAsset;
+        QueryAssetType m_type = QueryAssetType::TextureAsset;
 
         // and other rules
     };

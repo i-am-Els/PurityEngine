@@ -36,12 +36,6 @@ namespace pnt::mesh{
 
     PMeshComponent *P3DGeometricMeshSS::AddComponent(PEntity *entity) {
         try {
-            // Avoid multiple mesh components on one entity
-            for (const auto& component : meshComponents){
-                if (component != nullptr && component->getID() == entity->getInstanceId()) {
-                    return component.get();
-                }
-            }
             SMeshProfile profile = {true};
             meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity, profile));
 
@@ -67,37 +61,9 @@ namespace pnt::mesh{
         if (renderSystem)  { renderSystem->SetUpBuffers(&VBO, &EBO); }
     }
 
-    PMeshComponent *P3DGeometricMeshSS::GetComponent(unsigned int id) {
-        try{
-            for (const auto& component : meshComponents) {
-                if (component->getID() == id) {
-                    return component.get();
-                }
-            }
-        }catch(...){
-            PLog::echoMessage(LogLevel::Error, "Get Mesh Comp Generic Assertion failed");
-        }
-        return nullptr; // Return null pointer if component not found
-    }
-
     void P3DGeometricMeshSS::RemoveComponent(PEntity *entity, PMeshComponent *component) {
 
     }
 
-    void P3DGeometricMeshSS::RemoveComponentByTag(PEntity *entity, PMeshComponent *component, std::string tag) {
-
-    }
-
-    void P3DGeometricMeshSS::RemoveComponentsByTag(PEntity *entity, std::string tag) {
-
-    }
-
-    PMeshComponent *P3DGeometricMeshSS::FindComponentByTag(PEntity *entity, std::string tag) {
-        return nullptr;
-    }
-
-    std::vector<PMeshComponent *> P3DGeometricMeshSS::FindComponentsByTag(PEntity *entity, std::string tag) {
-        return std::vector<PMeshComponent *>();
-    }
 }
 

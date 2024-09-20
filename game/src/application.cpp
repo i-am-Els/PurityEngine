@@ -21,7 +21,7 @@ void Application::update(float deltaTime) {
 void Application::init() {
     PApplication::init();
 
-    quad = new PEntity("Quad");
+    quad = Scene.CreateEntity("Quad");
 
     auto mesh = quad->AddComponent<PMeshComponent>();
     auto render = quad->AddComponent<PRenderComponent>();

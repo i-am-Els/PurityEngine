@@ -8,7 +8,6 @@ namespace pnt::ecs{
     unsigned int PMeshComponent::s_count = 0;
 
     PMeshComponent::PMeshComponent(PEntity *entity, SMeshProfile profile) : PComponent(entity) {
-        m_id = ++s_count;
         m_MeshProfile = profile;
     }
 

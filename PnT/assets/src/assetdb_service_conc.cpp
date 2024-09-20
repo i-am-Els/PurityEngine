@@ -35,16 +35,16 @@ namespace pnt::assetDB{
         switch (assetDBQuery.operation)
         {
         case QueryOperation::Read:
-            performGetOperarion(assetDBQuery.spec);
+            performGetOperation(assetDBQuery.spec);
             break;
         case QueryOperation::Write:
-            performAddOperarion(assetDBQuery.spec);
+            performAddOperation(assetDBQuery.spec);
             break;
         case QueryOperation::Update:
-            performUpdateOperarion(assetDBQuery.spec);
+            performUpdateOperation(assetDBQuery.spec);
             break;
         case QueryOperation::Delete:
-            performDeleteOperarion(assetDBQuery.spec);
+            performDeleteOperation(assetDBQuery.spec);
             break;
         default:
             break;
@@ -52,22 +52,22 @@ namespace pnt::assetDB{
         return nullptr;
     }
 
-    PHandleBase* PAssetDatabase::performGetOperarion(const QuerySpec& spec)
+    PHandleBase* PAssetDatabase::performGetOperation(const QuerySpec& spec)
     {
         return spec.strategy->ReadOperation();
     }
 
-    PHandleBase* PAssetDatabase::performAddOperarion(const QuerySpec& spec)
+    PHandleBase* PAssetDatabase::performAddOperation(const QuerySpec& spec)
     {
         return spec.strategy->WriteOperation();
     }
 
-    PHandleBase* PAssetDatabase::performUpdateOperarion(const QuerySpec& spec)
+    PHandleBase* PAssetDatabase::performUpdateOperation(const QuerySpec& spec)
     {
         return spec.strategy->UpdateOperation();
     }
 
-    PHandleBase* PAssetDatabase::performDeleteOperarion(const QuerySpec& spec)
+    PHandleBase* PAssetDatabase::performDeleteOperation(const QuerySpec& spec)
     {
         return spec.strategy->DeleteOperation();
     }

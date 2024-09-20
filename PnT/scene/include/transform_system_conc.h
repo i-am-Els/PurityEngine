@@ -26,17 +26,7 @@ namespace pnt::scene{
 
         PTransformComponent *AddComponent(PEntity *entity) override;
 
-        PTransformComponent *GetComponent(unsigned int id) override;
-
         void RemoveComponent(PEntity *entity, PTransformComponent *component) override;
-
-        void RemoveComponentByTag(PEntity *entity, PTransformComponent *component, std::string tag) override;
-
-        void RemoveComponentsByTag(PEntity *entity, std::string tag) override;
-
-        PTransformComponent *FindComponentByTag(PEntity *entity, std::string tag) override;
-
-        std::vector<PTransformComponent *> FindComponentsByTag(PEntity *entity, std::string tag) override;
 
     private:
         std::vector<std::unique_ptr<PTransformComponent>> transformComponents;

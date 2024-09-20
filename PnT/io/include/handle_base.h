@@ -4,8 +4,16 @@
 
 #pragma once
 
+#include "log.h"
+#include "uuid.h"
+
 namespace pnt{
     struct PHandleBase{
-        int* handle_id;
+        pnt::PUUID m_handleId;
+        PHandleBase() {
+            PLog::echoValue(m_handleId);
+        }
+    private:
+        static int s_count;
     };
 }

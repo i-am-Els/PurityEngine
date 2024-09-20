@@ -7,6 +7,8 @@
 
 namespace pnt::ecs {
 
-    PComponent::PComponent(PEntity *entity) : m_entity(entity){}
+    PComponent::PComponent(PEntity *entity) : m_entity(entity){
+        m_id = PUUID();
+    }
 
 }

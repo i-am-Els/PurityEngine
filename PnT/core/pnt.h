@@ -6,14 +6,14 @@
 #include "entity.h"
 #include "vector2.h"
 #include "transform_ecs.h"
-#include "include/window_pnt.h"
+#include "window_pnt.h"
 #include "vertex_array.h"
 #include "buffer.h"
 #include "log.h"
 #include "input.h"
 #include "data_hash_table.h"
 #include "islemath.h"
-#include "include/application.h"
+#include "application.h"
 
 // ecs
 #include "mesh.h"

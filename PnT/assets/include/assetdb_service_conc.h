@@ -9,6 +9,7 @@
 #include "assetdb_enums.h"
 #include "assetdb_service.h"
 #include "assetdb_query_specs.h"
+#include "assets_types.h"
 
 namespace pnt::assetDB{
 
@@ -34,13 +35,13 @@ namespace pnt::assetDB{
 
         void init() override;
 
-        void start() override;
+        void start();
 
-        void process() override;
+        void process();
 
-        void render() override;
+        void render();
 
-        void update(float deltaTime) override;
+        void update(float deltaTime);
 
         void destroy() override;
 
@@ -48,11 +49,26 @@ namespace pnt::assetDB{
 
 
     private:
-        static PHandleBase* performGetOperarion(const QuerySpec& spec);
-        static PHandleBase* performAddOperarion(const QuerySpec& spec);
-        static PHandleBase* performUpdateOperarion(const QuerySpec& spec);
-        static PHandleBase* performDeleteOperarion(const QuerySpec& spec); // handle id is nullptr in this case if deletion suceeded...
+        static PHandleBase* performGetOperation(const QuerySpec& spec);
+        static PHandleBase* performAddOperation(const QuerySpec& spec);
+        static PHandleBase* performUpdateOperation(const QuerySpec& spec);
+        static PHandleBase* performDeleteOperation(const QuerySpec& spec); // handle id is nullptr in this case if deletion succeeded...
+
         // Switch on QueryType...
+        std::vector<PTextureAsset*> m_textureAssetContainer;
+        std::vector<PSpriteAsset*> m_spriteAssetContainer;
+        std::vector<PShaderAsset*> m_shaderAssetContainer;
+        std::vector<PMeshAsset*> m_meshAssetContainer;
+        std::vector<PSkeletonAsset*> m_skeletonAssetContainer;
+        std::vector<PStaticMeshAsset*> m_staticMeshAssetContainer;
+        std::vector<PMaterialAsset*> m_materialAssetContainer;
+        std::vector<PSplineAsset*> m_splineAssetContainer;
+        std::vector<PP2DPolygonMeshAsset*>m_p2DPolygonMeshAssetContainer;
+        std::vector<PSoundSourceAsset*> m_soundSourceAssetContainer;
+        std::vector<PP3DSoundSourceAsset*> m_p3DSoundSourceAssetContainer;
+        std::vector<PLevelAsset*> m_levelAssetContainer;
+        std::vector<PParticleAsset*> m_particleAssetContainer;
+        std::vector<PRenderMapAsset*> m_renderMapAssetContainer;
 
     };
 }

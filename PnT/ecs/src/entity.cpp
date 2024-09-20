@@ -7,23 +7,19 @@
 
 namespace pnt::ecs{
 
-    unsigned int PEntity::s_count = 0;
+//    unsigned int PEntity::s_count = 0;
 
-    PEntity::PEntity() : PEntityBase(++s_count), m_tags(ETags::Default) {
-        std::stringstream ss;
-        ss << m_instanceID;
-        m_name = "PEntity" + ss.str() ;
-        PLog::echoMessage(m_name.c_str());
-        initTransform();
-        // sets m_transform
+    PEntity::PEntity() : PEntityBase() {
+
     }
 
-    void PEntity::initTransform() {
-        m_transform = AddComponent<PTransformComponent>();
+    PEntity::PEntity(PUUID uuid) : PEntityBase(uuid) {
+
     }
 
-    PEntity::PEntity(const char* name) : PEntityBase(++s_count), m_name(name), m_tags(ETags::Default) {
-        initTransform(); // sets m_transform
+    PEntity::PEntity(const std::string &name) : PEntityBase() {
+        m_name = name;
     }
+
 }
 

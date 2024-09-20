@@ -28,12 +28,7 @@ namespace pnt::ecs{
         virtual void destroy() = 0;
 
         virtual ComponentType* AddComponent(PEntity* entity) = 0;
-        virtual ComponentType* GetComponent(unsigned int id) = 0;
         virtual void RemoveComponent(PEntity* entity, ComponentType* component) = 0;
-        virtual void RemoveComponentByTag(PEntity* entity, ComponentType* component, std::string tag) = 0;
-        virtual void RemoveComponentsByTag(PEntity* entity, std::string tag) = 0;
-        virtual ComponentType* FindComponentByTag(PEntity* entity, std::string tag) = 0;
-        virtual std::vector<ComponentType*> FindComponentsByTag(PEntity* entity, std::string tag) = 0;
 
     };
 

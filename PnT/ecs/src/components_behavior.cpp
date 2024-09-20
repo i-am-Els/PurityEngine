@@ -2,9 +2,9 @@
 // Created by emman on 8/5/2024.
 //
 
-#include "components_behavior.h"
 #include "entity.h"
 #include "scripting.h"
+#include "components_behavior.h"
 
 namespace pnt::ecs{
 
@@ -16,8 +16,9 @@ namespace pnt::ecs{
         return dynamic_cast<PBehaviourScriptComponent*>(behaviourOwner)->m_entity;
     }
 
-    unsigned int ManipulativeBehaviour::PImpl_ComponentBehaviour::getIDFromEntity(PEntity* entity) {
-        return entity->getInstanceId();
+    PUUID ManipulativeBehaviour::PImpl_ComponentBehaviour::getIDFromEntity(PEntity* entity){
+        auto id = getEntityBase(entity)->getInstanceId();
+        return id;
     }
 
     PEntityBase *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityBase(PEntity *entity) const {

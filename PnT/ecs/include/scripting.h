@@ -17,7 +17,6 @@ namespace pnt::ecs{
         void update(float deltaTime) override;
 
         void start() override;
-
         P_GET_COMPONENT_TYPE(PComponentType::PBehaviourScriptComponent)
 
     private:

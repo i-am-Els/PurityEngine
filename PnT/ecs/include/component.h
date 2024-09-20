@@ -5,6 +5,7 @@
 
 #pragma once
 #include "log.h"
+#include "uuid.h"
 
 #define P_GET_COMPONENT_TYPE(type) static PComponentType s_GetStaticType() { return type; } \
                                 virtual PComponentType getComponentType() const override { return s_GetStaticType(); } \
@@ -20,7 +21,10 @@ namespace pnt::ecs {
         PTransformComponent,
         PRenderComponent,
         PMeshComponent,
-        PBehaviourScriptComponent
+        PBehaviourScriptComponent,
+        PIDComponent,
+        PTagComponent,
+        PCameraComponent
     };
 
     class PComponent {
@@ -32,7 +36,7 @@ namespace pnt::ecs {
         virtual void update(float deltaTime){}
         virtual void start(){}
 
-        [[nodiscard]] inline unsigned int getID() const{ return m_id; }
+        [[nodiscard]] inline PUUID getID() const{ return m_id; }
 
         virtual PComponentType getComponentType() const = 0;
 
@@ -41,7 +45,7 @@ namespace pnt::ecs {
         PEntity* m_entity;
 
     protected:
-        unsigned int m_id;
+        PUUID m_id;
     };
 
 }

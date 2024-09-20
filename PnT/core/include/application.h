@@ -5,15 +5,15 @@
 #pragma once
 #include "window_pnt.h"
 #include "service_locator.h"
+#include "scene.h"
 
 using namespace pnt::graphics;
 namespace pnt{
 
     class PApplication {
     protected:
-        PApplication(const std::string &title, int width, int height) : applicationInfo(ApplicationInfo{title, width,
-                                                                                                        height}) {
-            serviceLocator = std::make_shared<PServiceLocator>();
+        PApplication(const std::string &title, int width, int height)
+        : applicationInfo(ApplicationInfo{title, width, height}), serviceLocator(std::make_shared<PServiceLocator>()) {
         }
 
     public:
@@ -28,6 +28,7 @@ namespace pnt{
         virtual void exit();
 
         std::shared_ptr<PServiceLocator> serviceLocator;
+        PScene Scene{};
 
         struct ApplicationInfo{
             const std::string &title;

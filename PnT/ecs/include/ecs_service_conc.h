@@ -13,6 +13,9 @@
 #include "mesh_system_conc.h"
 #include "transform_system_conc.h"
 #include "render_system_conc.h"
+#include "id_comp.h"
+#include "tag_comp.h"
+#include "reg_system_conc.h"
 
 namespace pnt{
     class PECSService final : public PServiceBase<IECSService>{
@@ -20,6 +23,8 @@ namespace pnt{
         PECSService() = default;
 
         explicit PECSService(PWindow* _window){
+            setSystem<PIDComponent>(std::make_unique<ecs::PIDManager>());
+            setSystem<PTagComponent>(std::make_unique<ecs::PTagManager>());
             setSystem<PTransformComponent>(std::make_unique<scene::PTransformSS>());
             setSystem<PMeshComponent>(std::make_unique<mesh::P3DGeometricMeshSS>());
             setSystem<PRenderComponent>(std::make_unique<graphics::POpenGLRenderSS>(_window->getWindow()));
@@ -33,25 +38,25 @@ namespace pnt{
             s_getSystem<PRenderComponent>()->init();
         }
 
-        void start() override {
+        void start() {
             s_getSystem<PTransformComponent>()->start();
             s_getSystem<PMeshComponent>()->start();
             s_getSystem<PRenderComponent>()->start();
         }
 
-        void process() override {
+        void process() {
             s_getSystem<PTransformComponent>()->process();
             s_getSystem<PMeshComponent>()->process();
             s_getSystem<PRenderComponent>()->process();
         }
 
-        void render() override {
+        void render() {
             s_getSystem<PTransformComponent>()->render();
             s_getSystem<PMeshComponent>()->render();
             s_getSystem<PRenderComponent>()->render();
         }
 
-        void update(float deltaTime) override{
+        void update(float deltaTime) {
             s_getSystem<PTransformComponent>()->update(deltaTime);
             s_getSystem<PMeshComponent>()->update(deltaTime);
             s_getSystem<PRenderComponent>()->update(deltaTime);
