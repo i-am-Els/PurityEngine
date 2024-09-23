@@ -6,7 +6,7 @@
 
 namespace pnt{
 
-    class PFileIO{
+    class PNT_API PFileIO{
     public:
         static std::string extractSourceFromFile(const char *path);
     };

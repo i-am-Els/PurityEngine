@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdarg>
 #include "global.h"
+#include "core_macros.h"
 
 namespace pnt {
     enum class LogLevel{
@@ -30,7 +31,7 @@ namespace pnt {
         return outString;
     }
 
-    class PLog {
+    class PNT_API PLog {
     private:
         PLog();
     public:

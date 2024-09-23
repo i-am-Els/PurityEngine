@@ -14,7 +14,7 @@ namespace pnt::graphics
     };
 
 
-    class PShader {
+    class PNT_API PShader {
     private:
         [[nodiscard]] static unsigned int compileShader(pnt::graphics::ShaderType type, unsigned int id) ;
         unsigned int shaderProgramID = 0;

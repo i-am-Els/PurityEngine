@@ -3,22 +3,24 @@
 //
 
 #pragma once
-#include "window_pnt.h"
+
+#include "pnt_core_pch.h"
 #include "service_locator.h"
+#include "window_pnt.h"
+#include "scene.h"
 
 using namespace pnt::graphics;
 namespace pnt{
 
-    class PApplication {
+    class PNT_API PApplication {
     protected:
-        PApplication(const std::string &title, int width, int height) : applicationInfo(ApplicationInfo{title, width,
-                                                                                                        height}) {
-            serviceLocator = std::make_shared<PServiceLocator>();
+        PApplication(const std::string &title, int width, int height)
+        : applicationInfo(ApplicationInfo{title, width, height}), serviceLocator(std::make_shared<PServiceLocator>()) {
         }
 
     public:
         std::unique_ptr<PWindow> window;
-
+        virtual ~PApplication() = default;
         virtual void init();
         virtual void start();
         virtual void process();
@@ -28,11 +30,15 @@ namespace pnt{
         virtual void exit();
 
         std::shared_ptr<PServiceLocator> serviceLocator;
+        PScene Scene{};
 
-        struct ApplicationInfo{
+        struct PNT_API ApplicationInfo{
             const std::string &title;
             int width;
             int height;
         } applicationInfo;
     };
+
+    // To be defined in client code
+    PNT_API PApplication* CreateApplication();
 }

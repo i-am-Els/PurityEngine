@@ -8,7 +8,7 @@
 #include "components_behavior.h"
 
 namespace pnt::ecs{
-    class PBehaviourScriptComponent : public PComponent, public ManipulativeBehaviour{
+    class PNT_API PBehaviourScriptComponent : public PComponent, public ManipulativeBehaviour{
         explicit PBehaviourScriptComponent(PEntity *entity);
 
     public:
@@ -17,7 +17,6 @@ namespace pnt::ecs{
         void update(float deltaTime) override;
 
         void start() override;
-
         P_GET_COMPONENT_TYPE(PComponentType::PBehaviourScriptComponent)
 
     private:

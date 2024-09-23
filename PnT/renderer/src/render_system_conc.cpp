@@ -100,12 +100,6 @@ namespace pnt::graphics {
 
     PRenderComponent *POpenGLRenderSS::AddComponent(PEntity *entity) {
         try {
-            // Avoid multiple render components on one entity
-            for (const auto& component : renderComponents){
-                if (component->getID() == entity->getInstanceId()) {
-                    return component.get();
-                }
-            }
             SRenderProfile profile = {true}; // Set the profile of the render component, through the DTO
             renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity, profile));
             return renderComponents.back().get();
@@ -115,37 +109,8 @@ namespace pnt::graphics {
         return nullptr;
     }
 
-    PRenderComponent *POpenGLRenderSS::GetComponent(unsigned int id) {
-        try{
-            // Get the Component that has the same id as the entity, we use that because only one component type can be on the entity.
-            for (const auto& component : renderComponents) {
-                if (component->getID() == id) {
-                    return component.get();
-                }
-            }
-        }catch(...){
-            PLog::echoMessage(LogLevel::Error, "Get Render Comp Generic Assertion failed");
-        }
-        return nullptr; // Return null pointer if component not found
-    }
-
     void POpenGLRenderSS::RemoveComponent(PEntity *entity, PRenderComponent *component) {
 
     }
 
-    void POpenGLRenderSS::RemoveComponentByTag(PEntity *entity, PRenderComponent *component, std::string tag) {
-
-    }
-
-    void POpenGLRenderSS::RemoveComponentsByTag(PEntity *entity, std::string tag) {
-
-    }
-
-    PRenderComponent *POpenGLRenderSS::FindComponentByTag(PEntity *entity, std::string tag) {
-        return nullptr;
-    }
-
-    std::vector<PRenderComponent *> POpenGLRenderSS::FindComponentsByTag(PEntity *entity, std::string tag) {
-        return {};
-    }
 }

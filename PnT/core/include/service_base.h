@@ -3,11 +3,11 @@
 //
 
 #pragma once
-#include <typeindex>
+#include "pnt_core_pch.h"
 
 namespace pnt{
     template<typename T>
-    class PServiceBase : public T{
+    class PNT_API PServiceBase : public T{
     public:
         /// Returns the type index of the base interface.
         [[nodiscard]] std::type_index getTypeIndex() const override {

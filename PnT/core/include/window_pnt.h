@@ -6,15 +6,13 @@
 
 #include "pnt_core_pch.h"
 
-#include "core_macros.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-//using namespace isle_engine::math;
 
 namespace pnt::graphics{
 
-    class PWindow{
+    class PNT_API PWindow{
     private:
         static void setVersion(int major, int minor);
         GLFWwindow* window;

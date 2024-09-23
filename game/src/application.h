@@ -4,6 +4,7 @@
 
 #pragma once
 
+#define PNT_ENTRY_POINT
 #include "pnt.h"
 
 using namespace pnt;
@@ -31,9 +32,4 @@ public:
     PEntity* quad;
 };
 
-namespace pnt{
-    PApplication* CreateApplication(){
-        return new Application("PnT", 700, 500);
-    }
-}
 

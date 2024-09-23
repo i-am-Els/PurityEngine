@@ -7,26 +7,29 @@
 #include "shader.h"
 #include "renderer.h"
 #include "linkedList.h"
-#include "isystems.h"
 #include "color.h"
 #include "GLFW/glfw3.h"
 #include "vertex_array.h"
 #include "render_system.h"
-#include "service_base.h"
 #include "buffer.h"
+#include "pnt_exceptions.h"
 
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
+using namespace pnt::exceptions;
 using namespace pnt::ds;
 
 namespace pnt::graphics{
 
-    class POpenGLRenderSS : public IRenderSystem{
+    class PNT_API POpenGLRenderSS final : public IRenderSystem{
     public:
         explicit POpenGLRenderSS(GLFWwindow*& window);
         ~POpenGLRenderSS() override;
         POpenGLRenderSS(POpenGLRenderSS&& renderer) = default;
+
+        POpenGLRenderSS(const POpenGLRenderSS& manager) = delete;
+        POpenGLRenderSS operator=(const POpenGLRenderSS& manager) = delete;
 
         void init() override;
         void start() override;
@@ -44,36 +47,26 @@ namespace pnt::graphics{
         inline void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
             try{
                 if (vbo == nullptr || ebo == nullptr){
-                    throw -1;
+                    throw NullBufferError();
                 }
 
                 this->_vbo = vbo;
                 this->_ebo = ebo;
             }
-            catch (int e){
-                PLog::echoMessage(LogLevel::Error, "Null Incoming Buffers");
+            catch (std::exception& e){
+                PLog::echoMessage(LogLevel::Error, e.what());
             }
         }
 
         PRenderComponent *AddComponent(PEntity* entity) override;
 
-        PRenderComponent *GetComponent(unsigned int id) override;
-
         void RemoveComponent(PEntity* entity, PRenderComponent *component) override;
-
-        void RemoveComponentByTag(PEntity* entity, PRenderComponent *component, std::string tag) override;
-
-        void RemoveComponentsByTag(PEntity* entity, std::string tag) override;
-
-        PRenderComponent *FindComponentByTag(PEntity* entity, std::string tag) override;
-
-        std::vector<PRenderComponent *> FindComponentsByTag(PEntity* entity, std::string tag) override;
 
     private:
         std::vector<std::unique_ptr<PRenderComponent>> renderComponents;
 
 
-        void clearWindow(GLbitfield masks, graphics::Color color);
+        static void clearWindow(GLbitfield masks, graphics::Color color);
         GLFWwindow* _window;
         std::unique_ptr<PShader> shader;
         VertexArray* vertexArray;

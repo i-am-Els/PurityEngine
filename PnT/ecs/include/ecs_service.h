@@ -8,7 +8,7 @@
 
 namespace pnt{
 
-    class IECSService : public IService{
+    class PNT_API IECSService : public IService{
     public:
 
 

@@ -3,6 +3,7 @@
 //
 
 #include "application.h"
+#include "quad_comp.h"
 
 using namespace pnt;
 
@@ -21,10 +22,11 @@ void Application::update(float deltaTime) {
 void Application::init() {
     PApplication::init();
 
-    quad = new PEntity("Quad");
+    quad = Scene.CreateEntity("Quad");
 
     auto mesh = quad->AddComponent<PMeshComponent>();
     auto render = quad->AddComponent<PRenderComponent>();
+
 
     PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
 
@@ -47,5 +49,7 @@ void Application::exit() {
     delete quad;
 }
 
-
+pnt::PApplication* pnt::CreateApplication(){
+    return new Application("PnT", 700, 500);
+}
 

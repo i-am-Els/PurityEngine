@@ -4,15 +4,12 @@
 
 #pragma once
 
-#include <map>
-#include <typeindex>
-#include <memory>
-#include <mutex>
-#include <stdexcept>
+#include "pnt_core_pch.h"
+
 #include "iservices.h"
 
 namespace pnt{
-    class PServiceLocator{
+    class PNT_API PServiceLocator{
     private:
         std::map<std::type_index, std::shared_ptr<IService>> services;
         mutable std::mutex mutex;
@@ -50,10 +47,16 @@ namespace pnt{
             auto it = services.find(typeIndex);
 
             if (it == services.end()){
+                PLog::echoValue(typeIndex.name());
                 throw std::runtime_error("Service not found!");
             }
 
             return std::static_pointer_cast<T>(it->second); // Cast the IService into a std::shared_pointer of the type T.
+        }
+
+        template<typename Interface, typename Concrete>
+        Concrete* getConcreteService(){
+            return dynamic_cast<Concrete*>(getService<Interface>().get());
         }
     };
 }

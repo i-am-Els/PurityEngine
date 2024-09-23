@@ -13,26 +13,29 @@
 #include "transform_ecs.h"
 #include "mesh.h"
 
-
 using namespace pnt::artifacts;
+
 namespace pnt::ecs {
 
-    class PEntity : public PEntityBase, public ManipulativeBehaviour {
+    class PNT_API PEntity : public PEntityBase, public ManipulativeBehaviour {
     public:
         PEntity();
-        explicit PEntity(const char* name);
+        explicit PEntity(const std::string& name);
+        explicit PEntity(PUUID uuid);
 //        PEntity(const PEntity& entity);
-        ~PEntity() override = default; // Destructor destroys all components
+        ~PEntity() override{
+            PLog::echoMessage("Destroying Entity...");
+        } // Destructor destroys all components
 
-    public:
-        PTransformComponent* m_transform;
+        [[nodiscard]] inline PUUID getInstanceID(){
+            return m_instanceID;
+        }
+
     private:
         std::string m_name{};
-        ETags m_tags;
-    private:
-        static unsigned int s_count;
-
-        void initTransform();
+        ETags m_tags{ETags::Default};
+        friend class PEntityRegistry;
     };
+
 }
 

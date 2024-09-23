@@ -3,7 +3,7 @@
 //
 
 #include "system_finder.h"
-#include "application.h"
+#include "papplication.h"
 #include "service_locator.h"
 #include "ecs_service_conc.h"
 
@@ -14,11 +14,11 @@ namespace pnt{
         return application;
     }
 
-    PECSService *PSystemFinder::PGetECSService() {
-        return dynamic_cast<PECSService *>(application->serviceLocator->getService<IECSService>().get());
+    PECSService *PSystemFinder::GetECSService() {
+        return dynamic_cast<PECSService *>(GetApplication()->serviceLocator->getService<IECSService>().get());
     }
 
     std::shared_ptr<PServiceLocator> PSystemFinder::GetServiceLocator() {
-        return application->serviceLocator;
+        return GetApplication()->serviceLocator;
     }
 }

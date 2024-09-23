@@ -8,7 +8,7 @@
 
 namespace pnt {
 
-    class PInput {
+    class PNT_API PInput {
     private:
         PInput();
     public:

@@ -8,8 +8,11 @@
 using namespace pnt::ecs;
 
 namespace pnt::scene{
-    class PTransformSS : public ITransformSystem {
+    class PNT_API PTransformSS final : public ITransformSystem {
     public:
+        PTransformSS() = default;
+        PTransformSS(const PTransformSS& manager) = delete;
+        PTransformSS operator=(const PTransformSS& manager) = delete;
         void init() override;
 
         void start() override;
@@ -26,17 +29,7 @@ namespace pnt::scene{
 
         PTransformComponent *AddComponent(PEntity *entity) override;
 
-        PTransformComponent *GetComponent(unsigned int id) override;
-
         void RemoveComponent(PEntity *entity, PTransformComponent *component) override;
-
-        void RemoveComponentByTag(PEntity *entity, PTransformComponent *component, std::string tag) override;
-
-        void RemoveComponentsByTag(PEntity *entity, std::string tag) override;
-
-        PTransformComponent *FindComponentByTag(PEntity *entity, std::string tag) override;
-
-        std::vector<PTransformComponent *> FindComponentsByTag(PEntity *entity, std::string tag) override;
 
     private:
         std::vector<std::unique_ptr<PTransformComponent>> transformComponents;

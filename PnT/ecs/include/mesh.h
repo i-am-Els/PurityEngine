@@ -8,6 +8,7 @@
 
 #include "component.h"
 #include "buffer.h"
+#include "assets_types.h"
 
 using namespace pnt::graphics;
 namespace pnt::mesh{
@@ -17,9 +18,10 @@ namespace pnt::mesh{
 namespace pnt::ecs{
     struct SMeshProfile{
         bool isVisible;
+        std::string relAssetPath;
     };
 
-    class PMeshComponent : public PComponent{
+    class PNT_API PMeshComponent final : public PComponent{
     public:
         explicit PMeshComponent(PEntity *entity, SMeshProfile profile);
         ~PMeshComponent() override { PLog::echoMessage("Destroying mesh"); }
@@ -27,10 +29,12 @@ namespace pnt::ecs{
         void update(float deltaTime) override;
         void start() override;
 
+
         P_GET_COMPONENT_TYPE(PComponentType::PMeshComponent)
         SMeshProfile m_MeshProfile;
 
     private:
+        assetDB::PAssetHandle<assetDB::PStaticMeshAsset>* meshHandle;
         static unsigned int s_count; // All components must have this
 
     protected:
