@@ -49,5 +49,7 @@ void Application::exit() {
     delete quad;
 }
 
-
+pnt::PApplication* pnt::CreateApplication(){
+    return new Application("PnT", 700, 500);
+}
 

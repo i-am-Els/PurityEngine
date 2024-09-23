@@ -5,5 +5,5 @@
 #include "ecs_service_conc.h"
 
 namespace pnt{
-    std::map<std::type_index, std::unique_ptr<ISystemBase>> PECSService::system_map;
+//    std::map<std::type_index, std::unique_ptr<ecs::ISystemBase>> PECSService::system_map;
 }

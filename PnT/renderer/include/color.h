@@ -5,7 +5,7 @@
 #pragma once
 
 namespace pnt::graphics{
-    struct Color{
+    struct PNT_API Color{
         float r, g, b, a;
 
         Color();

@@ -8,8 +8,11 @@
 using namespace pnt::ecs;
 
 namespace pnt::scene{
-    class PTransformSS final : public ITransformSystem {
+    class PNT_API PTransformSS final : public ITransformSystem {
     public:
+        PTransformSS() = default;
+        PTransformSS(const PTransformSS& manager) = delete;
+        PTransformSS operator=(const PTransformSS& manager) = delete;
         void init() override;
 
         void start() override;

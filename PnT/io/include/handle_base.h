@@ -8,7 +8,7 @@
 #include "uuid.h"
 
 namespace pnt{
-    struct PHandleBase{
+    struct PNT_API PHandleBase{
         pnt::PUUID m_handleId;
         PHandleBase() {
             PLog::echoValue(m_handleId);

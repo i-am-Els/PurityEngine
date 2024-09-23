@@ -8,7 +8,7 @@
 #include "entity_registry.h"
 
 namespace pnt{
-    class PScene{
+    class PNT_API PScene{
     public:
         PScene() = default;
         ~PScene() = default;

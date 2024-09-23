@@ -7,7 +7,7 @@
 #include "mesh.h"
 
 namespace pnt::ecs{
-    class IMeshSystem : public ISystem<PMeshComponent>{
+    class PNT_API IMeshSystem : public ISystem<PMeshComponent>{
 
     };
 }

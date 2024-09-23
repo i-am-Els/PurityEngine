@@ -17,15 +17,16 @@ using namespace pnt::artifacts;
 
 namespace pnt::ecs {
 
-    class PEntity : public PEntityBase, public ManipulativeBehaviour {
+    class PNT_API PEntity : public PEntityBase, public ManipulativeBehaviour {
     public:
         PEntity();
         explicit PEntity(const std::string& name);
         explicit PEntity(PUUID uuid);
-//        PEntity(const PEntity& entity) ;
+//        PEntity(const PEntity& entity);
         ~PEntity() override{
             PLog::echoMessage("Destroying Entity...");
         } // Destructor destroys all components
+
         [[nodiscard]] inline PUUID getInstanceID(){
             return m_instanceID;
         }
@@ -34,8 +35,6 @@ namespace pnt::ecs {
         std::string m_name{};
         ETags m_tags{ETags::Default};
         friend class PEntityRegistry;
-
-//        static unsigned int s_count;
     };
 
 }

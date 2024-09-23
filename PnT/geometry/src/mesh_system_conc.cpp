@@ -8,6 +8,7 @@
 
 namespace pnt::mesh{
     void P3DGeometricMeshSS::init() {
+
     }
 
     void P3DGeometricMeshSS::process() {
@@ -57,7 +58,7 @@ namespace pnt::mesh{
     }
 
     void P3DGeometricMeshSS::SendBuffersToRenderSystem() {
-        auto renderSystem = dynamic_cast<POpenGLRenderSS*>(PSystemFinder::PGetECSService()->getSystem<PRenderComponent>());
+        auto renderSystem = dynamic_cast<POpenGLRenderSS*>(PSystemFinder::GetECSService()->getSystem<PRenderComponent>());
         if (renderSystem)  { renderSystem->SetUpBuffers(&VBO, &EBO); }
     }
 

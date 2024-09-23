@@ -8,7 +8,7 @@
 #include "components_behavior.h"
 
 namespace pnt::ecs{
-    class PBehaviourScriptComponent : public PComponent, public ManipulativeBehaviour{
+    class PNT_API PBehaviourScriptComponent : public PComponent, public ManipulativeBehaviour{
         explicit PBehaviourScriptComponent(PEntity *entity);
 
     public:

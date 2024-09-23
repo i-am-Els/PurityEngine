@@ -7,7 +7,7 @@
 #include "isystems.h"
 
 namespace pnt::ecs{
-    class IRenderSystem : public ISystem<PRenderComponent>{
+    class PNT_API IRenderSystem : public ISystem<PRenderComponent>{
         public:
             virtual void SwapBuffers() = 0;
             virtual void setUpShader() =  0;

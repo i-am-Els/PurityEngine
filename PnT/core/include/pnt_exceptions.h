@@ -7,7 +7,7 @@
 
 namespace pnt::exceptions
 {
-    class NullBufferError final : public std::exception
+    class PNT_API NullBufferError final : public std::exception
     {
     public:
         [[nodiscard]] const char* what() const noexcept override{

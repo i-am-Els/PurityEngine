@@ -4,11 +4,16 @@
 
 #pragma once
 
-#include <typeindex>
+#include "pnt_core_pch.h"
+
+#define PNT_TYPE_INDEX_DEF() template<typename T>\
+[[nodiscard]] static std::type_index s_getTypeIndex(){\
+    return std::type_index(typeid(T));\
+} \
 
 namespace pnt{
 
-    class IService{
+    class PNT_API IService{
     public:
         virtual ~IService() = default;
 

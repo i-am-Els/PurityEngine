@@ -22,11 +22,14 @@ using namespace pnt::ds;
 
 namespace pnt::graphics{
 
-    class POpenGLRenderSS final : public IRenderSystem{
+    class PNT_API POpenGLRenderSS final : public IRenderSystem{
     public:
         explicit POpenGLRenderSS(GLFWwindow*& window);
         ~POpenGLRenderSS() override;
         POpenGLRenderSS(POpenGLRenderSS&& renderer) = default;
+
+        POpenGLRenderSS(const POpenGLRenderSS& manager) = delete;
+        POpenGLRenderSS operator=(const POpenGLRenderSS& manager) = delete;
 
         void init() override;
         void start() override;

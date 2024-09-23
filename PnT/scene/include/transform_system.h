@@ -8,7 +8,7 @@
 #include "transform_ecs.h"
 
 namespace pnt::ecs{
-    class ITransformSystem : public ISystem<PTransformComponent>{
+    class PNT_API ITransformSystem : public ISystem<PTransformComponent>{
 
     };
 }

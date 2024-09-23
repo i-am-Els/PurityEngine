@@ -17,19 +17,18 @@ namespace pnt::assetDB{
     // TODO - Implement the Specs GetAssetHandle methods...
 
 
-    struct PAssetDBQuery{
+    struct PNT_API PAssetDBQuery{
         PAssetDBQuery(const QuerySpec& spec, QueryOperation operation)
             : spec(spec),
               operation(operation)
         {
         }
 
-
         QuerySpec spec;
         QueryOperation operation;
     };
 
-    class PAssetDatabase final : public PServiceBase<IAssetDBService>{
+    class PNT_API PAssetDatabase final : public PServiceBase<IAssetDBService>{
     public:
         ~PAssetDatabase() override = default;
 
@@ -49,10 +48,10 @@ namespace pnt::assetDB{
 
 
     private:
-        static PHandleBase* performGetOperation(const QuerySpec& spec);
-        static PHandleBase* performAddOperation(const QuerySpec& spec);
-        static PHandleBase* performUpdateOperation(const QuerySpec& spec);
-        static PHandleBase* performDeleteOperation(const QuerySpec& spec); // handle id is nullptr in this case if deletion succeeded...
+        [[nodiscard]]static PHandleBase* performGetOperation(const QuerySpec& spec);
+        [[nodiscard]]static PHandleBase* performAddOperation(const QuerySpec& spec);
+        [[nodiscard]]static PHandleBase* performUpdateOperation(const QuerySpec& spec);
+        [[nodiscard]]static PHandleBase* performDeleteOperation(const QuerySpec& spec); // handle id is nullptr in this case if deletion succeeded...
 
         // Switch on QueryType...
         std::vector<PTextureAsset*> m_textureAssetContainer;

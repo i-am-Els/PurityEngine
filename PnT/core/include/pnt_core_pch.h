@@ -15,6 +15,9 @@
 #include <cmath>
 #include <exception>
 #include <random>
+#include <mutex>
+#include <stdexcept>
+#include <typeindex>
 
 // Data structures
 #include <string>
@@ -23,12 +26,15 @@
 #include <vector>
 #include <array>
 #include <unordered_map>
+#include <map>
 #include <unordered_set>
 
 
 // Windows Specific Includes
-#ifdef ISLE_PLATFORM_WINDOWS
+#ifdef PNT_PLATFORM_WINDOWS
 #include "windows.h"
 #endif
 
 #include "uuid.h"
+#include "core_macros.h"
+#include "log.h"

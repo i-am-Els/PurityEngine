@@ -8,7 +8,7 @@
 #include "tags.h"
 
 namespace pnt::ecs{
-    class PTagComponent final : public PComponent{
+    class PNT_API PTagComponent final : public PComponent{
     public:
         explicit PTagComponent(PEntity *entity);
         ~PTagComponent() override { PLog::echoMessage("Destroying Tag Component"); };

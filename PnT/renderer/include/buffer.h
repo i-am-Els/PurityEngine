@@ -13,7 +13,7 @@ using namespace isle_engine::math;
 
 namespace pnt::graphics{
 
-    struct Vertex{
+    struct PNT_API Vertex{
         Vector3f Position;
         Vector2f TextCoord;
         Vector3f Normal;
@@ -24,7 +24,7 @@ namespace pnt::graphics{
         ElementBuffer, VertexBuffer
     };
 
-    class Buffer{
+    class PNT_API Buffer{
     public:
 
         virtual void initBuffer() = 0;
@@ -54,7 +54,7 @@ namespace pnt::graphics{
 
     };
 
-    class VertexBuffer : public Buffer {
+    class PNT_API VertexBuffer : public Buffer {
     public:
         VertexBuffer() = default;
         VertexBuffer(std::vector<Vector3f> &data, unsigned int vertexCount);
@@ -80,7 +80,7 @@ namespace pnt::graphics{
 
     };
 
-    class ElementBuffer : public Buffer {
+    class PNT_API ElementBuffer : public Buffer {
     public:
         ElementBuffer() = default;
         ElementBuffer(std::vector<unsigned int> &data, unsigned int vertexCount);

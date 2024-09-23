@@ -5,15 +5,14 @@
 #pragma once
 #include "entity.h"
 #include "vector2.h"
-#include "transform_ecs.h"
 #include "window_pnt.h"
 #include "vertex_array.h"
 #include "buffer.h"
 #include "log.h"
 #include "input.h"
 #include "data_hash_table.h"
-#include "islemath.h"
 #include "papplication.h"
+#include "islemath.h"
 
 // ecs
 #include "mesh.h"
@@ -21,13 +20,16 @@
 #include "camera.h"
 #include "renderer.h"
 #include "id_comp.h"
+#include "tag_comp.h"
 #include "scripting.h"
+
+#ifdef PNT_ENTRY_POINT
+#include "entry.h"
+#endif
 
 
 using namespace pnt;
 using namespace pnt::graphics;
-
-
 
 namespace pnt{
 //    graphics::PWindow pRenderer;

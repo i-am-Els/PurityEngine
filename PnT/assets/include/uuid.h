@@ -6,9 +6,10 @@
 
 //#include <xhash>
 #include "pnt_core_pch.h"
+#include "core_macros.h"
 
 namespace pnt{
-    class PUUID {
+    class PNT_API PUUID {
     public:
         PUUID();
         explicit PUUID(uint64_t id);

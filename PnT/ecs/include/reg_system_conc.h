@@ -8,8 +8,11 @@
 
 namespace pnt::ecs{
 
-    class PIDManager final : public IIDSystem {
+    class PNT_API PIDManager final : public IIDSystem {
     public:
+        PIDManager() = default;
+        PIDManager(const PIDManager& manager) = delete;
+        PIDManager operator=(const PIDManager& manager) = delete;
         void init() override;
         void start() override;
         void process() override;
@@ -24,8 +27,11 @@ namespace pnt::ecs{
     };
 
 
-    class PTagManager final : public ITagSystem {
+    class PNT_API PTagManager final : public ITagSystem {
     public:
+        PTagManager() = default;
+        PTagManager(const PTagManager& manager) = delete;
+        PTagManager operator=(const PTagManager& manager) = delete;
         void init() override;
         void start() override;
         void process() override;

@@ -4,6 +4,18 @@
 
 #pragma once
 
+#ifdef PNT_PLATFORM_WINDOWS
+    #ifdef PNT_BUILD_DLL
+        #define PNT_API __declspec(dllexport)
+    #else
+        #define PNT_API __declspec(dllimport)
+    #endif
+#else
+    #error PNT only supports Windows right now
+#endif
+
+#define BIT(x) (1 << x) // Left Shift 1 For FlagEnums
+
 #ifdef PNT_ENABLE_ASSERT
 #include <cassert>
     #define PNT_ASSERT(expr) assert(expr)

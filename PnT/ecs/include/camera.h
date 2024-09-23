@@ -17,7 +17,7 @@ namespace pnt::ecs{
         Vector2i position;
     };
 
-    class PCameraComponent final : PComponent {
+    class PNT_API PCameraComponent final : PComponent {
     public:
         explicit PCameraComponent(PEntity *entity);
         PCameraComponent(PEntity *entity, unsigned int _width, unsigned int _height, int xPos, int yPos);

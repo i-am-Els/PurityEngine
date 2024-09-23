@@ -10,11 +10,11 @@
 #include "id_comp.h"
 
 namespace pnt::ecs{
-    class ITagSystem : public ISystem<PTagComponent>{
+    class PNT_API ITagSystem : public ISystem<PTagComponent>{
 
     };
 
-    class IIDSystem : public ISystem<PIDComponent>{
+    class PNT_API IIDSystem : public ISystem<PIDComponent>{
 
     };
 }

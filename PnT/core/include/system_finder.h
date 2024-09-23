@@ -12,7 +12,7 @@ namespace pnt{
     class PServiceLocator;
     class PECSService;
 
-    class PSystemFinder {
+    class PNT_API PSystemFinder {
         friend PApplication;
     public:
         static PSystemFinder& GetInstance(){
@@ -22,7 +22,7 @@ namespace pnt{
 
         static PApplication *GetApplication();
 
-        static PECSService * PGetECSService();
+        static PECSService * GetECSService();
 
         static std::shared_ptr<PServiceLocator> GetServiceLocator();
 

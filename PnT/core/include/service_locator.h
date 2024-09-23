@@ -4,15 +4,12 @@
 
 #pragma once
 
-#include <map>
-#include <typeindex>
-#include <memory>
-#include <mutex>
-#include <stdexcept>
+#include "pnt_core_pch.h"
+
 #include "iservices.h"
 
 namespace pnt{
-    class PServiceLocator{
+    class PNT_API PServiceLocator{
     private:
         std::map<std::type_index, std::shared_ptr<IService>> services;
         mutable std::mutex mutex;

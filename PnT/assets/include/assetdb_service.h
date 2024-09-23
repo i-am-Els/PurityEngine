@@ -8,7 +8,7 @@
 
 namespace pnt{
 
-    class IAssetDBService : public IService{
+    class PNT_API IAssetDBService : public IService{
     public:
 
 

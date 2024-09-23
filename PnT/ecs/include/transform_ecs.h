@@ -16,7 +16,7 @@ namespace pnt::ecs{
         Transform Parent;
     };
 
-    class PTransformComponent final : public PComponent {
+    class PNT_API PTransformComponent final : public PComponent {
     public:
         explicit PTransformComponent(PEntity *entity, STransformProfile profile);
 

@@ -5,13 +5,14 @@
 #pragma once
 
 #include "component.h"
-#include "ecs_service_conc.h"
 #include "entity_base.h"
+#include "ecs_service_conc.h"
+#include "system_finder.h"
 
 namespace pnt::ecs{
 
 
-    class ManipulativeBehaviour{
+    class PNT_API ManipulativeBehaviour{
     public:
 
         virtual ~ManipulativeBehaviour() = default;
@@ -29,7 +30,7 @@ namespace pnt::ecs{
         T *AddComponent();
 
     private:
-        class PImpl_ComponentBehaviour{
+        class PNT_API PImpl_ComponentBehaviour{
         public:
             PEntity* getEntity(ManipulativeBehaviour* behaviourOwner);
             PEntity* getEntityFromBehaviour(ManipulativeBehaviour* behaviourOwner);
@@ -67,7 +68,7 @@ namespace pnt::ecs{
     template<typename T>
     void ManipulativeBehaviour::RemoveComponent(T *component) {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
-        ISystem<T>* pSystem = PECSService::s_getSystem<T>();
+        ISystem<T>* pSystem = PSystemFinder::GetECSService()->getSystem<T>();
 
         auto e = behaviour.getEntity(this);
         PEntity *entity = e != nullptr ? e :  behaviour.getEntityFromBehaviour(this);
@@ -89,7 +90,7 @@ namespace pnt::ecs{
     template<typename T>
     T *ManipulativeBehaviour::AddComponent() {
         static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
-        ISystem<T>* pSystem = PECSService::s_getSystem<T>();
+        ISystem<T>* pSystem = PSystemFinder::GetECSService()->getSystem<T>();
 
         try{
             auto e = behaviour.getEntity(this);
@@ -101,7 +102,7 @@ namespace pnt::ecs{
                 return found;
             }
             return behaviour.getAddComponentResultIntoEntityContainer<T>(pSystem, entity,
-                                                                   "Component is not valid");
+                                                                         "Component is not valid");
         }catch(const char* e) {
             PLog::echoMessage(LogLevel::Error, e);
             return nullptr;

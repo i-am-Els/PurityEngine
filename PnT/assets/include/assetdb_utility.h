@@ -8,7 +8,7 @@
 // This is the part of the system that communicates with the FileI/O system.
 namespace pnt::assetDB
 {
-    class PAssetDBUtility {
+    class PNT_API PAssetDBUtility {
 
     };
 }

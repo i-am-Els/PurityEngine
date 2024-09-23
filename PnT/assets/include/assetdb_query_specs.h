@@ -5,13 +5,14 @@
 #pragma once
 
 #include "pnt_core_pch.h"
+#include "core_macros.h"
 #include "assetdb_enums.h"
 #include "assetdb_type_strategy.h"
 
 namespace pnt::assetDB
 {
     // Base Spec
-    class QuerySpec
+    class PNT_API QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -32,7 +33,7 @@ namespace pnt::assetDB
             delete strategy;
         }
     protected:
-        AssetOperationStrategy* strategy = nullptr;
+        AssetOperationStrategy* strategy;
 
     private:
         QueryAssetType m_type{};
@@ -43,7 +44,7 @@ namespace pnt::assetDB
     // Derived Specs
     //
 
-    class QueryStaticMeshAssetSpec final : public QuerySpec
+    class PNT_API QueryStaticMeshAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -61,7 +62,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryMeshAssetSpec final : public QuerySpec
+    class PNT_API QueryMeshAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -76,7 +77,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryTextureAssetSpec final : public QuerySpec
+    class PNT_API QueryTextureAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -91,7 +92,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QuerySpriteAssetSpec final : public QuerySpec
+    class PNT_API QuerySpriteAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -106,7 +107,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryShaderAssetSpec final : public QuerySpec
+    class PNT_API QueryShaderAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -121,7 +122,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QuerySkeletonAssetSpec final : public QuerySpec
+    class PNT_API QuerySkeletonAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -136,7 +137,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryMaterialAssetSpec final : public QuerySpec
+    class PNT_API QueryMaterialAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -151,7 +152,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QuerySplineAssetSpec final : public QuerySpec
+    class PNT_API QuerySplineAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -166,7 +167,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryP2DPolygonMeshAssetSpec final : public QuerySpec
+    class PNT_API QueryP2DPolygonMeshAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -181,7 +182,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QuerySoundSourceAssetSpec final : public QuerySpec
+    class PNT_API QuerySoundSourceAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -196,7 +197,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryP3DSoundSourceAssetSpec final : public QuerySpec
+    class PNT_API QueryP3DSoundSourceAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -211,7 +212,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryLevelAssetSpec final : public QuerySpec
+    class PNT_API QueryLevelAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -226,7 +227,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryParticleAssetSpec final : public QuerySpec
+    class PNT_API QueryParticleAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:
@@ -241,7 +242,7 @@ namespace pnt::assetDB
         // and other rules
     };
 
-    class QueryRenderMapAssetSpec final : public QuerySpec
+    class PNT_API QueryRenderMapAssetSpec final : public QuerySpec
     {
         friend class PAssetDatabase;
     public:

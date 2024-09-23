@@ -7,7 +7,7 @@
 #include "handle_base.h"
 
 namespace pnt::assetDB{
-    class PAsset {
+    class PNT_API PAsset {
         void * m_data;
     };
 
@@ -16,59 +16,59 @@ namespace pnt::assetDB{
     // ---------------------- Asset Types ----------------------
     // ---------------------------------------------------------
     
-    class PTextureAsset : public PAsset{
+    class PNT_API PTextureAsset : public PAsset{
 
     };
 
-    class PSpriteAsset : public PAsset{
+    class PNT_API PSpriteAsset : public PAsset{
 
     };
 
-    class PShaderAsset : public PAsset{
+    class PNT_API PShaderAsset : public PAsset{
 
     };
 
-    class PMeshAsset : public PAsset{
+    class PNT_API PMeshAsset : public PAsset{
 
     };
 
-    class PSkeletonAsset : public PAsset{
+    class PNT_API PSkeletonAsset : public PAsset{
 
     };
 
-    class PStaticMeshAsset : public PAsset{
+    class PNT_API PStaticMeshAsset : public PAsset{
 
     };
 
-    class PMaterialAsset : public PAsset{
+    class PNT_API PMaterialAsset : public PAsset{
 
     };
 
-    class PSplineAsset : public PAsset{
+    class PNT_API PSplineAsset : public PAsset{
 
     };
 
-    class PP2DPolygonMeshAsset : public PAsset{
+    class PNT_API PP2DPolygonMeshAsset : public PAsset{
 
     };
 
-    class PSoundSourceAsset : public PAsset{
+    class PNT_API PSoundSourceAsset : public PAsset{
 
     };
 
-    class PP3DSoundSourceAsset : public PAsset{
+    class PNT_API PP3DSoundSourceAsset : public PAsset{
 
     };
 
-    class PLevelAsset : public PAsset{
+    class PNT_API PLevelAsset : public PAsset{
 
     };
 
-    class PParticleAsset : public PAsset{
+    class PNT_API PParticleAsset : public PAsset{
 
     };
 
-    class PRenderMapAsset : public PAsset{
+    class PNT_API PRenderMapAsset : public PAsset{
 
     };
 
@@ -76,7 +76,7 @@ namespace pnt::assetDB{
     // ---------------------- Asset Type Handles ----------------------
     // ----------------------------------------------------------------
     template<typename AssetTypeRef>
-    class PAssetHandle final : public PHandleBase{
+    class PNT_API PAssetHandle final : public PHandleBase{
     public:
         PAssetHandle();
         explicit PAssetHandle(AssetTypeRef* data);

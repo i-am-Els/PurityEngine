@@ -4,11 +4,12 @@
 
 #pragma once
 #include "handle_base.h"
+#include "core_macros.h"
 
 namespace pnt::assetDB
 {
 
-    class AssetOperationStrategy
+    class PNT_API AssetOperationStrategy
     {
     public:
         virtual ~AssetOperationStrategy() = default;
@@ -18,7 +19,7 @@ namespace pnt::assetDB
         virtual PHandleBase* DeleteOperation() = 0;
     };
 
-    class TextureAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API TextureAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~TextureAssetOperationStrategy() override;
@@ -28,7 +29,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class SpriteAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API SpriteAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~SpriteAssetOperationStrategy() override;
@@ -38,7 +39,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class ShaderAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API ShaderAssetOperationStrategy final : public AssetOperationStrategy
     {
         ~ShaderAssetOperationStrategy() override;
         PHandleBase* ReadOperation() override;
@@ -47,7 +48,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class MeshAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API MeshAssetOperationStrategy final : public AssetOperationStrategy
     {
         ~MeshAssetOperationStrategy() override;
         PHandleBase* ReadOperation() override;
@@ -56,7 +57,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class SkeletonAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API SkeletonAssetOperationStrategy final : public AssetOperationStrategy
     {
         ~SkeletonAssetOperationStrategy() override;
         PHandleBase* ReadOperation() override;
@@ -65,7 +66,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class StaticMeshAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API StaticMeshAssetOperationStrategy final : public AssetOperationStrategy
     {
         ~StaticMeshAssetOperationStrategy() override;
         PHandleBase* ReadOperation() override;
@@ -74,7 +75,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class MaterialAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API MaterialAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~MaterialAssetOperationStrategy() override;
@@ -84,7 +85,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class SplineAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API SplineAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~SplineAssetOperationStrategy() override;
@@ -94,7 +95,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class P2DPolygonMeshAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API P2DPolygonMeshAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~P2DPolygonMeshAssetOperationStrategy() override;
@@ -104,7 +105,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class SoundSourceAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API SoundSourceAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~SoundSourceAssetOperationStrategy() override;
@@ -114,7 +115,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    // class P3DSoundSourceAssetOperationStrategy final : public AssetOperationStrategy
+    // class PNT_API P3DSoundSourceAssetOperationStrategy final : public AssetOperationStrategy
     // {
     // public:
     //     ~P3DSoundSourceAssetOperationStrategy() override;
@@ -124,7 +125,7 @@ namespace pnt::assetDB
     //     PHandleBase* DeleteOperation() override;
     // };
 
-    class LevelAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API LevelAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~LevelAssetOperationStrategy() override;
@@ -134,7 +135,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class ParticleAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API ParticleAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~ParticleAssetOperationStrategy() override;
@@ -144,7 +145,7 @@ namespace pnt::assetDB
         PHandleBase* DeleteOperation() override;
     };
 
-    class RenderMapAssetOperationStrategy final : public AssetOperationStrategy
+    class PNT_API RenderMapAssetOperationStrategy final : public AssetOperationStrategy
     {
     public:
         ~RenderMapAssetOperationStrategy() override;

@@ -27,7 +27,7 @@ namespace pnt::ecs {
         PCameraComponent
     };
 
-    class PComponent {
+    class PNT_API PComponent {
     public:
 
         explicit PComponent(PEntity *entity);

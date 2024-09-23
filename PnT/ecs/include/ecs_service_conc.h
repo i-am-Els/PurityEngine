@@ -18,9 +18,11 @@
 #include "reg_system_conc.h"
 
 namespace pnt{
-    class PECSService final : public PServiceBase<IECSService>{
+    class PNT_API PECSService final : public PServiceBase<IECSService>{
     public:
         PECSService() = default;
+        PECSService(const PECSService& service) = delete;
+        PECSService operator=(const PECSService& service) = delete;
 
         explicit PECSService(PWindow* _window){
             setSystem<PIDComponent>(std::make_unique<ecs::PIDManager>());
@@ -33,72 +35,77 @@ namespace pnt{
         ~PECSService() override = default;
 
         void init() override {
-            s_getSystem<PIDComponent>()->init();
-            s_getSystem<PTagComponent>()->init();
-            s_getSystem<PTransformComponent>()->init();
-            s_getSystem<PMeshComponent>()->init();
-            s_getSystem<PRenderComponent>()->init();
+            getSystem<PIDComponent>()->init();
+            getSystem<PTagComponent>()->init();
+            getSystem<PTransformComponent>()->init();
+            getSystem<PMeshComponent>()->init();
+            getSystem<PRenderComponent>()->init();
         }
 
         void start() {
-            s_getSystem<PIDComponent>()->start();
-            s_getSystem<PTagComponent>()->start();
-            s_getSystem<PTransformComponent>()->start();
-            s_getSystem<PMeshComponent>()->start();
-            s_getSystem<PRenderComponent>()->start();
+            getSystem<PIDComponent>()->start();
+            getSystem<PTagComponent>()->start();
+            getSystem<PTransformComponent>()->start();
+            getSystem<PMeshComponent>()->start();
+            getSystem<PRenderComponent>()->start();
         }
 
         void process() {
-            s_getSystem<PIDComponent>()->process();
-            s_getSystem<PTagComponent>()->process();
-            s_getSystem<PTransformComponent>()->process();
-            s_getSystem<PMeshComponent>()->process();
-            s_getSystem<PRenderComponent>()->process();
+            getSystem<PIDComponent>()->process();
+            getSystem<PTagComponent>()->process();
+            getSystem<PTransformComponent>()->process();
+            getSystem<PMeshComponent>()->process();
+            getSystem<PRenderComponent>()->process();
         }
 
         void render() {
-            s_getSystem<PIDComponent>()->render();
-            s_getSystem<PTagComponent>()->render();
-            s_getSystem<PTransformComponent>()->render();
-            s_getSystem<PMeshComponent>()->render();
-            s_getSystem<PRenderComponent>()->render();
+            getSystem<PIDComponent>()->render();
+            getSystem<PTagComponent>()->render();
+            getSystem<PTransformComponent>()->render();
+            getSystem<PMeshComponent>()->render();
+            getSystem<PRenderComponent>()->render();
         }
 
         void update(float deltaTime) {
-            s_getSystem<PIDComponent>()->update(deltaTime);
-            s_getSystem<PTagComponent>()->update(deltaTime);
-            s_getSystem<PTransformComponent>()->update(deltaTime);
-            s_getSystem<PMeshComponent>()->update(deltaTime);
-            s_getSystem<PRenderComponent>()->update(deltaTime);
+            getSystem<PIDComponent>()->update(deltaTime);
+            getSystem<PTagComponent>()->update(deltaTime);
+            getSystem<PTransformComponent>()->update(deltaTime);
+            getSystem<PMeshComponent>()->update(deltaTime);
+            getSystem<PRenderComponent>()->update(deltaTime);
         }
 
         void destroy() override{
-            s_getSystem<PIDComponent>()->destroy();
-            s_getSystem<PTagComponent>()->destroy();
-            s_getSystem<PTransformComponent>()->destroy();
-            s_getSystem<PMeshComponent>()->destroy();
-            s_getSystem<PRenderComponent>()->destroy();
+            getSystem<PIDComponent>()->destroy();
+            getSystem<PTagComponent>()->destroy();
+            getSystem<PTransformComponent>()->destroy();
+            getSystem<PMeshComponent>()->destroy();
+            getSystem<PRenderComponent>()->destroy();
+
+            unsetSystem<PIDComponent>();
+            unsetSystem<PTagComponent>();
+            unsetSystem<PTransformComponent>();
+            unsetSystem<PMeshComponent>();
+            unsetSystem<PRenderComponent>();
+
+            system_map.clear();
         }
 
     protected:
         // Map
-        static std::map<std::type_index, std::unique_ptr<ISystemBase>> system_map;
+        std::map<std::type_index, std::unique_ptr<ecs::ISystemBase>> system_map;
 
     public:
-        template<typename T>
-        [[nodiscard]] static std::type_index s_getTypeIndex() {
-            return std::type_index(typeid(T));
-        }
+        PNT_TYPE_INDEX_DEF()
 
-        template<typename T>
-        [[nodiscard]] static ISystem<T>* s_getSystem(){
-            auto index = s_getTypeIndex<T>();
-            auto it = system_map.find(index);
-            if (it == system_map.end()){
-                throw std::runtime_error("System not found!");
-            }
-            return dynamic_cast<ISystem<T>*>(it->second.get());
-        }
+//        template<typename T>
+//        [[nodiscard]] static ISystem<T>* s_getSystem(){
+//            auto index = s_getTypeIndex<T>();
+//            auto it = system_map.find(index);
+//            if (it == system_map.end()){
+//                throw std::runtime_error("System not found!");
+//            }
+//            return dynamic_cast<ISystem<T>*>(it->second.get());
+//        }
 
         template<typename T>
         [[nodiscard]] ISystem<T>* getSystem(){
@@ -111,7 +118,7 @@ namespace pnt{
         }
 
         template<typename T>
-        static void setSystem(std::unique_ptr<ISystem<T>> system){
+        void setSystem(std::unique_ptr<ISystem<T>> system){
             static_assert(std::is_base_of<PComponent, T>::value, "T must be a subclass of PComponent");
             std::type_index index = s_getTypeIndex<T>();
             if(system_map.find(index) != system_map.end()){
@@ -121,7 +128,7 @@ namespace pnt{
         }
 
         template<typename T>
-        static void unsetSystem(std::unique_ptr<ISystem<T>> system){
+        void unsetSystem(){
             static_assert(std::is_base_of<PComponent, T>::value, "T must be a subclass of PComponent");
             std::type_index index = s_getTypeIndex<T>();
             if(system_map.find(index) == system_map.end()){
@@ -130,7 +137,7 @@ namespace pnt{
             system_map.erase(index);
         }
 
-        static const std::map<std::type_index, std::unique_ptr<ISystemBase>> &getSystemMap() {
+        const std::map<std::type_index, std::unique_ptr<ISystemBase>> &getSystemMap() {
             return system_map;
         }
     };

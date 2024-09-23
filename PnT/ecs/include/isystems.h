@@ -7,13 +7,13 @@
 #include "component.h"
 
 namespace pnt::ecs{
-    class ISystemBase{
+    class PNT_API ISystemBase{
     public:
         virtual ~ISystemBase() = default;
     };
 
     template<typename ComponentType>
-    class ISystem : public ISystemBase{
+    class PNT_API ISystem : public ISystemBase{
     public:
         virtual void init() = 0;
 

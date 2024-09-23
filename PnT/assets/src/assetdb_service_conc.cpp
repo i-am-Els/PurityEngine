@@ -35,17 +35,13 @@ namespace pnt::assetDB{
         switch (assetDBQuery.operation)
         {
         case QueryOperation::Read:
-            performGetOperation(assetDBQuery.spec);
-            break;
+            return performGetOperation(assetDBQuery.spec);
         case QueryOperation::Write:
-            performAddOperation(assetDBQuery.spec);
-            break;
+            return performAddOperation(assetDBQuery.spec);
         case QueryOperation::Update:
-            performUpdateOperation(assetDBQuery.spec);
-            break;
+            return performUpdateOperation(assetDBQuery.spec);
         case QueryOperation::Delete:
-            performDeleteOperation(assetDBQuery.spec);
-            break;
+            return performDeleteOperation(assetDBQuery.spec);
         default:
             break;
         }

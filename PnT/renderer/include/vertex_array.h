@@ -6,7 +6,7 @@
 
 namespace pnt::graphics{
 
-    struct VertexArray {
+    struct PNT_API VertexArray {
         VertexArray() = default;
         ~VertexArray();
         void init();

@@ -14,7 +14,7 @@ namespace pnt::ecs{
     class PIDComponent;
 
 
-    class PEntityBase{
+    class PNT_API PEntityBase{
     public:
         PEntityBase() = default;
         virtual ~PEntityBase() = default;
@@ -22,7 +22,7 @@ namespace pnt::ecs{
 
     protected:
         PUUID m_instanceID{0};
-        std::vector<PComponent*> m_components;
+        std::vector<PComponent*> m_components = {};
 
         friend class ManipulativeBehaviour;
         friend class PIDManager;
