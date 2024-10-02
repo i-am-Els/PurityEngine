@@ -117,6 +117,8 @@ add_library(PnT SHARED
         core/include/entry.h
         core/include/layer_service.h
         core/include/layer_service.h
+        io/src/mesh_importer.cpp
+        io/include/mesh_importer.h
 )
 
 # Add the core directories for your library and dependencies
@@ -136,11 +138,16 @@ target_include_directories(PnT PUBLIC
 target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath)
+target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath assimp)
 
 target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
 include(FetchContent)
+
+#
+## Set the FetchContent cache behavior to avoid re-downloading
+#set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+
 # Fetch GLFW
 FetchContent_Declare(
         glfw
@@ -154,6 +161,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glad)
 
+FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY https://github.com/assimp/assimp.git
+        GIT_TAG        v5.4.3  # Replace with the version/tag you want
+)
+FetchContent_MakeAvailable(assimp)
+
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -161,19 +175,19 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 # Install header files to shared/core directory
 #install(FILES ${HEADERS} DESTINATION ${CMAKE_SOURCE_DIR}/shared/include)
 
-option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
-
-set(GLAD_DLL_PATH $<TARGET_FILE_DIR:glad>)
-set(GLFW_DLL_PATH $<TARGET_FILE_DIR:glfw>)
-
-if(MSVC_DEBUG_BUILD)
-    # Copy the DLL to the executable directory after build
-    add_custom_command(TARGET PnT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${GLAD_DLL_PATH}/glad.dll"
-            $<TARGET_FILE_DIR:PnT>)
-    add_custom_command(TARGET PnT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${GLFW_DLL_PATH}/glfw3.dll"
-            $<TARGET_FILE_DIR:PnT>)
-endif()
+#option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
+#
+#set(GLAD_DLL_PATH $<TARGET_FILE_DIR:glad>)
+#set(GLFW_DLL_PATH $<TARGET_FILE_DIR:glfw>)
+#
+#if(MSVC_DEBUG_BUILD)
+#    # Copy the DLL to the executable directory after build
+#    add_custom_command(TARGET PnT POST_BUILD
+#            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#            "${GLAD_DLL_PATH}/glad.dll"
+#            $<TARGET_FILE_DIR:PnT>)
+#    add_custom_command(TARGET PnT POST_BUILD
+#            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#            "${GLFW_DLL_PATH}/glfw3.dll"
+#            $<TARGET_FILE_DIR:PnT>)
+#endif()

@@ -13,10 +13,10 @@ using namespace isle_engine::math;
 
 namespace pnt::graphics{
 
-    struct PNT_API Vertex{
+    struct PNT_API PVertex{
         Vector3f Position;
-        Vector2f TextCoord;
         Vector3f Normal;
+        Vector2f TextCoord;
     };
 
 

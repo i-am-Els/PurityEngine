@@ -40,6 +40,14 @@ if(MSVC_DEBUG_BUILD)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${PNT_DLL_PATH}/PnT.dll"
             $<TARGET_FILE_DIR:Game>)
+    add_custom_command(TARGET Game POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${GLAD_DLL_PATH}/glad.dll"
+            $<TARGET_FILE_DIR:Game>)
+    add_custom_command(TARGET Game POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${GLFW_DLL_PATH}/glfw3.dll"
+            $<TARGET_FILE_DIR:Game>)
 else ()
     # Copy the DLL to the executable directory after build
     add_custom_command(TARGET Game POST_BUILD

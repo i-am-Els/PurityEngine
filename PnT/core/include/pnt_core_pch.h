@@ -37,4 +37,6 @@
 
 #include "uuid.h"
 #include "core_macros.h"
+#include "pnt_exceptions.h"
 #include "log.h"
+#include "islemath.h"

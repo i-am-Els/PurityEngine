@@ -4,7 +4,14 @@
 
 #pragma once
 
+
+#include "pnt_core_pch.h"
+#include "vertex_array.h"
+#include "buffer.h"
 #include "handle_base.h"
+
+using namespace isle_engine::math;
+using namespace pnt::graphics;
 
 namespace pnt::assetDB{
     class PNT_API PAsset {
@@ -17,7 +24,9 @@ namespace pnt::assetDB{
     // ---------------------------------------------------------
     
     class PNT_API PTextureAsset : public PAsset{
-
+    public:
+        unsigned int id;
+        std::string type; // Diffuse or Specular
     };
 
     class PNT_API PSpriteAsset : public PAsset{
@@ -37,7 +46,15 @@ namespace pnt::assetDB{
     };
 
     class PNT_API PStaticMeshAsset : public PAsset{
+    public:
+        std::vector<PVertex> vertices;
+        std::vector<unsigned int> indices;
+//        std::vector<PTextureAsset> textures; // I think the texture asset should only be referenced.
 
+    private:
+        VertexArray vao;
+        VertexBuffer vbo;
+        ElementBuffer ebo;
     };
 
     class PNT_API PMaterialAsset : public PAsset{

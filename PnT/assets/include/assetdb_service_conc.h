@@ -46,6 +46,8 @@ namespace pnt::assetDB{
 
         static PHandleBase* queryDBForAsset(const PAssetDBQuery& assetDBQuery);
 
+        void setupAsset();
+
 
     private:
         [[nodiscard]]static PHandleBase* performGetOperation(const QuerySpec& spec);
