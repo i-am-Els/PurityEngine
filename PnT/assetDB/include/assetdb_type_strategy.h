@@ -6,6 +6,8 @@
 #include "handle_base.h"
 #include "core_macros.h"
 
+using namespace pnt::fileIO;
+
 namespace pnt::assetDB
 {
 

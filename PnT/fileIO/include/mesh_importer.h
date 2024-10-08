@@ -15,7 +15,7 @@
 using namespace isle_engine::math;
 using namespace pnt::graphics;
 
-namespace pnt::fileio{
+namespace pnt::fileIO{
 
     class PNT_API MeshImporter {
 

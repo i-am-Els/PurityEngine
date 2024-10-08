@@ -7,7 +7,7 @@
 
 using namespace pnt::ecs;
 
-namespace pnt::scene{
+namespace pnt::ecs{
     class PNT_API PTransformSS final : public ITransformSystem {
     public:
         PTransformSS() = default;

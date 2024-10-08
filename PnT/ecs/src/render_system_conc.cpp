@@ -8,7 +8,9 @@
 #include "fileio.h"
 #include "entity.h"
 
-namespace pnt::graphics {
+using namespace pnt::fileIO;
+
+namespace pnt::ecs {
 
     void POpenGLRenderSS::setUpShader() {
         auto vert = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_vert"]);

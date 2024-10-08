@@ -103,4 +103,9 @@ namespace pnt{
     void PApplication::start() {
         serviceLocator->getConcreteService<IECSService, PECSService>()->start();
     }
+
+    PApplication::PApplication(std::string title, int width, int height)
+    : applicationInfo(title, width, height), serviceLocator(std::make_shared<PServiceLocator>())
+    {
+    }
 }

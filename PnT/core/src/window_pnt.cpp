@@ -5,7 +5,7 @@
 #include "window_pnt.h"
 #include "log.h"
 
-namespace pnt::graphics {
+namespace pnt {
 
     // PWindow
 
@@ -15,11 +15,6 @@ namespace pnt::graphics {
     }
 
     PWindow::~PWindow() = default;
-
-//    PWindow & PWindow::getInstance() {
-//        static PWindow instance;
-//        return instance;
-//    }
 
     void PWindow::bindWindowBackendAPI() {
         if(!glfwInit()){
@@ -82,6 +77,10 @@ namespace pnt::graphics {
             return true;
         }
         return false;
+    }
+
+    void PWindow::update() {
+
     }
 
 

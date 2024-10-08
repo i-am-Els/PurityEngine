@@ -6,7 +6,7 @@
 #include "fileio.h"
 #include "log.h"
 
-namespace pnt{
+namespace pnt::fileIO{
 
     /// @brief Extract Source code from file.
     /// @param path - The relative path to the file.

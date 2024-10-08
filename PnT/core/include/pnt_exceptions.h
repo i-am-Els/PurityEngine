@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include "core_macros.h"
+#include "../../../core/include/core_macros.h"
 
 
 namespace pnt::exceptions

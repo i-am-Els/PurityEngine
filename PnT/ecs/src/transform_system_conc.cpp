@@ -5,7 +5,7 @@
 #include "transform_system_conc.h"
 #include "entity.h"
 
-namespace pnt::scene{
+namespace pnt::ecs{
 
 
     void PTransformSS::init() {

@@ -33,33 +33,28 @@ target_compile_definitions(Game PUBLIC PNT_PLATFORM_WINDOWS)
 set(PNT_DLL_PATH $<TARGET_FILE_DIR:PnT>)
 set(GLAD_DLL_PATH $<TARGET_FILE_DIR:glad>)
 set(GLFW_DLL_PATH $<TARGET_FILE_DIR:glfw>)
+set(ASSIMP_DLL_PATH $<TARGET_FILE_DIR:assimp>)
+set(ISLEMATH_DLL_PATH $<TARGET_FILE_DIR:islemath>)
 
 if(MSVC_DEBUG_BUILD)
     # Copy the DLL to the executable directory after build
     add_custom_command(TARGET Game POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${PNT_DLL_PATH}/PnT.dll"
-            $<TARGET_FILE_DIR:Game>)
-    add_custom_command(TARGET Game POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${GLAD_DLL_PATH}/glad.dll"
-            $<TARGET_FILE_DIR:Game>)
-    add_custom_command(TARGET Game POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${GLFW_DLL_PATH}/glfw3.dll"
+#            "${ASSIMP_DLL_PATH}/assimp-vc143-mt.dll"
+            "${ISLEMATH_DLL_PATH}/islemath.dll"
             $<TARGET_FILE_DIR:Game>)
+
 else ()
     # Copy the DLL to the executable directory after build
     add_custom_command(TARGET Game POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${PNT_DLL_PATH}/libPnT.dll"
-            $<TARGET_FILE_DIR:Game>)
-    add_custom_command(TARGET Game POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${GLAD_DLL_PATH}/libglad.dll"
-            $<TARGET_FILE_DIR:Game>)
-    add_custom_command(TARGET Game POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${GLFW_DLL_PATH}/glfw3.dll"
+#            "${ASSIMP_DLL_PATH}/assimp-vc143-mt.dll"
+            "${ISLEMATH_DLL_PATH}/islemath.dll"
             $<TARGET_FILE_DIR:Game>)
 endif()

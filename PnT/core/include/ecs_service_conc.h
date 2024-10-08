@@ -27,9 +27,9 @@ namespace pnt{
         explicit PECSService(PWindow* _window){
             setSystem<PIDComponent>(std::make_unique<ecs::PIDManager>());
             setSystem<PTagComponent>(std::make_unique<ecs::PTagManager>());
-            setSystem<PTransformComponent>(std::make_unique<scene::PTransformSS>());
-            setSystem<PMeshComponent>(std::make_unique<mesh::P3DGeometricMeshSS>());
-            setSystem<PRenderComponent>(std::make_unique<graphics::POpenGLRenderSS>(_window->getWindow()));
+            setSystem<PTransformComponent>(std::make_unique<ecs::PTransformSS>());
+            setSystem<PMeshComponent>(std::make_unique<ecs::P3DGeometricMeshSS>());
+            setSystem<PRenderComponent>(std::make_unique<ecs::POpenGLRenderSS>(_window->getWindow()));
         }
 
         ~PECSService() override = default;

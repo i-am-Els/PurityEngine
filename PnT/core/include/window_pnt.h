@@ -10,7 +10,7 @@
 #include "GLFW/glfw3.h"
 
 
-namespace pnt::graphics{
+namespace pnt{
 
     class PNT_API PWindow{
     private:
@@ -22,6 +22,8 @@ namespace pnt::graphics{
         static void bindWindowBackendAPI(); // Bind GLFW
         static void unbind(); // UnBind
         static std::unique_ptr<PWindow> createWindow(int width, int height, const char *title = "PnT Window", int gl_major_v = 4, int gl_minor_v = 5);
+
+        void update();
 
         inline GLFWwindow*& getWindow()
         {

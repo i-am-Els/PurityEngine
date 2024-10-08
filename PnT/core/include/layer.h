@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "pnt_core_pch.h"
+#include "../../../core/include/pnt_core_pch.h"
 
 #include "service_base.h"
 #include "layer_service.h"
@@ -102,7 +102,6 @@ namespace pnt {
 
         void terminate();
 
-//        [[maybe_unused]] static LayerManager& s_GetInstance();
 
         [[maybe_unused]] PLayer* fetchLayerByID(unsigned int id);
 

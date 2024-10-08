@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "log.h"
+#include "../../core/include/log.h"
 #include "uuid.h"
 
-namespace pnt{
+namespace pnt::fileIO{
     struct PNT_API PHandleBase{
         pnt::PUUID m_handleId;
         PHandleBase() {

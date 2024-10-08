@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "pnt_core_pch.h"
-#include "core_macros.h"
+#include "../../../core/include/pnt_core_pch.h"
+#include "../../../core/include/core_macros.h"
 #include "layer.h"
 
 namespace pnt{

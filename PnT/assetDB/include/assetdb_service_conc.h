@@ -56,20 +56,7 @@ namespace pnt::assetDB{
         [[nodiscard]]static PHandleBase* performDeleteOperation(const QuerySpec& spec); // handle id is nullptr in this case if deletion succeeded...
 
         // Switch on QueryType...
-        std::vector<PTextureAsset*> m_textureAssetContainer;
-        std::vector<PSpriteAsset*> m_spriteAssetContainer;
-        std::vector<PShaderAsset*> m_shaderAssetContainer;
-        std::vector<PMeshAsset*> m_meshAssetContainer;
-        std::vector<PSkeletonAsset*> m_skeletonAssetContainer;
-        std::vector<PStaticMeshAsset*> m_staticMeshAssetContainer;
-        std::vector<PMaterialAsset*> m_materialAssetContainer;
-        std::vector<PSplineAsset*> m_splineAssetContainer;
-        std::vector<PP2DPolygonMeshAsset*>m_p2DPolygonMeshAssetContainer;
-        std::vector<PSoundSourceAsset*> m_soundSourceAssetContainer;
-        std::vector<PP3DSoundSourceAsset*> m_p3DSoundSourceAssetContainer;
-        std::vector<PLevelAsset*> m_levelAssetContainer;
-        std::vector<PParticleAsset*> m_particleAssetContainer;
-        std::vector<PRenderMapAsset*> m_renderMapAssetContainer;
+        std::map<PUUID, PAsset*> m_AssetContainer;
 
     };
 }

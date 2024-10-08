@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace pnt{
+namespace pnt::fileIO{
 
     class PNT_API PFileIO{
     public:

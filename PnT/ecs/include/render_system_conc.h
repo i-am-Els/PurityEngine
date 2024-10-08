@@ -6,7 +6,6 @@
 #include "islemath.h"
 #include "shader.h"
 #include "renderer.h"
-#include "linkedList.h"
 #include "color.h"
 #include "GLFW/glfw3.h"
 #include "vertex_array.h"
@@ -17,10 +16,10 @@
 
 using namespace isle_engine::math;
 using namespace pnt::ecs;
+using namespace pnt::graphics;
 using namespace pnt::exceptions;
-using namespace pnt::ds;
 
-namespace pnt::graphics{
+namespace pnt::ecs{
 
     class PNT_API POpenGLRenderSS final : public IRenderSystem{
     public:

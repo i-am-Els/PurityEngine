@@ -5,16 +5,16 @@
 #include "entity_registry.h"
 
 namespace pnt::ecs{
-    PEntity *PEntityRegistry::Create() {
-        entities.emplace_back(std::make_unique<PEntity>());
+    PEntity *PEntityRegistry::Create(PUUID uuid) {
+        m_entityMap.emplace(uuid, std::make_unique<PEntity>());
 
-        return entities.back().get();
+        return m_entityMap[uuid].get();
     }
 
-    PEntity *PEntityRegistry::Create(const std::string &name) {
-        entities.emplace_back(std::make_unique<PEntity>(name));
+    PEntity *PEntityRegistry::Create(PUUID uuid, const std::string &name) {
+        m_entityMap.emplace(uuid, std::make_unique<PEntity>(name));
 
-        return entities.back().get();
+        return m_entityMap[uuid].get();
     }
 
     void PEntityRegistry::Destroy() {
@@ -26,7 +26,7 @@ namespace pnt::ecs{
     }
 
     PEntity *PEntityRegistry::GetEntity(pnt::PUUID id) {
-        for(const auto& entity : entities ){
+        for(const auto& [uuid, entity] : m_entityMap){
             if (entity->m_instanceID == id){
                 return entity.get();
             }
@@ -36,7 +36,7 @@ namespace pnt::ecs{
 
     std::vector<PEntity*> PEntityRegistry::GetEntitiesWithTag(ETags tag, const std::vector<PEntity*>& entitiesToIgnore){
         std::vector<PEntity*> entitiesWithTag = {};
-        for(auto& entity : entities){
+        for(auto& [uuid, entity] : m_entityMap){
             if(auto tagComp = entity->GetComponent<PTagComponent>()){
                 if (tagComp->tag == tag && (std::find(entitiesToIgnore.begin(), entitiesToIgnore.end(), entity.get()) == entitiesToIgnore.end())){
                     entitiesWithTag.push_back(entity.get());
@@ -47,7 +47,7 @@ namespace pnt::ecs{
     }
 
     PEntityRegistry::~PEntityRegistry() {
-        entities.clear();
+        m_entityMap.clear();
     }
 
 }

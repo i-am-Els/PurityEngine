@@ -14,8 +14,8 @@ namespace pnt::ecs{
         ~PEntityRegistry();
         PEntityRegistry(const PEntityRegistry& registry) = delete;
         PEntityRegistry operator=(const PEntityRegistry& registry) = delete; // Copy of a class with a unique ptr member iis not allowed
-        [[nodiscard]]PEntity* Create();
-        [[nodiscard]]PEntity* Create(const std::string& name);
+        [[nodiscard]]PEntity* Create(PUUID uuid);
+        [[nodiscard]]PEntity* Create(PUUID uuid, const std::string& name);
         void Destroy();
         void Destroy(PUUID uuid);
 
@@ -24,6 +24,6 @@ namespace pnt::ecs{
         std::vector<PEntity*> GetEntitiesWithTag(ETags tag, const std::vector<PEntity*>& entitiesToIgnore = {});
 
     protected:
-        std::vector<std::unique_ptr<PEntity>> entities = {};
+        std::unordered_map<PUUID, std::unique_ptr<PEntity>> m_entityMap;
     };
 }
