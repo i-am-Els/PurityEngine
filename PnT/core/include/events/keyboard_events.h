@@ -13,6 +13,10 @@ namespace pnt{
 
         EVENT_CATEGORY(E_EventCategory::KeyBoardEvent | E_EventCategory::InputEvent)
 
+        ~KeyEvent() override {
+            PLog::echoMessage("Destroying Key Event.");
+        }
+
     protected:
         explicit KeyEvent(int keyCode) : m_keyCode(keyCode) {}
 
@@ -32,6 +36,11 @@ namespace pnt{
         }
 
         EVENT_TYPE(E_EventType::KeyPressed)
+
+        ~KeyPressedEvent() override {
+            PLog::echoMessage("Destroying Key Pressed Event.");
+        }
+
     private:
         int m_repeat_count;
     };
@@ -47,6 +56,10 @@ namespace pnt{
         }
 
         EVENT_TYPE(E_EventType::KeyReleased)
+
+        ~KeyReleasedEvent() override {
+            PLog::echoMessage("Destroying Key Released Event.");
+        }
     };
 
 }

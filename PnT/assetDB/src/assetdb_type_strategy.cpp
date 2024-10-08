@@ -9,7 +9,7 @@ namespace pnt::assetDB
     // Texture Strategy
 
     TextureAssetOperationStrategy::~TextureAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Texture Strategy.");
     }
 
     PHandleBase *TextureAssetOperationStrategy::ReadOperation() {
@@ -31,7 +31,7 @@ namespace pnt::assetDB
     // Sprite Strategy
 
     SpriteAssetOperationStrategy::~SpriteAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Sprite Strategy.");
     }
 
     PHandleBase *SpriteAssetOperationStrategy::ReadOperation() {
@@ -53,7 +53,7 @@ namespace pnt::assetDB
     // Shader Strategy
 
     ShaderAssetOperationStrategy::~ShaderAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Shader Strategy.");
     }
 
     PHandleBase *ShaderAssetOperationStrategy::ReadOperation() {
@@ -75,7 +75,7 @@ namespace pnt::assetDB
     // Mesh Strategy
 
     MeshAssetOperationStrategy::~MeshAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Mesh Strategy.");
     }
 
     PHandleBase *MeshAssetOperationStrategy::ReadOperation() {
@@ -97,7 +97,7 @@ namespace pnt::assetDB
     // Skeleton Strategy
 
     SkeletonAssetOperationStrategy::~SkeletonAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Skeleton Strategy.");
     }
 
     PHandleBase *SkeletonAssetOperationStrategy::ReadOperation() {
@@ -119,7 +119,7 @@ namespace pnt::assetDB
     // StaticMesh Strategy
 
     StaticMeshAssetOperationStrategy::~StaticMeshAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Static Mesh Strategy.");
     }
 
     PHandleBase *StaticMeshAssetOperationStrategy::ReadOperation() {
@@ -141,7 +141,7 @@ namespace pnt::assetDB
     // Material Strategy
 
     MaterialAssetOperationStrategy::~MaterialAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Material Strategy.");
     }
 
     PHandleBase *MaterialAssetOperationStrategy::ReadOperation() {
@@ -163,7 +163,7 @@ namespace pnt::assetDB
     // Spline Strategy
 
     SplineAssetOperationStrategy::~SplineAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Spline Strategy.");
     }
 
     PHandleBase *SplineAssetOperationStrategy::ReadOperation() {
@@ -185,7 +185,7 @@ namespace pnt::assetDB
     // P2DPolygonMesh Strategy
 
     P2DPolygonMeshAssetOperationStrategy::~P2DPolygonMeshAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying 2DPolygon Strategy.");
     }
 
     PHandleBase *P2DPolygonMeshAssetOperationStrategy::ReadOperation() {
@@ -207,7 +207,7 @@ namespace pnt::assetDB
     // SoundSource Strategy
 
     SoundSourceAssetOperationStrategy::~SoundSourceAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Sound Strategy.");
     }
 
     PHandleBase *SoundSourceAssetOperationStrategy::ReadOperation() {
@@ -229,7 +229,7 @@ namespace pnt::assetDB
     // Level Strategy
 
     LevelAssetOperationStrategy::~LevelAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Level Strategy.");
     }
 
     PHandleBase *LevelAssetOperationStrategy::ReadOperation() {
@@ -251,7 +251,7 @@ namespace pnt::assetDB
     // Particle Strategy
 
     ParticleAssetOperationStrategy::~ParticleAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Particle Strategy.");
     }
 
     PHandleBase *ParticleAssetOperationStrategy::ReadOperation() {
@@ -273,7 +273,7 @@ namespace pnt::assetDB
     // RenderMapAsset
 
     RenderMapAssetOperationStrategy::~RenderMapAssetOperationStrategy() {
-
+        PLog::echoMessage("Destroying Render Map Strategy.");
     }
 
     PHandleBase *RenderMapAssetOperationStrategy::ReadOperation() {

@@ -109,8 +109,8 @@ add_library(PnT SHARED
         assetDB/src/assetdb_type_strategy.cpp
         assetDB/src/assetdb_utility.cpp
         assetDB/src/assets_types.cpp
-        assetDB/src/uuid.cpp
         #--------------------------------
+        core/src/uuid.cpp
         core/src/ecs_service_conc.cpp
         core/src/input.cpp
         core/src/layer.cpp
@@ -148,6 +148,7 @@ add_library(PnT SHARED
         graphics/src/vertex_array.cpp
         #--------------------------------
         scene/src/scene.cpp
+        ecs/include/entity_handle.h
 )
 
 # Add the core directories for your library and dependencies
@@ -180,18 +181,18 @@ FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
 )
-#if(NOT glfw_POPULATED)
+if(NOT glfw_POPULATED)
     FetchContent_MakeAvailable(glfw)
-#endif ()
+endif ()
 
 
 FetchContent_Declare(
         glad
         GIT_REPOSITORY https://github.com/Dav1dde/glad.git
 )
-#if(NOT glad_POPULATED)
+if(NOT glad_POPULATED)
     FetchContent_MakeAvailable(glad)
-#endif ()
+endif ()
 
 
 FetchContent_Declare(
@@ -199,9 +200,9 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/assimp/assimp.git
         GIT_TAG       v5.4.3  # Replace with the version/tag you want
 )
-#if (NOT assimp_POPULATED)
+if (NOT assimp_POPULATED)
     FetchContent_MakeAvailable(assimp)
-#endif()
+endif()
 
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

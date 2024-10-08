@@ -32,7 +32,9 @@ namespace pnt::ecs{
 
         void start() override;
 
-        ~P3DGeometricMeshSS() override = default;
+        ~P3DGeometricMeshSS() override {
+            PLog::echoMessage("Destroying 3D Geometric Mesh System.");
+        }
 
         PMeshComponent *AddComponent(PEntity *entity) override;
 

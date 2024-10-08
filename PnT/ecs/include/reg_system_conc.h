@@ -19,7 +19,9 @@ namespace pnt::ecs{
         void render() override;
         void update(float deltaTime) override;
         void destroy() override;
-        ~PIDManager() override = default;
+        ~PIDManager() override {
+            PLog::echoMessage("Destroying ID Manager.");
+        }
         PIDComponent *AddComponent(PEntity *entity) override;
         void RemoveComponent(PEntity *entity, PIDComponent *component) override;
     private:
@@ -38,7 +40,9 @@ namespace pnt::ecs{
         void render() override;
         void update(float deltaTime) override;
         void destroy() override;
-        ~PTagManager() override = default;
+        ~PTagManager() override {
+            PLog::echoMessage("Destroying Tag Manager.");
+        }
         PTagComponent *AddComponent(PEntity *entity) override;
         void RemoveComponent(PEntity *entity, PTagComponent *component) override;
     private:

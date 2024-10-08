@@ -60,5 +60,9 @@ namespace pnt{
         Concrete* getConcreteService(){
             return dynamic_cast<Concrete*>(getService<Interface>().get());
         }
+
+        ~PServiceLocator() {
+            PLog::echoMessage("Destroying Service Locator.");
+        }
     };
 }

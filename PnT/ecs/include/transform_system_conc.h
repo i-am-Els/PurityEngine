@@ -25,7 +25,9 @@ namespace pnt::ecs{
 
         void destroy() override;
 
-        ~PTransformSS() override = default;
+        ~PTransformSS() override {
+            PLog::echoMessage("Destroying Transform System.");
+        }
 
         PTransformComponent *AddComponent(PEntity *entity) override;
 

@@ -40,3 +40,4 @@
 #include "pnt_exceptions.h"
 #include "log.h"
 #include "islemath.h"
+#include "handle_base.h"

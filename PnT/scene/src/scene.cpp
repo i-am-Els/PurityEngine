@@ -12,6 +12,7 @@ namespace pnt::scene{
         return CreateEntityWithUUID(PUUID(), name);
     }
 
+    // TODO  Replace Entity return with Entity Handle
     PEntity* PScene::CreateEntityWithUUID(pnt::PUUID uuid, const std::string& name) {
         // Add entity to Entity Registry
         auto entity = m_registry.Create(uuid, name);
@@ -38,6 +39,10 @@ namespace pnt::scene{
 
     PScene::PScene(const std::unordered_map<PUUID, PEntity *>& entityMap, const PEntityRegistry& registry) {
 
+    }
+
+    PScene::~PScene() {
+        PLog::echoMessage("Destroying Scene.");
     }
 
 }

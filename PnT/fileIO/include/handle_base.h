@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../../core/include/log.h"
+#include "log.h"
 #include "uuid.h"
 
 namespace pnt::fileIO{
@@ -13,6 +13,11 @@ namespace pnt::fileIO{
         PHandleBase() {
             PLog::echoValue(m_handleId);
         }
+
+        virtual ~PHandleBase() {
+            PLog::echoMessage("Destroying Handle Base.");
+        }
+
     private:
         static int s_count;
     };

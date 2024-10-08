@@ -17,7 +17,9 @@ namespace pnt{
 
     public:
         std::unique_ptr<PWindow> window;
-        virtual ~PApplication() = default;
+        virtual ~PApplication() {
+            PLog::echoMessage("Destroying PApplication.");
+        }
         virtual void init();
         virtual void start();
         virtual void process();

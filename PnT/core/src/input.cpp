@@ -19,7 +19,9 @@ namespace pnt {
     void PInput::terminate() {
     }
 
-    PInput::~PInput() = default;
+    PInput::~PInput() {
+        PLog::echoMessage("Destroying Input.");
+    }
 
     bool PInput::isKeyPressed(int keyCode) {
         /// @brief  Code Example

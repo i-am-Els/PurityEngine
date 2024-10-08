@@ -82,7 +82,7 @@ namespace pnt {
             delete layer;
             layer = nullptr;
         }
-        std::cout << "Layer Manager Defeated" << std::endl;
+
     }
 
     // Return type Layer* can be interpreted as an unsigned int*
@@ -106,13 +106,14 @@ namespace pnt {
     }
 
     PLayerService::~PLayerService() noexcept {
+        PLog::echoMessage("Destroying Layer Manager.");
         PLayerService::terminate();
     }
 
     /// @brief Creates a Layer and adds it to the Layer Holding Container.
     /// @return int - it signifies the Layer's ID and Index in the holding container.
     /// @note Method returns -1 only if the maxLayerCount is reached
-    [[maybe_unused]] int PLayerService::s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType) {
+    [[maybe_unused]]unsigned int PLayerService::s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType) {
         if (id >= MAX_LAYER) {
 //            throw std::runtime_error("Maximum number of layers reached.");
             return (int)IndexOutOfBoundsError(); // TODO Error code will be substituted for this Later

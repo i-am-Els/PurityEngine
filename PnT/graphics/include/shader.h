@@ -28,7 +28,7 @@ namespace pnt::graphics
         /// @param vertexSource - The vertex shader source string.
         /// @param fragmentSource - The fragment shader source string.
         /// @return std::unique_ptr Shader program of type PShader
-        static std::unique_ptr<PShader> createShaders(const std::string& vertexSource, const std::string& fragmentSource);
+        static void createShaders(std::unique_ptr<PShader>& shader, const std::string& vertexSource, const std::string& fragmentSource);
 
         void bindShader() const;
         static void unbindShader();

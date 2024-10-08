@@ -30,7 +30,9 @@ namespace pnt::assetDB{
 
     class PNT_API PAssetDatabase final : public PServiceBase<IAssetDBService>{
     public:
-        ~PAssetDatabase() override = default;
+        ~PAssetDatabase() override{
+            PLog::echoMessage("Destroying AssetDB.");
+        }
 
         void init() override;
 

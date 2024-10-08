@@ -93,15 +93,18 @@ namespace pnt::assetDB{
     // ---------------------- Asset Type Handles ----------------------
     // ----------------------------------------------------------------
     template<typename AssetTypeRef>
-    class PNT_API PAssetHandle final : public PHandleBase{
+    class PNT_API PAssetHandle final : public fileIO::PHandleBase{
     public:
         PAssetHandle();
         explicit PAssetHandle(AssetTypeRef* data);
-        ~PAssetHandle() { delete m_data; }
+        ~PAssetHandle() {
+            m_data = nullptr;
+            PLog::echoMessage("Destroying Asset Handle");
+        }
         explicit operator PUUID() { return m_handleId; }
 
     protected:
-        explicit operator AssetTypeRef*() { return m_data; } // THis conversion operator is a way to retrieve the data of the asset.
+//        explicit operator AssetTypeRef*() { return m_data; } // THis conversion operator is a way to retrieve the data of the asset.
 
     private:
         AssetTypeRef* m_data;

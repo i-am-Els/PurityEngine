@@ -46,7 +46,6 @@ Application::Application(const std::string &title, int width, int height) : PApp
 
 void Application::exit() {
     PApplication::exit();
-    delete quad;
 }
 
 pnt::PApplication* pnt::CreateApplication(){

@@ -48,6 +48,7 @@ namespace pnt::ecs{
 
     PEntityRegistry::~PEntityRegistry() {
         m_entityMap.clear();
+        PLog::echoMessage("Destroying Entity Registry.");
     }
 
 }

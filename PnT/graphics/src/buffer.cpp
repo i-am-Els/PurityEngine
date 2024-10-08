@@ -7,7 +7,9 @@
 namespace pnt::graphics{
     unsigned int VertexBuffer::s_count = 0;
 
-    VertexBuffer::~VertexBuffer() = default;
+    VertexBuffer::~VertexBuffer() {
+        PLog::echoMessage("Destroying Vertex Buffer.");
+    }
 
     VertexBuffer::VertexBuffer(std::vector<Vector3f> &data, unsigned int vertexCount) : Buffer() {
         this->m_data = data;
@@ -38,7 +40,9 @@ namespace pnt::graphics{
 
     unsigned int ElementBuffer::s_count = 0;
 
-    ElementBuffer::~ElementBuffer() = default;
+    ElementBuffer::~ElementBuffer() {
+        PLog::echoMessage("Destroying Element Buffer.");
+    }
 
     ElementBuffer::ElementBuffer(std::vector<unsigned int> &data, unsigned int vertexCount) : Buffer() {
         this->m_data = data;

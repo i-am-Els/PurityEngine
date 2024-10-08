@@ -11,7 +11,7 @@ namespace pnt::scene{
     class PNT_API PScene{
     public:
         PScene() = default;
-        ~PScene() = default;
+        ~PScene();
         PScene(const std::unordered_map<PUUID, PEntity*>& entityMap, const ecs::PEntityRegistry& registry );
         ecs::PEntity* CreateEntity(const std::string& name);
         ecs::PEntity* CreateEntityWithUUID(PUUID uuid, const std::string& name);

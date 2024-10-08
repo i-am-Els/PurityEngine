@@ -8,7 +8,9 @@
 
 namespace pnt::graphics{
     unsigned int VertexArray::vaoCount = 0;
-    VertexArray::~VertexArray() = default;
+    VertexArray::~VertexArray() {
+        PLog::echoMessage("Destroying Vertex Array.");
+    }
 
     void VertexArray::init()  {
         vaoID = vaoCount++;

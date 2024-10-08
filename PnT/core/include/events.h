@@ -85,6 +85,10 @@ namespace pnt{
             return false;
         }
 
+        ~EventDispatcher() {
+            PLog::echoMessage("Destroying Event Dispatcher.");
+        }
+
 
     private:
         Event& m_Event;

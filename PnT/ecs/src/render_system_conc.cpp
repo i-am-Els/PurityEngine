@@ -15,7 +15,8 @@ namespace pnt::ecs {
     void POpenGLRenderSS::setUpShader() {
         auto vert = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_vert"]);
         auto frag = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_frag"]);
-        shader = PShader::createShaders(vert, frag);
+
+        PShader::createShaders(shader, vert, frag);
         if (shader->GetShaderProgramID())
             PLog::echoMessage("PShader Up and Running!");
         else PLog::echoMessage("PShader Set up failed!");
@@ -98,6 +99,7 @@ namespace pnt::ecs {
 
     POpenGLRenderSS::~POpenGLRenderSS() {
         delete vertexArray;
+        PLog::echoMessage("Destroying OpenGL Render System.");
     }
 
     PRenderComponent *POpenGLRenderSS::AddComponent(PEntity *entity) {

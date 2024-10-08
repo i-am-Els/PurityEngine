@@ -46,7 +46,7 @@ namespace pnt {
             }
 
             PLayer() = delete;
-            virtual ~PLayer() { std::cout << "Delete Layer" << std::endl;};
+            virtual ~PLayer() { PLog::echoMessage("Destroying Layer.");};
             PLayer& operator=(const PLayer& l) = delete; // copy assignment
             PLayer& operator=(PLayer&&) = delete; // move assignment
 
@@ -121,7 +121,7 @@ namespace pnt {
 //        PLayerService() = default;
 
         /// Use this as interface
-        [[maybe_unused]] [[nodiscard]] int s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType=ELayerType::Layer);
+        [[maybe_unused]] [[nodiscard]] unsigned int s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType=ELayerType::Layer);
 
         /// Use this as interface
         [[maybe_unused]] bool deleteLayer(unsigned int id);

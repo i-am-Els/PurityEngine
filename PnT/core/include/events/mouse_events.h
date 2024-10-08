@@ -14,6 +14,10 @@ namespace pnt{
 
         EVENT_CATEGORY(E_EventCategory::MouseBtnEvent | E_EventCategory::InputEvent)
 
+        ~MouseButtonEvent() override {
+            PLog::echoMessage("Destroying Mouse Event.");
+        }
+
     protected:
         explicit MouseButtonEvent(int button) : m_button(button) {}
         int m_button;
@@ -30,6 +34,10 @@ namespace pnt{
         }
 
         EVENT_TYPE(E_EventType::MouseButtonPressed)
+
+        ~MouseButtonPressedEvent() override {
+            PLog::echoMessage("Destroying Mouse Pressed Event.");
+        }
     };
 
     class PNT_API MouseButtonReleasedEvent : public MouseButtonEvent{
@@ -43,6 +51,10 @@ namespace pnt{
         }
 
         EVENT_TYPE(E_EventType::MouseButtonReleased)
+
+        ~MouseButtonReleasedEvent() override {
+            PLog::echoMessage("Destroying Mouse Released Event.");
+        }
     };
 
     class PNT_API MouseMovedEvent : public Event{
@@ -60,6 +72,11 @@ namespace pnt{
 
         EVENT_TYPE(E_EventType::MouseMoved)
         EVENT_CATEGORY(E_EventCategory::MouseEvent | E_EventCategory::InputEvent)
+
+        ~MouseMovedEvent() override {
+            PLog::echoMessage("Destroying Mouse Moved Event.");
+        }
+
     private:
         float m_xPos, m_yPos;
     };
@@ -79,6 +96,11 @@ namespace pnt{
 
         EVENT_TYPE(E_EventType::MouseScrolled)
         EVENT_CATEGORY(E_EventCategory::MouseEvent | E_EventCategory::InputEvent)
+
+        ~MouseScrolledEvent() override {
+            PLog::echoMessage("Destroying Mouse Scrolled Event.");
+        }
+
     private:
         float m_xOffset, m_yOffset;
     };

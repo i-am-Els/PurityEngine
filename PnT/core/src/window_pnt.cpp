@@ -14,7 +14,9 @@ namespace pnt {
         PLog::echoMessage("PWindow Constructed!");
     }
 
-    PWindow::~PWindow() = default;
+    PWindow::~PWindow() {
+        PLog::echoMessage("Destroying Window.");
+    }
 
     void PWindow::bindWindowBackendAPI() {
         if(!glfwInit()){

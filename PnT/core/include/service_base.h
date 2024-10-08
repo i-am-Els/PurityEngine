@@ -13,5 +13,7 @@ namespace pnt{
         [[nodiscard]] std::type_index getTypeIndex() const override {
             return std::type_index(typeid(T));
         }
+
+        virtual ~PServiceBase() = default;
     };
 }

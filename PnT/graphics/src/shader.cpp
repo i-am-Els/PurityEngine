@@ -15,9 +15,9 @@ PShader::~PShader() {
     PLog::echoMessage("Shader Destroyed");
 };
 
-std::unique_ptr<PShader> PShader::createShaders(const std::string& vertexSource, const std::string& fragmentSource)
+void PShader::createShaders(std::unique_ptr<PShader>& shader, const std::string& vertexSource, const std::string& fragmentSource)
 {
-    auto shader = std::make_unique<PShader>();
+    shader = std::make_unique<PShader>();
     auto programID = glCreateProgram();
     unsigned int vs = setUpShader(ShaderType::VertexShader, vertexSource);
     unsigned int fs = setUpShader(ShaderType::FragmentShader, fragmentSource);
@@ -45,9 +45,11 @@ std::unique_ptr<PShader> PShader::createShaders(const std::string& vertexSource,
     if (programID){
         shader->shaderProgramID = programID;
         PLog::echoMessage("PShader setup is successful!");
-        return std::move(shader);
+        return;
     }
-    return nullptr;
+
+    shader.reset();
+    shader = nullptr;
 }
 
 void PShader::bindShader() const {

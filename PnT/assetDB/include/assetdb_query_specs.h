@@ -30,6 +30,7 @@ namespace pnt::assetDB
 
         virtual ~QuerySpec()
         {
+            PLog::echoMessage("Destroying query spec.");
             delete strategy;
         }
     protected:
@@ -53,7 +54,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryStaticMeshAssetSpec() override = default;
+        ~QueryStaticMeshAssetSpec() override {
+            PLog::echoMessage("Destroying static mesh query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::StaticMeshAsset;
         const std::string& m_meshName;
         const std::string& m_meshRelPath;
@@ -71,7 +74,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryMeshAssetSpec() override = default;
+        ~QueryMeshAssetSpec() override {
+            PLog::echoMessage("Destroying mesh query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::MeshAsset;
 
         // and other rules
@@ -86,7 +91,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryTextureAssetSpec() override = default;
+        ~QueryTextureAssetSpec() override{
+            PLog::echoMessage("Destroying texture query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::TextureAsset;
 
         // and other rules
@@ -101,7 +108,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QuerySpriteAssetSpec() override = default;
+        ~QuerySpriteAssetSpec() override{
+            PLog::echoMessage("Destroying material query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::SpriteAsset;
 
         // and other rules
@@ -116,7 +125,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryShaderAssetSpec() override = default;
+        ~QueryShaderAssetSpec() override{
+            PLog::echoMessage("Destroying shader query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::ShaderAsset;
 
         // and other rules
@@ -131,7 +142,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QuerySkeletonAssetSpec() override = default;
+        ~QuerySkeletonAssetSpec() override{
+            PLog::echoMessage("Destroying skeleton query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::SkeletonAsset;
 
         // and other rules
@@ -146,7 +159,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryMaterialAssetSpec() override = default;
+        ~QueryMaterialAssetSpec() override{
+            PLog::echoMessage("Destroying material query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::MaterialAsset;
 
         // and other rules
@@ -161,7 +176,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QuerySplineAssetSpec() override = default;
+        ~QuerySplineAssetSpec() override {
+            PLog::echoMessage("Destroying spline query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::SplineAsset;
 
         // and other rules
@@ -176,7 +193,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryP2DPolygonMeshAssetSpec() override = default;
+        ~QueryP2DPolygonMeshAssetSpec() override{
+            PLog::echoMessage("Destroying 2d polygon query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::P2DPolygonMeshAsset;
 
         // and other rules
@@ -191,7 +210,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QuerySoundSourceAssetSpec() override = default;
+        ~QuerySoundSourceAssetSpec() override{
+            PLog::echoMessage("Destroying sound query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::SoundSourceAsset;
 
         // and other rules
@@ -206,7 +227,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryP3DSoundSourceAssetSpec() override = default;
+        ~QueryP3DSoundSourceAssetSpec() override {
+            PLog::echoMessage("Destroying 3d sound query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::P3DSoundSourceAsset;
 
         // and other rules
@@ -221,7 +244,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryLevelAssetSpec() override = default;
+        ~QueryLevelAssetSpec() override{
+            PLog::echoMessage("Destroying level query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::LevelAsset;
 
         // and other rules
@@ -236,7 +261,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryParticleAssetSpec() override = default;
+        ~QueryParticleAssetSpec() override{
+            PLog::echoMessage("Destroying particle query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::ParticleAsset;
 
         // and other rules
@@ -251,7 +278,9 @@ namespace pnt::assetDB
         {
         }
 
-        ~QueryRenderMapAssetSpec() override = default;
+        ~QueryRenderMapAssetSpec() override {
+            PLog::echoMessage("Destroying render map query spec.");
+        }
         QueryAssetType m_type = QueryAssetType::RenderMapAsset;
 
         // and other rules

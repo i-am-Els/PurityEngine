@@ -32,7 +32,9 @@ namespace pnt{
             setSystem<PRenderComponent>(std::make_unique<ecs::POpenGLRenderSS>(_window->getWindow()));
         }
 
-        ~PECSService() override = default;
+        ~PECSService() override {
+            PLog::echoMessage("Destroying ECS Service.");
+        }
 
         void init() override {
             getSystem<PIDComponent>()->init();

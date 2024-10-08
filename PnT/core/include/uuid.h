@@ -5,7 +5,6 @@
 #pragma once
 
 //#include <xhash>
-#include "pnt_core_pch.h"
 #include "core_macros.h"
 
 namespace pnt{
