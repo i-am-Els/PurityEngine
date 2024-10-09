@@ -55,6 +55,6 @@ else ()
             "${GLAD_DLL_PATH}/libglad.dll"
             "${GLFW_DLL_PATH}/glfw3.dll"
 #            "${ASSIMP_DLL_PATH}/assimp-vc143-mt.dll"
-            "${ISLEMATH_DLL_PATH}/islemath.dll"
+            "${ISLEMATH_DLL_PATH}/libislemath.dll"
             $<TARGET_FILE_DIR:Game>)
 endif()

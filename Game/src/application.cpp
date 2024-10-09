@@ -22,13 +22,13 @@ void Application::update(float deltaTime) {
 void Application::init() {
     PApplication::init();
 
-    quad = Scene.CreateEntity("Quad");
+    auto quad = Scene.CreateEntity("Quad");
 
-    auto mesh = quad->AddComponent<PMeshComponent>();
-    auto render = quad->AddComponent<PRenderComponent>();
+    auto mesh = quad.AddComponent<PMeshComponent>();
+    auto render = quad.AddComponent<PRenderComponent>();
 
 
-    PLog::echoValue(quad->GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
+    PLog::echoValue(quad.GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
 
 }
 
@@ -41,7 +41,7 @@ void Application::destroy() {
 }
 
 Application::Application(const std::string &title, int width, int height) : PApplication(title, width, height) {
-    quad = nullptr;
+
 }
 
 void Application::exit() {

@@ -28,8 +28,6 @@ public:
     void exit() override;
 
     void start() override;
-
-    PEntity* quad;
 };
 
 

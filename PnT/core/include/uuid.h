@@ -42,7 +42,6 @@ namespace pnt{
 
 }
 
-
 namespace std{
     template<>
     struct hash<pnt::PUUID>{

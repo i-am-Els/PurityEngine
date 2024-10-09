@@ -17,7 +17,7 @@ PShader::~PShader() {
 
 void PShader::createShaders(std::unique_ptr<PShader>& shader, const std::string& vertexSource, const std::string& fragmentSource)
 {
-    shader = std::make_unique<PShader>();
+    // shader = std::make_unique<PShader>();
     auto programID = glCreateProgram();
     unsigned int vs = setUpShader(ShaderType::VertexShader, vertexSource);
     unsigned int fs = setUpShader(ShaderType::FragmentShader, fragmentSource);

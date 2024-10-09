@@ -14,6 +14,12 @@ namespace pnt::fileIO{
             PLog::echoValue(m_handleId);
         }
 
+        PHandleBase(const PHandleBase& handle) = default;
+//        PHandleBase(PHandleBase&& handle)  noexcept : m_handleId(handle.m_handleId) {
+//
+//        }
+
+
         virtual ~PHandleBase() {
             PLog::echoMessage("Destroying Handle Base.");
         }

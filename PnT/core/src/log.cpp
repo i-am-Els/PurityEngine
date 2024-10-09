@@ -7,7 +7,18 @@
 namespace pnt {
 
     void PLog::echoMessage(const char *message, LogLevel _level) {
-        std::cout << "[" << stringifyLogLevel(_level) << "]" << " " << message << std::endl;
+
+        switch (_level) {
+            case LogLevel::Error:
+                std::cout << "\033[91m[Error]: " << message << "\033[0m" << std::endl;
+                break;
+            case LogLevel::Warning:
+                std::cout << "\033[93m[Warning]: " << message << "\033[0m" << std::endl;
+                break;
+            case LogLevel::Info:
+                std::cout << "\033[94m[Info]: " << message << "\033[0m" <<std::endl;
+                break;
+        }
     }
 
     PLog& PLog::getInstance() {
@@ -28,10 +39,21 @@ namespace pnt {
     void PLog::echoMessage(LogLevel _level, const char *message, ...) {
         va_list args;
         va_start(args, message);
-        printf("[%s] ", stringifyLogLevel(_level).c_str());
+        switch (_level) {
+
+            case LogLevel::Error:
+                printf("\033[91m[%s] ", stringifyLogLevel(_level).c_str());
+                break;
+            case LogLevel::Warning:
+                printf("\033[93m[%s] ", stringifyLogLevel(_level).c_str());
+                break;
+            case LogLevel::Info:
+                printf("\033[94m[%s] ", stringifyLogLevel(_level).c_str());
+                break;
+        }
         vprintf(message, args);
         va_end(args);
-        printf("\n");
+        printf("\n\033[0m");
     }
 
 
