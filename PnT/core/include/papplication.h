@@ -9,18 +9,17 @@
 #include "window_pnt.h"
 #include "scene.h"
 
-using namespace pnt::graphics;
 namespace pnt{
 
     class PNT_API PApplication {
     protected:
-        PApplication(const std::string &title, int width, int height)
-        : applicationInfo(ApplicationInfo{title, width, height}), serviceLocator(std::make_shared<PServiceLocator>()) {
-        }
+        PApplication(std::string title, int width, int height);
 
     public:
         std::unique_ptr<PWindow> window;
-        virtual ~PApplication() = default;
+        virtual ~PApplication() {
+            PLog::echoMessage("Destroying PApplication.");
+        }
         virtual void init();
         virtual void start();
         virtual void process();
@@ -30,13 +29,21 @@ namespace pnt{
         virtual void exit();
 
         std::shared_ptr<PServiceLocator> serviceLocator;
-        PScene Scene{};
+        scene::PScene Scene{};
 
         struct PNT_API ApplicationInfo{
-            const std::string &title;
+            std::string title;
             int width;
             int height;
-        } applicationInfo;
+
+            ApplicationInfo(std::string t, int w, int h){
+                title = t;
+                width = w;
+                height = h;
+            }
+        };
+
+        ApplicationInfo applicationInfo;
     };
 
     // To be defined in client code

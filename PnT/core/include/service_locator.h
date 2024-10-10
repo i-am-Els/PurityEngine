@@ -19,7 +19,8 @@ namespace pnt{
         void registerService(std::shared_ptr<T> service){
             static_assert(std::is_base_of<IService, T>::value, "T must be a subclass of IService");
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
-            std::type_index typeIndex = service->getTypeIndex(); //
+            std::type_index typeIndex =std::type_index(typeid(T)); //
+            PLog::echoValue(typeIndex.name());
 
             if (services.find(typeIndex) != services.end()){
                 throw std::runtime_error("Service already registered!");
@@ -32,6 +33,7 @@ namespace pnt{
         void unregisterService(){
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             auto typeIndex = std::type_index(typeid(T));
+            PLog::echoValue(typeIndex.name());
 
             if (services.find(typeIndex) == services.end()){
                 throw std::runtime_error("Service not registered!");
@@ -45,9 +47,9 @@ namespace pnt{
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             auto typeIndex = std::type_index(typeid(T));
             auto it = services.find(typeIndex);
+            PLog::echoValue(typeIndex.name());
 
             if (it == services.end()){
-                PLog::echoValue(typeIndex.name());
                 throw std::runtime_error("Service not found!");
             }
 
@@ -57,6 +59,10 @@ namespace pnt{
         template<typename Interface, typename Concrete>
         Concrete* getConcreteService(){
             return dynamic_cast<Concrete*>(getService<Interface>().get());
+        }
+
+        ~PServiceLocator() {
+            PLog::echoMessage("Destroying Service Locator.");
         }
     };
 }

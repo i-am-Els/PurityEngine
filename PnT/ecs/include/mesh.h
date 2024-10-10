@@ -11,11 +11,10 @@
 #include "assets_types.h"
 
 using namespace pnt::graphics;
-namespace pnt::mesh{
-    class P3DGeometricMeshSS;
-}
 
 namespace pnt::ecs{
+    class P3DGeometricMeshSS;
+
     struct SMeshProfile{
         bool isVisible;
         std::string relAssetPath;
@@ -62,7 +61,7 @@ namespace pnt::ecs{
                 4, 0, 3, // Bottom triangles
                 3, 7, 4
         };
-        friend class pnt::mesh::P3DGeometricMeshSS;
+        friend class P3DGeometricMeshSS;
 
     };
 }

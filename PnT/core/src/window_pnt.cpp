@@ -5,7 +5,7 @@
 #include "window_pnt.h"
 #include "log.h"
 
-namespace pnt::graphics {
+namespace pnt {
 
     // PWindow
 
@@ -14,12 +14,9 @@ namespace pnt::graphics {
         PLog::echoMessage("PWindow Constructed!");
     }
 
-    PWindow::~PWindow() = default;
-
-//    PWindow & PWindow::getInstance() {
-//        static PWindow instance;
-//        return instance;
-//    }
+    PWindow::~PWindow() {
+        PLog::echoMessage("Destroying Window.");
+    }
 
     void PWindow::bindWindowBackendAPI() {
         if(!glfwInit()){
@@ -82,6 +79,10 @@ namespace pnt::graphics {
             return true;
         }
         return false;
+    }
+
+    void PWindow::update() {
+
     }
 
 

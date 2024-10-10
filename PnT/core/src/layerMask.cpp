@@ -29,7 +29,9 @@ namespace pnt {
         return false;
     }
 
-    LayerMask::~LayerMask() = default;
+    LayerMask::~LayerMask(){
+        PLog::echoMessage("Destroying Layer Mask.");
+    }
 
     /// False tells that the layer was not added to the max at all in the first place
     bool LayerMask::removeLayer(int layerIndex) {

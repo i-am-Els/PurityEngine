@@ -14,6 +14,10 @@ namespace pnt{
         EVENT_TYPE(E_EventType::WindowClose)
 
         EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~WindowCloseEvent() override {
+            PLog::echoMessage("Destroying Window Event.");
+        }
     };
 
     class PNT_API WindowResizeEvent : public Event{
@@ -31,6 +35,11 @@ namespace pnt{
         EVENT_TYPE(E_EventType::WindowResize)
 
         EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~WindowResizeEvent() override {
+            PLog::echoMessage("Destroying Window Resized Event.");
+        }
+
     private:
         uint32_t m_width, m_height;
     };
@@ -61,6 +70,10 @@ namespace pnt{
         EVENT_TYPE(E_EventType::AppTick)
 
         EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~AppTickEvent() override {
+            PLog::echoMessage("Destroying App Tick Event.");
+        }
     };
 
     class PNT_API AppUpdateEvent : public Event{
@@ -70,6 +83,10 @@ namespace pnt{
         EVENT_TYPE(E_EventType::AppUpdate)
 
         EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~AppUpdateEvent() override {
+            PLog::echoMessage("Destroying App Update Event.");
+        }
     };
 
     class PNT_API AppRenderEvent : public Event{
@@ -79,6 +96,10 @@ namespace pnt{
         EVENT_TYPE(E_EventType::AppRender)
 
         EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~AppRenderEvent() override {
+            PLog::echoMessage("Destroying App Rendered Event.");
+        }
     };
 }
 

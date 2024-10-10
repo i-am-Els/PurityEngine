@@ -4,8 +4,9 @@
 
 #pragma once
 
+#include "papplication.h"
 
-#include <papplication.h>
+
 extern pnt::PApplication * pnt::CreateApplication();
 
 #ifdef PNT_PLATFORM_WINDOWS

@@ -4,19 +4,22 @@
 
 #pragma once
 
-#include "pnt_core_pch.h"
-#include "core_macros.h"
+#include "../../../core/include/pnt_core_pch.h"
+
 #include "service_base.h"
 #include "layer_service.h"
 
-namespace pnt {
 
-    class Application;
+
+namespace pnt {
+    constexpr size_t ARRAY_SIZE = 32;
+
+    class PApplication;
 
     class Event;
     enum class ELayerType{
         Layer,
-        ImGuiLayer
+        OverlayLayer
     };
 
     class PNT_API PLayerService : public PServiceBase<ILayerService>{
@@ -38,11 +41,12 @@ namespace pnt {
             inline void disable() { m_enabled = false; }
             [[nodiscard]] [[maybe_unused]] inline bool isEnabled() const { return m_enabled; }
 
-            operator unsigned int() const { return m_id; }
-            operator std::string() const { return m_name; }
+            explicit operator unsigned int() const { return m_id; }
+            explicit operator std::string() const { return m_name;
+            }
 
             PLayer() = delete;
-            virtual ~PLayer() { std::cout << "Delete Layer" << std::endl;};
+            virtual ~PLayer() { PLog::echoMessage("Destroying Layer.");};
             PLayer& operator=(const PLayer& l) = delete; // copy assignment
             PLayer& operator=(PLayer&&) = delete; // move assignment
 
@@ -60,7 +64,7 @@ namespace pnt {
             [[maybe_unused]] void setEventFireCallback(CallbackFnWithEventArg1 callback);
         private:
             PLayer(const PLayer& layer); // copy constructor
-            PLayer(PLayer&& a) = default; // move constructor
+            PLayer(PLayer&& a) noexcept = default; // move constructor
             PLayer(unsigned int id, const std::string&);
 
             std::string m_name;
@@ -98,7 +102,6 @@ namespace pnt {
 
         void terminate();
 
-//        [[maybe_unused]] static LayerManager& s_GetInstance();
 
         [[maybe_unused]] PLayer* fetchLayerByID(unsigned int id);
 
@@ -118,18 +121,17 @@ namespace pnt {
 //        PLayerService() = default;
 
         /// Use this as interface
-        [[maybe_unused]] [[nodiscard]] int s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType=ELayerType::Layer);
+        [[maybe_unused]] [[nodiscard]] unsigned int s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType=ELayerType::Layer);
 
         /// Use this as interface
         [[maybe_unused]] bool deleteLayer(unsigned int id);
     private:
-        void pushToStack(PLayer* layer);
-        bool popFromStack(PLayer* layer);
 
         // Do not use outside the LayerManager class
-        [[nodiscard]]static std::unique_ptr<PLayer> s_MakeLayer(ELayerType layerType, unsigned int id, const std::string& name);
+        void MakeLayer(ELayerType layerType, unsigned int id, const std::string& name);
 
-        static const unsigned int MAX_LAYER = 32;
+
+        static const unsigned int MAX_LAYER = ARRAY_SIZE;
         static const unsigned int BASE_LAYER_COUNT;
         std::array<PLayer*, MAX_LAYER> layerStack{};
     };

@@ -15,7 +15,9 @@ namespace pnt::ecs{
     class PNT_API ManipulativeBehaviour{
     public:
 
-        virtual ~ManipulativeBehaviour() = default;
+        virtual ~ManipulativeBehaviour() {
+            PLog::echoMessage("Destroying Manipulative Behaviour Host.");
+        }
 
         template<typename T>
         T *GetComponent();

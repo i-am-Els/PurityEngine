@@ -18,5 +18,8 @@ set(CMAKE_CXX_STANDARD 17)
 # Add the "PnT" library subdirectory
 add_subdirectory(PnT)
 
+# Add the "PnT" Editor subdirectory
+add_subdirectory(PnTEditor)
+
 # Add the "game" executable subdirectory
-add_subdirectory(game)
+add_subdirectory(Game)

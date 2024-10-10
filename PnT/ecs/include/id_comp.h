@@ -9,12 +9,15 @@
 
 
 namespace pnt{
-    class PScene;
+    namespace scene{
+        class PScene;
+    }
+
     namespace  ecs{
         class PIDManager;
 
         class PNT_API PIDComponent final: public PComponent{
-            friend class pnt::PScene;
+            friend class pnt::scene::PScene;
         public:
             explicit PIDComponent(PEntity *entity);
 
