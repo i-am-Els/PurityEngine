@@ -12,6 +12,51 @@ project(Police_n_Thief)
 
 set(CMAKE_CXX_STANDARD 17)
 
+option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
 
 # Add tasks subprojects
-add_executable(PnTEditor gui/editor.cpp gui/editor.h)
+add_executable(PnTEditor
+        gui/src/editor.cpp
+        gui/include/editor.h
+        project/src/project_manager.cpp
+        project/include/project_manager.h
+        gui/include/p_editor_application.cpp
+        gui/include/p_editor_application.h)
+
+# Add the core directory for the PnT library
+target_include_directories(PnTEditor PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
+
+# Link against the PnT library (assuming it's built in a sibling directory)
+target_link_libraries(PnTEditor PRIVATE PnT)
+
+target_compile_definitions(PnTEditor PUBLIC PNT_PLATFORM_WINDOWS)
+
+# Path to the DLL in the build directory
+set(PNT_DLL_PATH $<TARGET_FILE_DIR:PnT>)
+set(GLAD_DLL_PATH $<TARGET_FILE_DIR:glad>)
+set(GLFW_DLL_PATH $<TARGET_FILE_DIR:glfw>)
+set(ASSIMP_DLL_PATH $<TARGET_FILE_DIR:assimp>)
+set(ISLEMATH_DLL_PATH $<TARGET_FILE_DIR:islemath>)
+
+if(MSVC_DEBUG_BUILD)
+    # Copy the DLL to the executable directory after build
+    add_custom_command(TARGET PnTEditor POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${PNT_DLL_PATH}/PnT.dll"
+            "${GLAD_DLL_PATH}/glad.dll"
+            "${GLFW_DLL_PATH}/glfw3.dll"
+#            "${ASSIMP_DLL_PATH}/assimp-vc143-mt.dll"
+            "${ISLEMATH_DLL_PATH}/islemath.dll"
+            $<TARGET_FILE_DIR:PnTEditor>)
+
+else ()
+    # Copy the DLL to the executable directory after build
+    add_custom_command(TARGET PnTEditor POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${PNT_DLL_PATH}/libPnT.dll"
+            "${GLAD_DLL_PATH}/libglad.dll"
+            "${GLFW_DLL_PATH}/glfw3.dll"
+#            "${ASSIMP_DLL_PATH}/assimp-vc143-mt.dll"
+            "${ISLEMATH_DLL_PATH}/libislemath.dll"
+            $<TARGET_FILE_DIR:PnTEditor>)
+endif()

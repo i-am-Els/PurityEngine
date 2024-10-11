@@ -50,6 +50,7 @@ namespace pnt::ecs {
     }
 
     void POpenGLRenderSS::start() {
+        if (!(_vbo && _ebo)) return;
         vertexArray->init(); // setup vao, bind and configure it
         _vbo->bindBuffer();
         _ebo->bindBuffer();
