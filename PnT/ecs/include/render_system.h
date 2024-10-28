@@ -9,7 +9,6 @@
 namespace pnt::ecs{
     class PNT_API IRenderSystem : public ISystem<PRenderComponent>{
         public:
-            virtual void SwapBuffers() = 0;
             virtual void setUpShader() =  0;
     };
 }

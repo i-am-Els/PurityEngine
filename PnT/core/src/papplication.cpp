@@ -72,9 +72,10 @@ namespace pnt{
 
     void PApplication::init() {
         pnt::PSystemFinder::application = this;
+
         // Set up window
         PWindow::bindWindowBackendAPI();
-        window = PWindow::createWindow(applicationInfo.width, applicationInfo.height, applicationInfo.title.c_str());
+        PWindow::createWindow(window, applicationInfo.width, applicationInfo.height, applicationInfo.title.c_str());
 
         // Create all Services
         auto ecsService = std::make_shared<PECSService>(window.get());
@@ -107,5 +108,6 @@ namespace pnt{
     PApplication::PApplication(std::string title, int width, int height)
     : applicationInfo(title, width, height), serviceLocator(std::make_shared<PServiceLocator>())
     {
+        window = std::make_unique<PWindow>();
     }
 }

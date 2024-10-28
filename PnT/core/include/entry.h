@@ -7,7 +7,7 @@
 #include "papplication.h"
 
 
-extern pnt::PApplication * pnt::CreateApplication();
+//extern pnt::PApplication * pnt::CreateApplication();
 
 #ifdef PNT_PLATFORM_WINDOWS
 PNT_API int main(){

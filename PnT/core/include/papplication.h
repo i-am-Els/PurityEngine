@@ -17,6 +17,7 @@ namespace pnt{
 
     public:
         std::unique_ptr<PWindow> window;
+
         virtual ~PApplication() {
             PLog::echoMessage("Destroying PApplication.");
         }

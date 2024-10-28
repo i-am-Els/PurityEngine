@@ -43,4 +43,22 @@ namespace pnt::exceptions
             return "Query index is out of bounds, the result cannot be found, check that your is correct and try again.";
         }
     };
+
+    class PNT_API ShaderProgramCreationError final : public std::exception
+    {
+    public:
+        operator int() { return 0; }
+        [[nodiscard]] const char* what() const noexcept override{
+            return "Shader Program creation failed. Test the GlError to see the full description.";
+        }
+    };
+
+    class PNT_API OpenGlContextNotCurrentError final : public std::exception
+    {
+    public:
+        operator int() { return -1; }
+        [[nodiscard]] const char* what() const noexcept override{
+            return "The opengl context has change and s no more the current glfwWindow.";
+        }
+    };
 }

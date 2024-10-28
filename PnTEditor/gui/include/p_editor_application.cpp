@@ -8,7 +8,7 @@
 namespace gui {
 
     PEditorApplication::~PEditorApplication() {
-
+        PLog::echoMessage("Deleting PEditorApplication");
     }
 
     void PEditorApplication::init() {

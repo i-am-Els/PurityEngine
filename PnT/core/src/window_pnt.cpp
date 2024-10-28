@@ -10,7 +10,7 @@ namespace pnt {
     // PWindow
 
     PWindow::PWindow() {
-        window = nullptr;
+        m_glfwWindow = nullptr;
         PLog::echoMessage("PWindow Constructed!");
     }
 
@@ -26,13 +26,11 @@ namespace pnt {
         }
     }
 
-    std::unique_ptr<PWindow> PWindow::createWindow(int width, int height, const char* title, int gl_major_v, int gl_minor_v) {
-        std::unique_ptr<PWindow> window = std::make_unique<PWindow>();
-
+    void PWindow::createWindow(const std::unique_ptr<PWindow>& window, int width, int height, const char* title, int gl_major_v, int gl_minor_v) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         setVersion(gl_major_v, gl_minor_v);
 
-        window->window = glfwCreateWindow(
+        window->m_glfwWindow = glfwCreateWindow(
                 width,
                 height,
                 title,
@@ -40,19 +38,17 @@ namespace pnt {
                 nullptr
         );
 
-        if(!window->window){
+        if(!window->m_glfwWindow){
             PLog::echoMessage("Something Went wrong while creating a Window. That's all we know", LogLevel::Error);
-            return nullptr;
+            return;
         }else{
             PLog::echoMessage("Window creation completed successfully!");
         }
 
-        glfwMakeContextCurrent(window->window);
+        glfwMakeContextCurrent(window->m_glfwWindow);
         int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         PNT_ASSERT_MSG(status, "Failed to initialize GLAD!");
-
-        return std::move(window);
-    }
+   }
 
     void PWindow::setVersion(int major, int minor) {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
@@ -65,8 +61,8 @@ namespace pnt {
     }
 
     void PWindow::deleteWindow() {
-        glfwDestroyWindow(window);
-        window = nullptr;
+        glfwDestroyWindow(m_glfwWindow);
+        m_glfwWindow = nullptr;
         PLog::echoMessage("Window Deleted!");
     }
 
@@ -74,7 +70,7 @@ namespace pnt {
 //    }
 
     bool PWindow::windowClose(){
-        if (glfwWindowShouldClose(window)){
+        if (glfwWindowShouldClose(m_glfwWindow)){
             deleteWindow();
             return true;
         }

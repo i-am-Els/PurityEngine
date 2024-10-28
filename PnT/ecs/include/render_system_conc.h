@@ -38,7 +38,6 @@ namespace pnt::ecs{
         void destroy() override;
 
         void setUpShader() override;
-        void SwapBuffers() override;
 
         VertexBuffer* _vbo;
         ElementBuffer* _ebo;

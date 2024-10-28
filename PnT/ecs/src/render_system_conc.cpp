@@ -50,7 +50,7 @@ namespace pnt::ecs {
     }
 
     void POpenGLRenderSS::start() {
-        if (!(_vbo && _ebo)) return;
+        if (_vbo == nullptr || _ebo == nullptr) return;
         vertexArray->init(); // setup vao, bind and configure it
         _vbo->bindBuffer();
         _ebo->bindBuffer();
@@ -76,7 +76,11 @@ namespace pnt::ecs {
         vertexArray->bindVAO();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         VertexArray::unbindVAO();
-        SwapBuffers();
+        if (glfwGetCurrentContext() != _window) {
+            PLog::echoMessage("Context is not current!", LogLevel::Error);
+            throw OpenGlContextNotCurrentError();
+        }
+        glfwSwapBuffers(_window);
         PShader::unbindShader();
     }
 
@@ -86,14 +90,19 @@ namespace pnt::ecs {
 
     void POpenGLRenderSS::clearWindow(GLbitfield masks, graphics::Color color) {
         glClearColor(color.r, color.g, color.b, color.a);
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            std::cout << "OpenGL Error: " << err << std::endl;
+        }
+
         glClear(masks);
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            std::cout << "OpenGL Error: " << err << std::endl;
+        }
+
     }
 
-    void POpenGLRenderSS::SwapBuffers() {
-        glfwSwapBuffers(_window);
-    }
-
-    POpenGLRenderSS::POpenGLRenderSS(GLFWwindow *&window) : _window(window) {
+    POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* &window) : _window(window) {
         vertexArray = new VertexArray();
         renderComponents.reserve(100);
     }

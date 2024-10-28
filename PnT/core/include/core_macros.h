@@ -24,3 +24,10 @@
     #define PNT_ASSERT(expr)
     #define PNT_ASSERT_MSG(expr, msg)
 #endif
+
+#ifdef _WIN32
+#include <windows.h>
+#define PNT_DEBUG_MT_LOG(msg) PLog::echoMessage(std::string("Thread_id: (") + std::to_string(GetCurrentThreadId()) + ") " + msg)
+#else
+#define PNT_DEBUG_MT_LOG(msg) PLog::echoMessage(msg)
+#endif

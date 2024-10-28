@@ -15,19 +15,19 @@ namespace pnt{
     class PNT_API PWindow{
     private:
         static void setVersion(int major, int minor);
-        GLFWwindow* window;
+        GLFWwindow* m_glfwWindow;
 
     public:
         PWindow();
         static void bindWindowBackendAPI(); // Bind GLFW
         static void unbind(); // UnBind
-        static std::unique_ptr<PWindow> createWindow(int width, int height, const char *title = "PnT Window", int gl_major_v = 4, int gl_minor_v = 5);
+        static void createWindow(const std::unique_ptr<PWindow>& window, int width, int height, const char *title = "PnT Window", int gl_major_v = 4, int gl_minor_v = 5);
 
         void update();
 
         inline GLFWwindow*& getWindow()
         {
-            return window;
+            return m_glfwWindow;
         }
 
         void deleteWindow();
