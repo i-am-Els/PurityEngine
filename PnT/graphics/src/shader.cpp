@@ -124,8 +124,11 @@ unsigned int PShader::compileShader(pnt::graphics::ShaderType type, unsigned int
         std::cout << message << std::endl;
         glDeleteShader(id);
         free(message);
+        throw std::runtime_error("Shader Compilation failed");
         return 0;
     }
+    PLog::echoMessage("Shader Compilation Passed");
+
     return 1;
 }
 

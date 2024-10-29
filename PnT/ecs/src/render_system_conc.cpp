@@ -105,6 +105,8 @@ namespace pnt::ecs {
     POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* &window) : _window(window) {
         vertexArray = new VertexArray();
         renderComponents.reserve(100);
+        _vbo = nullptr;
+        _ebo = nullptr;
     }
 
     POpenGLRenderSS::~POpenGLRenderSS() {
@@ -125,6 +127,20 @@ namespace pnt::ecs {
 
     void POpenGLRenderSS::RemoveComponent(PEntity *entity, PRenderComponent *component) {
 
+    }
+
+    void POpenGLRenderSS::SetUpBuffers(VertexBuffer *vbo, ElementBuffer *ebo) {
+        try{
+            if (vbo == nullptr || ebo == nullptr){
+                throw NullBufferError();
+            }
+
+            this->_vbo = vbo;
+            this->_ebo = ebo;
+        }
+        catch (std::exception& e){
+            PLog::echoMessage(LogLevel::Error, e.what());
+        }
     }
 
 }

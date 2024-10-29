@@ -20,7 +20,7 @@ add_executable(PnTEditor
         gui/include/editor.h
         project/src/project_manager.cpp
         project/include/project_manager.h
-        gui/include/p_editor_application.cpp
+        gui/src/p_editor_application.cpp
         gui/include/p_editor_application.h)
 
 # Add the core directory for the PnT library

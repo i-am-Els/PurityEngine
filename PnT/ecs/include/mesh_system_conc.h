@@ -46,10 +46,6 @@ namespace pnt::ecs{
 
     private:
         std::vector<std::unique_ptr<PMeshComponent>> meshComponents;
-        ElementBuffer EBO;
-        VertexBuffer VBO;
-
-        void SendBuffersToRenderSystem();
     };
 }
 

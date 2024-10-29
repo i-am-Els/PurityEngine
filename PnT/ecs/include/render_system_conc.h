@@ -42,19 +42,7 @@ namespace pnt::ecs{
         VertexBuffer* _vbo;
         ElementBuffer* _ebo;
 
-        inline void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
-            try{
-                if (vbo == nullptr || ebo == nullptr){
-                    throw NullBufferError();
-                }
-
-                this->_vbo = vbo;
-                this->_ebo = ebo;
-            }
-            catch (std::exception& e){
-                PLog::echoMessage(LogLevel::Error, e.what());
-            }
-        }
+        void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo);
 
         PRenderComponent *AddComponent(PEntity* entity) override;
 

@@ -39,27 +39,11 @@ namespace pnt::ecs{
         try {
             SMeshProfile profile = {true};
             meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity, profile));
-
-            // Will only render one mesh in the scene, that of the most recently added mesh component.
-            VBO = {meshComponents.back()->m_vertices, (unsigned int)(meshComponents.back().get()->m_vertices.size()) };
-            EBO = {meshComponents.back()->m_indices, (unsigned int)meshComponents.back().get()->m_indices.size() };
-
-            VBO.initBuffer();
-            EBO.initBuffer();
-            //
-
-            SendBuffersToRenderSystem();
-
             return meshComponents.back().get();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Mesh Comp Generic Assertion failed");
         }
         return nullptr;
-    }
-
-    void P3DGeometricMeshSS::SendBuffersToRenderSystem() {
-        auto renderSystem = dynamic_cast<POpenGLRenderSS*>(PSystemFinder::GetECSService()->getSystem<PRenderComponent>());
-        if (renderSystem)  { renderSystem->SetUpBuffers(&VBO, &EBO); }
     }
 
     void P3DGeometricMeshSS::RemoveComponent(PEntity *entity, PMeshComponent *component) {
