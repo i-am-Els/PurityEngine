@@ -7,6 +7,7 @@
 #include "data_hash_table.h"
 #include "fileio.h"
 #include "entity.h"
+#include "scene.h"
 
 using namespace pnt::fileIO;
 
@@ -46,18 +47,14 @@ namespace pnt::ecs {
     void POpenGLRenderSS::init() {
         shader = std::make_unique<PShader>();
         setUpShader();
-
     }
 
     void POpenGLRenderSS::start() {
-        if (_vbo == nullptr || _ebo == nullptr) return;
         vertexArray->init(); // setup vao, bind and configure it
-        _vbo->bindBuffer();
-        _ebo->bindBuffer();
-
+//        _vbo->bindBuffer();
+//        _ebo->bindBuffer();
         vertexArray->addAttribute(0, 3, sizeof(float) * 3, nullptr); // add attribute to vao
         glEnable(GL_DEPTH_TEST);
-
     }
 
     void POpenGLRenderSS::process() {
@@ -71,15 +68,21 @@ namespace pnt::ecs {
 
     void POpenGLRenderSS::render() {
         clearWindow(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, Color(.5f, .5f, .2f));
-
         shader->bindShader();
-        vertexArray->bindVAO();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        VertexArray::unbindVAO();
+
         if (glfwGetCurrentContext() != _window) {
             PLog::echoMessage("Context is not current!", LogLevel::Error);
             throw OpenGlContextNotCurrentError();
         }
+        else {
+            if (hasSomethingToRender()) {
+                PLog::echoMessage("Has Something to Render.");
+                vertexArray->bindVAO();
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+                VertexArray::unbindVAO();
+            }
+        }
+
         glfwSwapBuffers(_window);
         PShader::unbindShader();
     }
@@ -90,21 +93,12 @@ namespace pnt::ecs {
 
     void POpenGLRenderSS::clearWindow(GLbitfield masks, graphics::Color color) {
         glClearColor(color.r, color.g, color.b, color.a);
-        GLenum err;
-        while ((err = glGetError()) != GL_NO_ERROR) {
-            std::cout << "OpenGL Error: " << err << std::endl;
-        }
-
         glClear(masks);
-        while ((err = glGetError()) != GL_NO_ERROR) {
-            std::cout << "OpenGL Error: " << err << std::endl;
-        }
-
     }
 
     POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* &window) : _window(window) {
         vertexArray = new VertexArray();
-        renderComponents.reserve(100);
+        renderComponents.reserve(128);
         _vbo = nullptr;
         _ebo = nullptr;
     }
@@ -141,6 +135,10 @@ namespace pnt::ecs {
         catch (std::exception& e){
             PLog::echoMessage(LogLevel::Error, e.what());
         }
+    }
+
+    bool POpenGLRenderSS::hasSomethingToRender() const noexcept {
+        return scene::PScene::HasAnythingToRender();
     }
 
 }

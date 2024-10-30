@@ -18,6 +18,9 @@ namespace pnt::scene{
         void DestroyEntity(PEntityHandle entity);
         void DestroyEntityWithUUID(PUUID uuid);
 
+        static bool HasAnythingToRender();
+
+    private:
         ecs::PEntityRegistry m_registry;
     };
 } // pnt::scene

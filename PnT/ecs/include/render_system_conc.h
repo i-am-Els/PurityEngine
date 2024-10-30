@@ -62,5 +62,6 @@ namespace pnt::ecs{
         static void SetUniformVec2(int uniformID, Vector2f vec2);
         static void SetUniformVec3(int uniformID, Vector3f vec3);
 
+        [[nodiscard]] bool hasSomethingToRender() const noexcept;
     };
 }

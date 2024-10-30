@@ -2,7 +2,7 @@
 // Created by Eniola Olawale on 10/10/2024.
 //
 
-#include "../include/p_editor_application.h"
+#include "p_editor_application.h"
 
 
 namespace gui {
@@ -46,5 +46,5 @@ namespace gui {
 
 
 pnt::PApplication* pnt::CreateApplication(){
-    return new gui::PEditorApplication("PnT Editor", 700, 500);
+    return new gui::PEditorApplication("PnT Editor", 1280, 700);
 }

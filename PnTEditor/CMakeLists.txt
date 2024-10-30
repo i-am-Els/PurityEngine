@@ -24,7 +24,12 @@ add_executable(PnTEditor
         gui/include/p_editor_application.h)
 
 # Add the core directory for the PnT library
-target_include_directories(PnTEditor PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
+target_include_directories(PnTEditor PRIVATE
+        ${CMAKE_SOURCE_DIR}/PnT/core
+        core/include
+        gui/include
+        project/include
+)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
 target_link_libraries(PnTEditor PRIVATE PnT)

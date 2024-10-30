@@ -7,8 +7,13 @@
 #include "iservices.h"
 #include "isystems.h"
 
+
 namespace pnt{
+    namespace scene {
+        class PScene;
+    }
     class PApplication;
+    class PWindow;
     class PServiceLocator;
     class PECSService;
 
@@ -21,6 +26,10 @@ namespace pnt{
         }
 
         static PApplication *GetApplication();
+
+        static PWindow *GetWindow();
+
+        static scene::PScene *GetScene();
 
         static PECSService * GetECSService();
 
