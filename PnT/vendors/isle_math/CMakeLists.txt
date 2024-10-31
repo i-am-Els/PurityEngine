@@ -61,10 +61,31 @@ target_compile_definitions(
 target_include_directories(
         islemath
         PUBLIC
-        include
-        include/math
-        include/math/matrix
-        include/math/vector
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/math>
+        $<INSTALL_INTERFACE:include/math>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/math/matrix>
+        $<INSTALL_INTERFACE:include/math/matrix>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/math/vector>
+        $<INSTALL_INTERFACE:include/math/vector>
 )
 
 target_precompile_headers(islemath PRIVATE include/isle_pch.h)
+
+
+include(GNUInstallDirs)
+
+# Install the islemath library and headers
+install(TARGETS islemath
+        EXPORT islemathTargets
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        INCLUDES DESTINATION include)
+
+install(DIRECTORY include/ DESTINATION include/isle_math)
+install(EXPORT islemathTargets
+        FILE islemathTargets.cmake
+        NAMESPACE islemath::
+        DESTINATION lib/cmake/islemath)

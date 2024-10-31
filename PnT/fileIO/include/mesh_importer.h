@@ -18,6 +18,10 @@ using namespace pnt::graphics;
 namespace pnt::fileIO{
 
     class PNT_API MeshImporter {
+    public:
+        MeshImporter();
+
+        bool ImportFile(const std::string& file);
 
     };
 
