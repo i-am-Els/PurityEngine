@@ -192,25 +192,25 @@ FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
 )
-if(NOT glfw_POPULATED)
-    FetchContent_MakeAvailable(glfw)
-endif ()
-
 
 FetchContent_Declare(
         glad
         GIT_REPOSITORY https://github.com/Dav1dde/glad.git
 )
-if(NOT glad_POPULATED)
-    FetchContent_MakeAvailable(glad)
-endif ()
-
 
 FetchContent_Declare(
         assimp
         GIT_REPOSITORY https://github.com/assimp/assimp.git
         GIT_TAG       v5.4.3  # Replace with the version/tag you want
 )
+
+
+if(NOT glad_POPULATED)
+    FetchContent_MakeAvailable(glad)
+endif ()
+if(NOT glfw_POPULATED)
+    FetchContent_MakeAvailable(glfw)
+endif ()
 if (NOT assimp_POPULATED)
     FetchContent_MakeAvailable(assimp)
 endif()
