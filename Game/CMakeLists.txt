@@ -25,7 +25,7 @@ add_executable(Game ${SOURCES}
 target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
-target_link_libraries(Game PRIVATE PnT::PnT)
+target_link_libraries(Game PRIVATE PnT)
 
 target_compile_definitions(Game PUBLIC PNT_PLATFORM_WINDOWS)
 

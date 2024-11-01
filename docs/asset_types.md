@@ -37,6 +37,9 @@ Animation files
 Assets
 - `*.pnta`
 
+Scripting
+- `*.pmeta`
+
 Script3D
 - `*.script3D`
 
@@ -67,7 +70,7 @@ Note: First line in any section takes priority in MVP phase.
 - PolygonMeshAsset.
 - SoundSourceAsset.
 - 3DSoundSourceAsset.
-- LevelAsset (Scene description nodes or contents and prefab such as an `Entity` Prefab).
+- LevelAsset (Scene description nodes or contents and prefab such as an `Entity` Prefab or `Behaviour` scripts).
 - ParticleAssets.
 - RenderMapAssets (CubeMap, Environment Max etc).
 
@@ -98,12 +101,12 @@ This DB file represents assets that need to be present in the assetDatabase at r
   "id": 1234567890123456,
   "assets" : [
     {
-      "id": 0,
-      "path": "<file-with-uuid-0-rel-path-to-project-root>"
+      "id": 3456789012345612,
+      "path": "<file-with-uuid-0-rel-path-to-project-root>.pnta"
     },
     {
-      "id": 1,
-      "path": "<file-with-uuid-1-rel-path-to-project-root>"
+      "id": 8901234561234567,
+      "path": "<file-with-uuid-1-rel-path-to-project-root>.pmeta"
     }
   ]
 }
@@ -115,8 +118,8 @@ Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative 
 ### PnT scene description files `*.pnts`
 The structure of the scene file describes the hierarchical tree of entity transforms.
 
-### PnT scene description files `*.pnts`
-The structure of asset files vary, and can be determined by the asset source i.e whether it was imported as an asset or created in the editor as a prefab.
+### PnT scene description files `*.pnta`
+The structure of asset files vary, and can be determined by the asset source i.e. whether it was imported as an asset or created in the editor as a prefab.
 
 #### The Asset source enum 
 - Asset
@@ -177,7 +180,12 @@ The Keys:
         },
         "renderComponent": {
           "isVisible": true
-        }
+        },
+        "behaviourComponents": [
+          "<scriptA-path-relative-to-project-root>",
+          "<scriptB-path-relative-to-project-root>",
+          "<scriptC-path-relative-to-project-root>"
+        ]
       }
     ]
   },
@@ -196,3 +204,46 @@ In the example above we have a `PREFAB` asset. This is what an asset created in 
 - `"ref_asset_index"` is the index of the referenced asset in `ref_assets` array.
 
 <hr>
+
+## Scripts - Behaviour Component
+
+The scripts are C++ files for now, until a scripting system is introduced. To serialize scripts, we need to create a meta file for the script.
+The meta file holds the json structure of the serializable contents(mostly primitive types) in the script class.
+
+It is important that these scripts implement the BehaviourComponent class if they will be added to entities and serialized with the scene description.  
+
+##### SCRIPT `.pmeta`
+```json
+{
+  "id" : 2109654432138765,
+  "path": "<ref-script-path-relative-to-project-root>",
+  "serializable_fields" : {
+    "color": [0, 0, 1, 1],
+    "camera_offset" : [0.0, 10.0, -35.0]
+  }
+}
+```
+
+Every script should have an accompanying `.pmeta` file of the same name. and in the same directory that contains its serialization details. 
+In this case:
+
+```c++
+#include "pnt.h"
+using namespace isle_engine::math;
+using namespace pnt::graphics; 
+
+class CameraOffset : public PBehaviourScriptComponent{
+public:
+    Color color {0, 0, 1, 1};
+    Vector3f camera_offset { 0.0f, 10.0f, -35.0f};
+    
+    void start() override{
+        // ...
+    }
+    
+    void update(float deltaTime) override{
+        // ...
+    }
+};
+```
+

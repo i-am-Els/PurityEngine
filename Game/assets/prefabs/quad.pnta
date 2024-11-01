@@ -25,7 +25,12 @@
         },
         "renderComponent": {
           "isVisible": true
-        }
+        },
+        "behaviourComponents": [
+          "<scriptA-path-relative-to-project-root>",
+          "<scriptB-path-relative-to-project-root>",
+          "<scriptC-path-relative-to-project-root>"
+        ]
       }
     ]
   },

@@ -175,10 +175,12 @@ target_include_directories(PnT PUBLIC
         $<INSTALL_INTERFACE:vendors/isle_math/include>
 )
 
+find_package(cereal CONFIG REQUIRED)
+
 target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath assimp)
+target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath assimp cereal::cereal)
 
 target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 

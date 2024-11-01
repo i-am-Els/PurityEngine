@@ -32,7 +32,7 @@ target_include_directories(PnTEditor PRIVATE
 )
 
 # Link against the PnT library (assuming it's built in a sibling directory)
-target_link_libraries(PnTEditor PRIVATE PnT::PnT)
+target_link_libraries(PnTEditor PRIVATE PnT)
 
 target_compile_definitions(PnTEditor PUBLIC PNT_PLATFORM_WINDOWS)
 

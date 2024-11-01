@@ -15,6 +15,7 @@ namespace pnt::fileIO{
 
         const aiScene* aiScene = importer.ReadFile(file,
                                                    aiProcess_CalcTangentSpace
+                                                   | aiProcess_GenNormals
                                                    | aiProcess_Triangulate
                                                    | aiProcess_JoinIdenticalVertices
                                                    | aiProcess_SortByPType
