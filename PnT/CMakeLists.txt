@@ -1,18 +1,18 @@
 # This file handles building each task as sub-project.
 #
 # Each task becomes an independent project in which you can experiment.
-#
-# Tasks are added as separate sub-projects so as compilation errors in
-# one task don't affect another task.
 
 cmake_minimum_required(VERSION 3.26)
+
 project(Police_n_Thief VERSION 0.1.2)
+
+option(PNT_INSTALL "Install PnT library" ON)
+option(PNT_EXPORT "Export PnT targets for downstream projects" ON)
 
 # Set the C++ standard/version that should be used
 set(CMAKE_CXX_STANDARD 17)
 
-# Define your source files in src/
-file(GLOB_RECURSE SOURCES "*.cpp")
+option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
 
 option(ON_HACK "Turn on Hack Mode" OFF)
 if(ON_HACK)
@@ -24,13 +24,8 @@ if (PNT_ACTIVATE_ASSERTION)
     add_compile_definitions(PNT_ENABLE_ASSERT)
 endif()
 
-option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
 
-add_subdirectory(vendors/isle_math)
-
-# Create the PnT library
-add_library(PnT SHARED
-        # ----------- HEADER ------------
+set(PNT_HEADER_FILES
         core/include/pnt_core_pch.h
         #--------------------------------
         artifacts/data_hash_table.h
@@ -104,8 +99,9 @@ add_library(PnT SHARED
         #--------------------------------
         scene/include/scene.h
         #--------------------------------
-        #--------------------------------
-        # ----------- SOURCE ------------
+)
+
+set(PNT_SOURCE_FILES
         #--------------------------------
         assetDB/src/assetdb_service_conc.cpp
         assetDB/src/assetdb_type_strategy.cpp
@@ -153,6 +149,33 @@ add_library(PnT SHARED
         ecs/include/entity_handle.h
 )
 
+# TO ensure that targets are exported and included in PnT install
+set(GLAD_INSTALL ON)
+set(ASSIMP_INSTALL ON)
+set(GLFW_INSTALL ON)
+set(IsleMath_INSTALL ON)
+
+find_package(glfw3 REQUIRED)
+find_package(GTest REQUIRED)
+find_package(glad REQUIRED)
+find_package(assimp REQUIRED)
+find_package(cereal REQUIRED)
+find_package(IsleMath CONFIG REQUIRED)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+
+include(GNUInstallDirs)
+
+# Create the PnT library
+add_library(PnT SHARED
+        ${PNT_HEADER_FILES}
+        ${PNT_SOURCE_FILES}
+)
+
+
 # Add the core directories for your library and dependencies
 target_include_directories(PnT PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/artifacts>
@@ -175,128 +198,69 @@ target_include_directories(PnT PUBLIC
         $<INSTALL_INTERFACE:vendors/isle_math/include>
 )
 
-find_package(cereal CONFIG REQUIRED)
-
 target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT PUBLIC glad glfw opengl32 islemath assimp cereal::cereal)
+target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath::IsleMath assimp::assimp cereal::cereal GTest::gtest)
 
 target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
-include(FetchContent)
+# Make variables available to downstream project
 
-## Set the FetchContent cache behavior to avoid re-downloading
-#set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+if(PNT_INSTALL)
 
-# Fetch GLFW
-FetchContent_Declare(
-        glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw
-)
-
-FetchContent_Declare(
-        glad
-        GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-)
-
-FetchContent_Declare(
-        assimp
-        GIT_REPOSITORY https://github.com/assimp/assimp.git
-        GIT_TAG       v5.4.3  # Replace with the version/tag you want
-)
-
-
-if(NOT glad_POPULATED)
-    FetchContent_MakeAvailable(glad)
-endif ()
-if(NOT glfw_POPULATED)
-    FetchContent_MakeAvailable(glfw)
-endif ()
-if (NOT assimp_POPULATED)
-    FetchContent_MakeAvailable(assimp)
-endif()
-
-
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-# TO ensure that targets are exported and included in PnT install
-set(GLAD_INSTALL ON)
-set(ASSIMP_INSTALL ON)
-set(GLFW_INSTALL ON)
-
-# Path to the DLL in the build directory
-set(GLAD_DLL_PATH $<TARGET_FILE_DIR:glad>)
-set(GLFW_DLL_PATH $<TARGET_FILE_DIR:glfw>)
-set(ASSIMP_DLL_PATH $<TARGET_FILE_DIR:assimp>)
-
-# Install the glad and islemath DLL to the bin directory with other runtime libraries
-# Set the glad and islemath targets to be exported
-
-include(GNUInstallDirs)
-
-# Install the PnT library (DLL or shared library)
-install(TARGETS PnT
-        EXPORT PnTTargets             # Exported target for the package
-        RUNTIME DESTINATION bin       # DLLs on Windows
-        LIBRARY DESTINATION lib       # Shared libraries on UNIX
-        ARCHIVE DESTINATION lib       # Static libraries, if applicable
-#        INCLUDES DESTINATION include
-)
-
-# Install header files
-install(DIRECTORY core/include/ DESTINATION include/PnT)
-install(DIRECTORY ecs/include/ DESTINATION include/PnT/ecs)
-install(DIRECTORY graphics/include/ DESTINATION include/PnT/graphics)
-install(DIRECTORY assetDB/include/ DESTINATION include/PnT/assetDB)
-install(DIRECTORY fileIO/include/ DESTINATION include/PnT/fileIO)
-install(DIRECTORY scene/include/ DESTINATION include/PnT/scene)
-
-# Install dependency DLLs to the same directory as the PnT library
-if(MSVC_DEBUG_BUILD)
-    install(FILES
-            "${GLAD_DLL_PATH}/glad.dll"
-            "${GLFW_DLL_PATH}/glfw3.dll"
-            "${ASSIMP_DLL_PATH}/assimp-vc143-mt.dll"
-            DESTINATION bin
+    # Install the PnT library (DLL or shared library)
+    install(TARGETS PnT
+            EXPORT PnTTargets             # Exported target for the package
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # DLLs on Windows
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # Shared libraries on UNIX
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # Static libraries, if applicable
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
-else()
-    # Install dependency DLLs to the same directory as the PnT library
-    install(FILES
-            "${GLAD_DLL_PATH}/libglad.dll"
-            "${GLFW_DLL_PATH}/glfw3.dll"
-            "${ASSIMP_DLL_PATH}/libassimp-5.dll"
-            DESTINATION bin
+
+    # Export the targets to a file
+    install(EXPORT PnTTargets
+            FILE PnTTargets.cmake
+            NAMESPACE PnT::
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT
     )
+
+    # Install header files
+    install(DIRECTORY core/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT)
+    install(DIRECTORY ecs/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs)
+    install(DIRECTORY graphics/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/graphics)
+    install(DIRECTORY assetDB/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB)
+    install(DIRECTORY fileIO/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/fileIO)
+    install(DIRECTORY scene/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene)
+
+
+    # Package configuration
+    include(CMakePackageConfigHelpers)
+
+    # Write version file for the package
+    write_basic_package_version_file(
+            "${CMAKE_CURRENT_BINARY_DIR}/PnTConfigVersion.cmake"
+            VERSION ${PROJECT_VERSION}
+            COMPATIBILITY SameMajorVersion
+    )
+
+    # Configure the main PnTConfig.cmake file from a template
+    configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/PnTConfig.cmake.in
+            ${CMAKE_CURRENT_BINARY_DIR}/PnTConfig.cmake
+            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT)
+
+    # Install the config and version files
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/PnTConfig.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/PnTConfigVersion.cmake"
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT
+    )
+
+    if(PNT_EXPORT)
+        export(EXPORT PnTTargets
+                FILE "${CMAKE_CURRENT_BINARY_DIR}/PnTTargets.cmake"
+                NAMESPACE PnT::
+        )
+    endif ()
+
 endif ()
-
-
-# Package configuration
-
-include(CMakePackageConfigHelpers)
-
-# Write version file for the package
-write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/PnTConfigVersion.cmake"
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY AnyNewerVersion
-)
-
-# Export the targets to a file
-install(EXPORT PnTTargets
-        FILE PnTTargets.cmake
-        NAMESPACE PnT::
-        DESTINATION lib/cmake/PnT
-)
-
-# Configure the main PnTConfig.cmake file from a template
-configure_file(PnTConfig.cmake.in PnTConfig.cmake @ONLY)
-
-# Install the config and version files
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/PnTConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/PnTConfigVersion.cmake"
-        DESTINATION lib/cmake/PnT
-)

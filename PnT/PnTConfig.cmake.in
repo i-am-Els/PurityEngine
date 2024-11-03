@@ -1,10 +1,11 @@
 @PACKAGE_INIT@
 
+include("${CMAKE_CURRENT_LIST_DIR}/PnTTargets.cmake")
+
 include(CMakeFindDependencyMacro)
 
 # Dependencies, if required by find_package
-# find_dependency(glfw REQUIRED)
-# find_dependency(glad REQUIRED)
-# find_dependency(assimp REQUIRED)
+find_dependency(glad REQUIRED)
+find_dependency(assimp REQUIRED)
+find_dependency(glfw3 REQUIRED)
 
-include("${CMAKE_CURRENT_LIST_DIR}/PnTTargets.cmake")
