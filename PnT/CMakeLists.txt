@@ -4,14 +4,17 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-#project(PnT VERSION 0.1.2)
-project(Police_n_Thief VERSION 0.1.2)
+#project(PnT VERSION 0.1.2 LANGUAGES CXX)
+project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
+
+# Set the C++ standard/version that should be used
+set(CMAKE_CXX_STANDARD 17)
+
+set(BUILD_SHARED_LIBS ON)
 
 option(PNT_INSTALL "Install PnT library" ON)
 option(PNT_EXPORT "Export PnT targets for downstream projects" ON)
 
-# Set the C++ standard/version that should be used
-set(CMAKE_CXX_STANDARD 17)
 
 option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
 
@@ -94,7 +97,7 @@ add_library(PnT
         core/include/events/keyboard_events.h
         core/include/events/mouse_events.h
         core/include/events/window_events.h
-        core/pnt.h
+        core/include/pnt.h
         #--------------------------------
         ecs/include/camera.h
         ecs/include/component.h
@@ -178,52 +181,44 @@ add_library(PnT
         scene/src/scene.cpp
 )
 
-target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
+target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE GLAD_DLL)
 
-
-message("Message-- CMAKE VAR: ${CMAKE_CURRENT_SOURCE_DIR}")
-if(IsleMath_FOUND)
-    message(STATUS "IsleMath found: ${IsleMath_INCLUDE_DIRS}")
-else()
-    message(WARNING "IsleMath not found!")
-endif()
-
+#get_target_property(assimp_INCLUDE_DIRS assimp::assimp INTERFACE_INCLUDE_DIRECTORIES)
+#
+#message("Message-- CMAKE VAR: ${assimp_INCLUDE_DIRS}")
 
 # Add the core directories for your library and dependencies
 target_include_directories(PnT PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/artifacts>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/artifacts>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/assetDB/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include/events>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/include/events>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/events>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ecs/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/fileIO/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/fileIO/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/fileIO>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/graphics/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/graphics/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/graphics>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scene/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene>
         # -----------------------------------------------------------------
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include/math>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include/math/matrix>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math/matrix>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include/math/vector>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math/vector>
+        $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}>
+        $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}/math>
+        $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}/math/vector>
+        $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}/math/matrix>
+        # -----------------------------------------------------------------
+#        $<BUILD_INTERFACE:${assimp_INCLUDE_DIRS}>
 )
+
 
 target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath::IsleMath assimp::assimp cereal::cereal GTest::gtest)
+target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath::IsleMath cereal::cereal GTest::gtest assimp::assimp)
 
 
 if(PNT_INSTALL)
@@ -231,7 +226,6 @@ if(PNT_INSTALL)
     # Install header files
     install(DIRECTORY artifacts/            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/artifacts)
     install(DIRECTORY assetDB/include/      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB)
-    install(DIRECTORY core/                 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/core)
     install(DIRECTORY core/include/         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/core)
     install(DIRECTORY core/include/events/  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/events)
     install(DIRECTORY ecs/include/          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs)

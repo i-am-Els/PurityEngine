@@ -4,10 +4,12 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-#project(Game VERSION 0.1.2)
-project(Police_n_Thief VERSION 0.1.2)
+#project(Game VERSION 0.1.2 LANGUAGES CXX)
+project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+
+set(BUILD_SHARED_LIBS ON)
 
 option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
 

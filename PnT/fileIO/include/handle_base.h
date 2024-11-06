@@ -4,14 +4,13 @@
 
 #pragma once
 
-#include "log.h"
-#include "uuid.h"
+#include "pnt_core_pch.h"
 
 namespace pnt::fileIO{
     struct PNT_API PHandleBase{
         pnt::PUUID m_handleId;
         PHandleBase() {
-            PLog::echoValue(m_handleId);
+            pnt::PLog::echoValue(m_handleId);
         }
 
         PHandleBase(const PHandleBase& handle) = default;
@@ -21,7 +20,7 @@ namespace pnt::fileIO{
 
 
         virtual ~PHandleBase() {
-            PLog::echoMessage("Destroying Handle Base.");
+            pnt::PLog::echoMessage("Destroying Handle Base.");
         }
 
     private:

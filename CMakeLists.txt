@@ -20,7 +20,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(ExternalProject)
 
-message("CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 
 # Add IsleMath as a standalone project
 ExternalProject_Add(IsleMath
