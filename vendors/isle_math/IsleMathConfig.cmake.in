@@ -1,6 +1,5 @@
 @PACKAGE_INIT@
 
+# set(IsleMath_INCLUDE_DIRS ${PACKAGE_PREFIX_DIR}/include/IsleMath CACHE STRING "Include directories for IsleMath")
+
 include("${CMAKE_CURRENT_LIST_DIR}/IsleMathTargets.cmake")
-
-check_required_components(IsleMath)
-

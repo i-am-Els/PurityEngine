@@ -5,8 +5,7 @@
 #pragma once
 #include <iostream>
 #include <cstdarg>
-#include "global.h"
-#include "core_macros.h"
+#include "pnt_core_pch.h"
 
 namespace pnt {
     enum class LogLevel{

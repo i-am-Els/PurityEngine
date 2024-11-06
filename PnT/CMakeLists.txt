@@ -4,6 +4,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+#project(PnT VERSION 0.1.2)
 project(Police_n_Thief VERSION 0.1.2)
 
 option(PNT_INSTALL "Install PnT library" ON)
@@ -24,8 +25,38 @@ if (PNT_ACTIVATE_ASSERTION)
     add_compile_definitions(PNT_ENABLE_ASSERT)
 endif()
 
+include(GNUInstallDirs)
 
 set(PNT_HEADER_FILES
+
+)
+
+set(PNT_SOURCE_FILES
+
+)
+
+find_package(IsleMath CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(GTest CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
+find_package(cereal CONFIG REQUIRED)
+
+# TO ensure that targets are exported and included in PnT install
+set(GLAD_INSTALL ON)
+set(ASSIMP_INSTALL ON)
+set(GLFW_INSTALL ON)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+
+
+# Create the PnT library
+add_library(PnT
+        SHARED
+        # -----------HEADER-------------
         core/include/pnt_core_pch.h
         #--------------------------------
         artifacts/data_hash_table.h
@@ -70,6 +101,7 @@ set(PNT_HEADER_FILES
         ecs/include/components_behavior.h
         ecs/include/entity.h
         ecs/include/entity_base.h
+        ecs/include/entity_handle.h
         ecs/include/entity_registry.h
         ecs/include/id_comp.h
         ecs/include/isystems.h
@@ -99,9 +131,7 @@ set(PNT_HEADER_FILES
         #--------------------------------
         scene/include/scene.h
         #--------------------------------
-)
-
-set(PNT_SOURCE_FILES
+        # -----------SOURCE-------------
         #--------------------------------
         assetDB/src/assetdb_service_conc.cpp
         assetDB/src/assetdb_type_strategy.cpp
@@ -146,68 +176,69 @@ set(PNT_SOURCE_FILES
         graphics/src/vertex_array.cpp
         #--------------------------------
         scene/src/scene.cpp
-        ecs/include/entity_handle.h
 )
 
-# TO ensure that targets are exported and included in PnT install
-set(GLAD_INSTALL ON)
-set(ASSIMP_INSTALL ON)
-set(GLFW_INSTALL ON)
-set(IsleMath_INSTALL ON)
-
-find_package(glfw3 REQUIRED)
-find_package(GTest REQUIRED)
-find_package(glad REQUIRED)
-find_package(assimp REQUIRED)
-find_package(cereal REQUIRED)
-find_package(IsleMath CONFIG REQUIRED)
-
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
 
 
-include(GNUInstallDirs)
-
-# Create the PnT library
-add_library(PnT SHARED
-        ${PNT_HEADER_FILES}
-        ${PNT_SOURCE_FILES}
-)
+message("Message-- CMAKE VAR: ${CMAKE_CURRENT_SOURCE_DIR}")
+if(IsleMath_FOUND)
+    message(STATUS "IsleMath found: ${IsleMath_INCLUDE_DIRS}")
+else()
+    message(WARNING "IsleMath not found!")
+endif()
 
 
 # Add the core directories for your library and dependencies
 target_include_directories(PnT PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/artifacts>
-        $<INSTALL_INTERFACE:artifacts>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/artifacts>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/assetDB/include>
-        $<INSTALL_INTERFACE:assetDB/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
-        $<INSTALL_INTERFACE:core/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include/events>
-        $<INSTALL_INTERFACE:core/include/events>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/include/events>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ecs/include>
-        $<INSTALL_INTERFACE:ecs/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/fileIO/include>
-        $<INSTALL_INTERFACE:fileIO/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/fileIO/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/graphics/include>
-        $<INSTALL_INTERFACE:graphics/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/graphics/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scene/include>
-        $<INSTALL_INTERFACE:scene/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vendors/isle_math/include>
-        $<INSTALL_INTERFACE:vendors/isle_math/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene/include>
+        # -----------------------------------------------------------------
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math>
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include/math>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath>
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include/math/matrix>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math/matrix>
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/../vendors/isle_math/include/math/vector>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math/vector>
 )
 
-target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
+target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
 # Link against GLFW and GLEW libraries
 target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath::IsleMath assimp::assimp cereal::cereal GTest::gtest)
 
-target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
-
-# Make variables available to downstream project
 
 if(PNT_INSTALL)
+
+    # Install header files
+    install(DIRECTORY artifacts/            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/artifacts)
+    install(DIRECTORY assetDB/include/      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB)
+    install(DIRECTORY core/                 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/core)
+    install(DIRECTORY core/include/         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/core)
+    install(DIRECTORY core/include/events/  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/core/events)
+    install(DIRECTORY ecs/include/          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs)
+    install(DIRECTORY fileIO/include/       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/fileIO)
+    install(DIRECTORY graphics/include/     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/graphics)
+    install(DIRECTORY scene/include/        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene)
+
 
     # Install the PnT library (DLL or shared library)
     install(TARGETS PnT
@@ -225,17 +256,13 @@ if(PNT_INSTALL)
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT
     )
 
-    # Install header files
-    install(DIRECTORY core/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT)
-    install(DIRECTORY ecs/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/ecs)
-    install(DIRECTORY graphics/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/graphics)
-    install(DIRECTORY assetDB/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/assetDB)
-    install(DIRECTORY fileIO/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/fileIO)
-    install(DIRECTORY scene/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene)
-
-
     # Package configuration
     include(CMakePackageConfigHelpers)
+
+    # Configure the main PnTConfig.cmake file from a template
+    configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/PnTConfig.cmake.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/PnTConfig.cmake"
+            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT)
 
     # Write version file for the package
     write_basic_package_version_file(
@@ -244,23 +271,17 @@ if(PNT_INSTALL)
             COMPATIBILITY SameMajorVersion
     )
 
-    # Configure the main PnTConfig.cmake file from a template
-    configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/PnTConfig.cmake.in
-            ${CMAKE_CURRENT_BINARY_DIR}/PnTConfig.cmake
-            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT)
-
     # Install the config and version files
     install(FILES
             "${CMAKE_CURRENT_BINARY_DIR}/PnTConfig.cmake"
             "${CMAKE_CURRENT_BINARY_DIR}/PnTConfigVersion.cmake"
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT
     )
+endif ()
 
-    if(PNT_EXPORT)
-        export(EXPORT PnTTargets
-                FILE "${CMAKE_CURRENT_BINARY_DIR}/PnTTargets.cmake"
-                NAMESPACE PnT::
-        )
-    endif ()
-
+if(PNT_EXPORT)
+    export(EXPORT PnTTargets
+            FILE "${CMAKE_CURRENT_BINARY_DIR}/PnTTargets.cmake"
+            NAMESPACE PnT::
+    )
 endif ()

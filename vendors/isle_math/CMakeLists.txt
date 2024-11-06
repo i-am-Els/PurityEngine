@@ -4,6 +4,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+#project(IsleMath VERSION 0.1.2)
 project(Police_n_Thief VERSION 0.1.2)
 
 option(IsleMath_INSTALL "Install IsleMath library" ON)
@@ -92,13 +93,13 @@ if(IsleMath_INSTALL)
     install(EXPORT IsleMathTargets
             FILE IsleMathTargets.cmake
             NAMESPACE IsleMath::
-            DESTINATION lib/cmake/IsleMath)
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/IsleMath)
 
     include(CMakePackageConfigHelpers)
 
     # Configure the main IsleMathConfig.cmake file from a template
-    configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/IsleMathConfig.cmake.in
-            ${CMAKE_CURRENT_BINARY_DIR}/IsleMathConfig.cmake
+    configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/IsleMathConfig.cmake.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/IsleMathConfig.cmake"
             INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/IsleMath)
 
     # Write version file for the package

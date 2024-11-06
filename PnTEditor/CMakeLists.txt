@@ -5,6 +5,8 @@
 
 # Minimum required version of CMake
 cmake_minimum_required(VERSION 3.26)
+
+#project(PnTEditor VERSION 0.1.2)
 project(Police_n_Thief VERSION 0.1.2)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -30,7 +32,7 @@ target_include_directories(PnTEditor PRIVATE
         project/include
 )
 
-find_package(PnT REQUIRED)
+find_package(PnT CONFIG REQUIRED)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
 target_link_libraries(PnTEditor PRIVATE PnT::PnT)

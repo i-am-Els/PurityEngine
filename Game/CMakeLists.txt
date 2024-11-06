@@ -3,7 +3,9 @@
 # Each task becomes an independent project in which you can experiment.
 
 cmake_minimum_required(VERSION 3.26)
-project(GameRTApplication)
+
+#project(Game VERSION 0.1.2)
+project(Police_n_Thief VERSION 0.1.2)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -21,7 +23,7 @@ add_executable(Game ${SOURCES}
 # Add the core directory for the PnT library
 #target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
 
-find_package(PnT REQUIRED)
+find_package(PnT CONFIG REQUIRED)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
 target_link_libraries(Game PRIVATE PnT::PnT)
