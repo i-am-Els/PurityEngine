@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "pnt_core_pch.h"
+#include "core_macros.h"
 
 namespace pnt::fileIO{
     struct PNT_API PHandleBase{

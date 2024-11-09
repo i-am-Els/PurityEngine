@@ -6,6 +6,7 @@
 
 //#include <xhash>
 #include "core_macros.h"
+#include <sstream>
 
 namespace pnt{
     class PNT_API PUUID {

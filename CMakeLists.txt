@@ -9,17 +9,18 @@ cmake_minimum_required(VERSION 3.26)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
 list(APPEND CMAKE_PREFIX_PATH ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug)
+list(APPEND CMAKE_PREFIX_PATH ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR}/install)
 
 # Define the project name
 project(Police_n_Thief VERSION 0.1.2)
 
-
 # Set the C++ standard (adjust as needed)
 set(CMAKE_CXX_STANDARD 17)
 
-include(ExternalProject)
+set(USING_PACKAGE_MANAGER_VCPKG ON CACHE BOOL "Use the package manager")
 
+include(ExternalProject)
 
 # Add IsleMath as a standalone project
 ExternalProject_Add(IsleMath
@@ -38,6 +39,8 @@ ExternalProject_Add(PnT
         -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/install
         -DCMAKE_PREFIX_PATH:PATH=${CMAKE_PREFIX_PATH}
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DVCPKG_BIN_DIR:PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin
+        -DVCPKG_DEBUG_BIN_DIR:PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin
         BUILD_ALWAYS TRUE
         DEPENDS IsleMath  # Make sure PnT builds after IsleMath
 )
@@ -49,6 +52,8 @@ ExternalProject_Add(PnTEditor
         -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/install
         -DCMAKE_PREFIX_PATH:PATH=${CMAKE_PREFIX_PATH}
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DVCPKG_BIN_DIR:PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin
+        -DVCPKG_DEBUG_BIN_DIR:PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin
         BUILD_ALWAYS TRUE
         DEPENDS PnT  # Ensure PnT builds first
 )
@@ -60,6 +65,8 @@ ExternalProject_Add(Game
         -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/install
         -DCMAKE_PREFIX_PATH:PATH=${CMAKE_PREFIX_PATH}
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DVCPKG_BIN_DIR:PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin
+        -DVCPKG_DEBUG_BIN_DIR:PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin
         BUILD_ALWAYS TRUE
         DEPENDS IsleMath PnT # Ensures IsleMath then PnT builds first
 )

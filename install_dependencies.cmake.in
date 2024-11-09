@@ -1,0 +1,15 @@
+# install_dependencies.cmake.in
+file(GET_RUNTIME_DEPENDENCIES
+     RESOLVED_DEPENDENCIES_VAR dependencies
+     UNRESOLVED_DEPENDENCIES_VAR unresolved
+     DIRECTORIES "@VCPKG_BIN_DIR@" "@VCPKG_DEBUG_BIN_DIR@" "${CMAKE_INSTALL_PREFIX}/bin"
+)
+
+# Optionally print resolved dependencies (for debugging purposes)
+message("Resolved dependencies: ${dependencies}")
+message("Unresolved dependencies: ${unresolved}")
+
+# Copy each resolved dependency to the install folder
+foreach(dependency IN LISTS dependencies)
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "${dependency}")
+endforeach()

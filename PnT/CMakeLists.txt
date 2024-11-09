@@ -4,8 +4,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-#project(PnT VERSION 0.1.2 LANGUAGES CXX)
-project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
+project(PnT VERSION 0.1.2 LANGUAGES CXX)
+#project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
 set(CMAKE_CXX_STANDARD 17)
@@ -14,9 +14,6 @@ set(BUILD_SHARED_LIBS ON)
 
 option(PNT_INSTALL "Install PnT library" ON)
 option(PNT_EXPORT "Export PnT targets for downstream projects" ON)
-
-
-option(MSVC_DEBUG_BUILD "Debug build with Visual Studio" ON)
 
 option(ON_HACK "Turn on Hack Mode" OFF)
 if(ON_HACK)
@@ -29,14 +26,6 @@ if (PNT_ACTIVATE_ASSERTION)
 endif()
 
 include(GNUInstallDirs)
-
-set(PNT_HEADER_FILES
-
-)
-
-set(PNT_SOURCE_FILES
-
-)
 
 find_package(IsleMath CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
@@ -183,10 +172,6 @@ add_library(PnT
 
 target_compile_definitions(PnT PUBLIC PNT_PLATFORM_WINDOWS PNT_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE GLAD_DLL)
 
-#get_target_property(assimp_INCLUDE_DIRS assimp::assimp INTERFACE_INCLUDE_DIRECTORIES)
-#
-#message("Message-- CMAKE VAR: ${assimp_INCLUDE_DIRS}")
-
 # Add the core directories for your library and dependencies
 target_include_directories(PnT PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/artifacts>
@@ -219,6 +204,127 @@ target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
 # Link against GLFW and GLEW libraries
 target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath::IsleMath cereal::cereal GTest::gtest assimp::assimp)
+
+#
+#function(install_runtime_files target)
+#    get_target_property(target_link_libs ${target} INTERFACE_LINK_LIBRARIES)
+#    # Set exclude list for the targets that needs to be iterated on like opengl32
+#    set(_exclude_list "opengl32")
+#
+#    string(TOUPPER CMAKE_BUILD_TYPE build_type)
+#    set(IMPORTED_TARGETS_INSTALL "")
+#
+#    foreach (target_name ${target_link_libs})
+#        list(FIND _exclude_list "${target_name}" _exclude_index) # find target name in excluded target list
+#        if (_exclude_index EQUAL -1) # if not found continue
+#            get_target_property(target_type ${target_name} TYPE)
+#            if(${target_type} MATCHES "(SHARED_LIBRARY|MODULE_LIBRARY)")
+#                list(APPEND IMPORTED_TARGETS_INSTALL ${target_name})
+#                message(STATUS "Targets include: ${target_name}")
+#                # Get the list of libraries linked to the target (including shared and static libraries)
+#                get_target_property(LINKED_LIBRARIES ${target_name} LINK_LIBRARIES)
+#                foreach (lib ${LINKED_LIBRARIES})
+#                    message(STATUS "Libraries include: ${lib}")
+#                endforeach ()
+#            endif ()
+#        endif ()
+#        unset(_target_type)
+#    endforeach ()
+#
+#    install(IMPORTED_RUNTIME_ARTIFACTS
+#            ${IMPORTED_TARGETS_INSTALL}
+#            RUNTIME
+#            DESTINATION ${CMAKE_INSTALL_BINDIR}
+#            LIBRARY
+#            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#    )
+
+    # Get the list of libraries linked to the target (including shared and static libraries)
+#    get_target_property(LINKED_LIBRARIES PnT LINK_LIBRARIES)
+#    foreach (lib ${LINKED_LIBRARIES})
+#        message(STATUS "Libraries include: ${lib}")
+#    endforeach ()
+
+#endfunction()
+
+#function(get_all_dependencies target dependencies)
+#    set(all_dependencies "")
+#    string(TOUPPER CMAKE_BUILD_TYPE build_type)
+#    # Set exclude list for the targets that need to be iterated over (like opengl32)
+#    set(_exclude_list "opengl32")
+#
+#    # Get direct dependencies
+#    get_target_property(direct_dependencies ${target} LINK_LIBRARIES)
+#    if (NOT direct_dependencies)
+#        set(direct_dependencies "")
+#    endif()
+#
+#    # Get interface dependencies
+#    get_target_property(interface_dependencies ${target} INTERFACE_LINK_LIBRARIES)
+#    if (NOT interface_dependencies)
+#        set(interface_dependencies "")
+#    endif()
+#
+#    # Get imported dependencies
+#    get_target_property(imported_dependencies ${target} IMPORTED_LOCATION)
+#    if (NOT imported_dependencies)
+#        set(imported_dependencies "")
+#    endif()
+#
+#    # Get imported configuration dependencies
+#    get_target_property(imported_config_dependencies ${target} IMPORTED_LOCATION_${build_type})
+#    if (NOT imported_config_dependencies)
+#        set(imported_config_dependencies "")
+#    endif()
+#
+#    # Get imported link dependent libraries
+#    get_target_property(imp_dependent_dependencies ${target} IMPORTED_LINK_DEPENDENT_LIBRARIES)
+#    if (NOT imp_dependent_dependencies)
+#        set(imp_dependent_dependencies "")
+#    endif()
+#
+#    # Get dependent configuration libraries
+#    get_target_property(dependent_config_dependencies ${target} IMPORTED_LINK_DEPENDENT_LIBRARIES_${build_type})
+#    if (NOT dependent_config_dependencies)
+#        set(dependent_config_dependencies "")
+#    endif()
+#
+#    # Combine all dependencies
+#    list(APPEND all_dependencies ${direct_dependencies} ${interface_dependencies}
+#            ${imported_dependencies} ${imported_config_dependencies}
+#            ${imp_dependent_dependencies} ${dependent_config_dependencies})
+#
+#    list(REMOVE_DUPLICATES all_dependencies)
+#
+#    # Now recurse on the direct dependencies to get their dependencies too
+#    set(some_dependencies "")
+#    foreach(dep IN LISTS all_dependencies)
+#        list(FIND _exclude_list "${dep}" _exclude_index) # Find target name in exclude list
+#        if (_exclude_index EQUAL -1) # If not found, continue
+#            # Avoid recursion on already processed dependencies
+#            if (NOT dep IN_LIST dependencies)
+#                message(STATUS "Checking dep ${dep}")
+#                get_all_dependencies(${dep} some_dependencies)  # Recursive call to get sub-dependencies
+#                list(APPEND dependencies ${some_dependencies})  # Append the sub-dependencies
+#            endif()
+#        endif()
+#    endforeach()
+#
+#    list(REMOVE_DUPLICATES dependencies)  # Remove any duplicates in the final list
+#
+#    # Pass back the list of dependencies
+#    set(${dependencies} PARENT_SCOPE)
+#endfunction()
+#
+## Usage example:
+#set(all_dependencies "")
+#get_all_dependencies(PnT all_dependencies)
+#
+## Output all dependencies (recursively)
+#message("All dependencies for target 'Game' (including transitive ones):")
+#foreach(dep IN LISTS all_dependencies)
+#    message("${dep}")
+#endforeach()
 
 
 if(PNT_INSTALL)
@@ -271,6 +377,33 @@ if(PNT_INSTALL)
             "${CMAKE_CURRENT_BINARY_DIR}/PnTConfigVersion.cmake"
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PnT
     )
+
+#    install_runtime_files(PnT)
+#    get_all_dependencies(PnT dependencies)
+
+
+#    message("DIRECTORIES: ${VCPKG_BIN_DIR}, ${VCPKG_DEBUG_BIN_DIR}")
+#    # Specify the path to the CMake script in the project root
+#    set(VCPKG_BIN_DIR "${VCPKG_BIN_DIR}")
+#    set(VCPKG_DEBUG_BIN_DIR "${VCPKG_DEBUG_BIN_DIR}")
+#    set(MAIN_PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/..)
+#    configure_file(${MAIN_PROJECT_SOURCE_DIR}/install_dependencies.cmake.in ${CMAKE_BINARY_DIR}/install_dependencies.cmake @ONLY)
+#    # Run the configured script at install time
+#    install(SCRIPT ${CMAKE_BINARY_DIR}/install_dependencies.cmake)
+
+    add_custom_command(TARGET PnT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy -t "${CMAKE_INSTALL_PREFIX}/bin" $<TARGET_RUNTIME_DLLS:PnT>
+            COMMAND_EXPAND_LISTS
+    )
+
+    string(TOUPPER CMAKE_BUILD_TYPE build_type)
+
+    message("Assimp includes  ${ASSIMP_INCLUDE_DIRS}")
+#    add_custom_command(TARGET PnT POST_BUILD
+#            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:assimp::assimp> "${CMAKE_INSTALL_PREFIX}/bin"
+#            COMMAND_EXPAND_LISTS
+#    )
+
 endif ()
 
 if(PNT_EXPORT)
@@ -279,3 +412,4 @@ if(PNT_EXPORT)
             NAMESPACE PnT::
     )
 endif ()
+

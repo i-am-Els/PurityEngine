@@ -3,9 +3,10 @@
 //
 
 #pragma once
+
+#include "core_macros.h"
 #include <iostream>
 #include <cstdarg>
-#include "pnt_core_pch.h"
 
 namespace pnt {
     enum class LogLevel{
