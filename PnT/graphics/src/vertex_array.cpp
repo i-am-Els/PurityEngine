@@ -14,7 +14,7 @@ namespace pnt::graphics{
 
     void VertexArray::init()  {
         vaoID = vaoCount++;
-        glGenVertexArrays(1, &vaoID);
+        glCreateVertexArrays(1, &vaoID);
         bindVAO();
         attribCount = 0;
     }

@@ -32,6 +32,24 @@ namespace pnt {
     void PLog::terminate() {
     }
 
+    std::string PLog::stringifyLogLevel(LogLevel x)
+    {
+        std::string outString;
+        switch(x)
+        {
+            case LogLevel::Error:
+                outString = "Error";
+                break;
+            case LogLevel::Warning:
+                outString = "Warning";
+                break;
+            case LogLevel::Info:
+                outString = "Info";
+                break;
+        }
+        return outString;
+    }
+
     /// @brief This function allows logging multiple strings together
     /// @example PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", static_cast<std::string>(id->m_entityInstanceID).c_str());
     /// @note like in printf, you need to specify the format(%s) first before providing the data("some text");

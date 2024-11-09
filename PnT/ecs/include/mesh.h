@@ -37,30 +37,13 @@ namespace pnt::ecs{
         static unsigned int s_count; // All components must have this
 
     protected:
-        std::vector<Vector3f> m_vertices = {
-                Vector3f(-.5f, -.5f, 0.f),
-                Vector3f(-.5f, .5f, 0.f),
-                Vector3f(.5f, .5f, 0.f),
-                Vector3f(.5f, -.5f, 0.f),
-                Vector3f(-.5f, -.5f, 1.f),
-                Vector3f(-.5f, .5f, 1.f),
-                Vector3f(.5f, .5f, 1.f),
-                Vector3f(.5f, -.5f, 1.f)
-                };
-        std::vector<unsigned int> m_indices = {
-                0, 1, 2, // Forward triangles
-                2, 3, 0,
-                3, 2, 6, // Right triangles
-                6, 7, 3,
-                7, 6, 5, // Back triangles
-                5, 4, 7,
-                4, 5, 1, // Left triangles
-                1, 0, 4,
-                1, 5, 6, // Top triangles
-                5, 2, 1,
-                4, 0, 3, // Bottom triangles
-                3, 7, 4
-        };
+        struct Vertex{
+            std::vector<Vector3f> position;
+            std::vector<Vector3f> normals;
+            std::vector<Vector2f> textureCoord;
+        } m_vertex_data;
+        std::vector<unsigned int> m_indices;
+
         friend class P3DGeometricMeshSS;
 
     };

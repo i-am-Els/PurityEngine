@@ -6,6 +6,7 @@
 #include "papplication.h"
 #include "service_locator.h"
 #include "ecs_service_conc.h"
+#include "scene.h"
 
 namespace pnt{
     PApplication* PSystemFinder::application = nullptr;
@@ -20,5 +21,13 @@ namespace pnt{
 
     std::shared_ptr<PServiceLocator> PSystemFinder::GetServiceLocator() {
         return GetApplication()->serviceLocator;
+    }
+
+    PWindow *PSystemFinder::GetWindow() {
+        return GetApplication()->window.get();
+    }
+
+    scene::PScene *PSystemFinder::GetScene() {
+        return &GetApplication()->Scene;
     }
 }

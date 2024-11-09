@@ -45,4 +45,8 @@ namespace pnt::scene{
         PLog::echoMessage("Destroying Scene.");
     }
 
+    bool PScene::HasAnythingToRender() {
+        return !PSystemFinder::GetScene()->m_registry.entityMapIsEmpty();
+    }
+
 }

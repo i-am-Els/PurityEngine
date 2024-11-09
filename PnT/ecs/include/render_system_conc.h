@@ -38,24 +38,11 @@ namespace pnt::ecs{
         void destroy() override;
 
         void setUpShader() override;
-        void SwapBuffers() override;
 
         VertexBuffer* _vbo;
         ElementBuffer* _ebo;
 
-        inline void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo){
-            try{
-                if (vbo == nullptr || ebo == nullptr){
-                    throw NullBufferError();
-                }
-
-                this->_vbo = vbo;
-                this->_ebo = ebo;
-            }
-            catch (std::exception& e){
-                PLog::echoMessage(LogLevel::Error, e.what());
-            }
-        }
+        void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo);
 
         PRenderComponent *AddComponent(PEntity* entity) override;
 
@@ -75,5 +62,6 @@ namespace pnt::ecs{
         static void SetUniformVec2(int uniformID, Vector2f vec2);
         static void SetUniformVec3(int uniformID, Vector3f vec3);
 
+        [[nodiscard]] bool hasSomethingToRender() const noexcept;
     };
 }

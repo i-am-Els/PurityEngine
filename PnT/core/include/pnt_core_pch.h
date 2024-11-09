@@ -1,4 +1,4 @@
- //
+//
 // Created by Eniola Olawale on 9/5/2024.
 //
 
@@ -39,5 +39,5 @@
 #include "core_macros.h"
 #include "pnt_exceptions.h"
 #include "log.h"
-#include "islemath.h"
+#include "math/islemath.h"
 #include "handle_base.h"

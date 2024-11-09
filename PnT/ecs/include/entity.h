@@ -33,7 +33,6 @@ namespace pnt::ecs {
 
     private:
         std::string m_name{};
-        ETags m_tags{ETags::Default};
         friend class PEntityRegistry;
     };
 

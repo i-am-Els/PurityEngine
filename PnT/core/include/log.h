@@ -3,37 +3,20 @@
 //
 
 #pragma once
+
+#include "core_macros.h"
 #include <iostream>
 #include <cstdarg>
-#include "global.h"
-#include "core_macros.h"
 
 namespace pnt {
     enum class LogLevel{
         Error = 0, Warning, Info
     };
 
-    inline static std::string stringifyLogLevel(LogLevel x)
-    {
-        std::string outString;
-        switch(x)
-        {
-            case LogLevel::Error:
-                outString = "Error";
-                break;
-            case LogLevel::Warning:
-                outString = "Warning";
-                break;
-            case LogLevel::Info:
-                outString = "Info";
-                break;
-        }
-        return outString;
-    }
-
     class PNT_API PLog {
     private:
         PLog();
+        static std::string stringifyLogLevel(LogLevel x);
     public:
         static LogLevel level;
         [[nodiscard]] static PLog& getInstance();
@@ -41,7 +24,7 @@ namespace pnt {
         static void echoMessage(LogLevel _level = LogLevel::Info, const char* message = "", ...);
 
         template<class T>
-        static void echoValue(T value){
+         static void echoValue(T value){
             std::cout << "[Value] " << value << std::endl;
         }
         static void terminate();

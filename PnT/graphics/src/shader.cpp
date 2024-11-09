@@ -17,7 +17,6 @@ PShader::~PShader() {
 
 void PShader::createShaders(std::unique_ptr<PShader>& shader, const std::string& vertexSource, const std::string& fragmentSource)
 {
-    // shader = std::make_unique<PShader>();
     auto programID = glCreateProgram();
     unsigned int vs = setUpShader(ShaderType::VertexShader, vertexSource);
     unsigned int fs = setUpShader(ShaderType::FragmentShader, fragmentSource);
@@ -67,8 +66,8 @@ unsigned int PShader::GetShaderProgramID() const {
 /// @brief Setup a shader
 /// @param type - ShaderType enum value, the type of shader.
 /// @param source - Shader source string defining shader code.
-/// @returns 0 - if error occurs.
-/// @returns ID <unsigned integer> - No error occurred.
+/// @returns 0 | ShaderProgramCreationException - if error occurs. Exception has an integer value of 0
+/// @returns ID  <unsigned integer> - No error occurred.
 unsigned int PShader::setUpShader(ShaderType type, const std::string& source)
 {
     unsigned int ID = 1;
@@ -84,18 +83,22 @@ unsigned int PShader::setUpShader(ShaderType type, const std::string& source)
             ID = glCreateShader(GL_GEOMETRY_SHADER);
             break;
         default:
-            return 0; // Unimplemented shader type
+            return pnt::exceptions::ShaderProgramCreationError(); // Unimplemented shader type
     }
-    const char* sourceData = source.c_str();
-    glShaderSource(ID, 1, &sourceData, nullptr);
 
+    PLog::echoMessage("Shader program value is: ");
+    PLog::echoValue(ID);
 
-    if (compileShader(type, ID)) // returns 1 - Success || returns 0 - Failed
-    {
-        return ID; // succeeded
+    if (ID != 0) {
+        const char *sourceData;
+        sourceData = source.c_str();
+        glShaderSource(ID, 1, &sourceData, nullptr);
+
+        if (compileShader(type, ID)) { // returns ID - Success
+            return ID;
+        } // succeeded
     }
-    return 0; // failed
-
+    return exceptions::ShaderProgramCreationError(); // returns 0 - Failed
 }
 
 /// @brief Compiles a shader
@@ -121,8 +124,11 @@ unsigned int PShader::compileShader(pnt::graphics::ShaderType type, unsigned int
         std::cout << message << std::endl;
         glDeleteShader(id);
         free(message);
+//        throw std::runtime_error("Shader Compilation failed");
         return 0;
     }
+    PLog::echoMessage("Shader Compilation Passed");
+
     return 1;
 }
 

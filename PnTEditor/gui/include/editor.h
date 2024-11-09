@@ -4,8 +4,12 @@
 
 #pragma once
 
+namespace pnt::editor{
 
-class Editor {
+    class Editor {
 
-};
+
+    };
+
+}
 

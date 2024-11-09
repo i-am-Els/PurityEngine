@@ -37,6 +37,9 @@ Animation files
 Assets
 - `*.pnta`
 
+Scripting
+- `*.pmeta`
+
 Script3D
 - `*.script3D`
 
@@ -46,6 +49,9 @@ Animation
 
 Scene Description
 - `*.pnts`
+
+AssetDB Repository file
+- `*.pntDB`
 
 Project File
 - `*.pnt`
@@ -64,49 +70,180 @@ Note: First line in any section takes priority in MVP phase.
 - PolygonMeshAsset.
 - SoundSourceAsset.
 - 3DSoundSourceAsset.
-- LevelAsset (3D Scene description package's runtime format).
+- LevelAsset (Scene description nodes or contents and prefab such as an `Entity` Prefab or `Behaviour` scripts).
 - ParticleAssets.
 - RenderMapAssets (CubeMap, Environment Max etc).
 
 <hr>
 
-# Knowledge Center
-## Specs and Handles
+## Internal Structure of Files
+This documents the internal layout of this json files.
 
-What is the deal with the `spec` and `handle` keywords? what are they and how they different from plain `structs`?
+### PnT project file `*.pnt`
+The layout and key-value pair looks like so: 
+```json
+{
+  "project_name": "Game",
+  "start_up_scene" : "./assets/scenes/default_scene.pnts",
 
-### Handles
+  "projectDB" : "./assets/Game.pntDB"
+}
 
-**Definition**: A "handle" is an abstract reference or identifier to a resource (like a file, object, or system resource). Rather than working directly with the resource, programs work with the handle, which the system uses to manage access to the actual resource.
+```
+- `"project_name"` is the name of the project, also what goes into the executable name.
+- `"start_up_scene"` points to the relative path to the PnTEditor launch start up scene `.pnts` file.
+- `"projectDB"`points to the asset database file in the project. 
 
-**Usage**: Handles are often used in systems programming to manage resources like files, windows, or database connections. For instance, instead of working with a file directly, the program opens the file and gets a file handle (an identifier), which it then uses to read, write, or close the file.
+### PnT Asset DB file `*.pntDB`
+This DB file represents assets that need to be present in the assetDatabase at runtime and they are loaded on launch.
+```json
+{
+  "id": 1234567890123456,
+  "assets" : [
+    {
+      "id": 3456789012345612,
+      "path": "<file-with-uuid-0-rel-path-to-project-root>.pnta"
+    },
+    {
+      "id": 8901234561234567,
+      "path": "<file-with-uuid-1-rel-path-to-project-root>.pmeta"
+    }
+  ]
+}
+```
+- `"assets"`is a list of pairs of asset `id` (_key_) and their relative `path`s(_value_). These assets are the `.pnta` files in the project directory.
 
-Handles are typically used to reference external or system-level resources, like:
-- Files (opened files in an operating system),
-- 3D meshes or textures loaded into a renderer,
-- Network sockets, database connections, or system objects.
+Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative `path`s(_value_).
 
-The key point here is that these resources are often managed by external systems (like the OS or a rendering engine) and require controlled access. A handle allows you to refer to these resources without exposing their internal workings.
+### PnT scene description files `*.pnts`
+The structure of the scene file describes the hierarchical tree of entity transforms.
 
-#### When Handles Are Suitable:
-- The resource is large or requires special access, like a file or a GPU buffer (3D mesh, texture).
-- The resource is managed externally, like when the OS or a rendering engine allocates and frees memory (e.g., OpenGL textures or file descriptors).
-- The resource needs to be safely shared among different systems or processes.
+### PnT scene description files `*.pnta`
+The structure of asset files vary, and can be determined by the asset source i.e. whether it was imported as an asset or created in the editor as a prefab.
 
-#### When Handles Are Not Necessary:
-- The resource is small, like a simple struct (e.g., a transform).
-- You have full ownership and control over the resource in your code, meaning there's no need to abstract or manage it externally.
+#### The Asset source enum 
+- Asset
+- Prefab
 
-### Specs
+##### 'ASSET' asset
+An 'Asset' asset is one that was imported through the fileIO system. It has an external source. 
 
-A spec (short for specification) is essentially a document or description that outlines the expected behavior, structure, or requirements of a system, component, or API. Specs serve as a blueprint for how something is supposed to work. Think of them as guidelines that describe what a program, module, or system should do—without necessarily diving into how it's done.A spec (short for specification) is essentially a document or description that outlines the expected behavior, structure, or requirements of a system, component, or API. Specs serve as a blueprint for how something is supposed to work. Think of them as guidelines that describe what a program, module, or system should do—without necessarily diving into how it's done.
+```json
+{
+  "id": 6543210987654321,
+  "source" : ["asset"],
+  "type" : "StaticMeshAsset",
+  "data" : {
+    "vertices" : {
+      "position": [],
+      "textureCoord" : [],
+      "normal": []
+    },
+    "indices" : []
+  },
+  "ref_assets": []
+}
+```
+The Keys:
+- `"id"` is a uuid assigned to the asset file. it is also reference in the `"assets"` map in assetDB file.
+- `"source"` describes the source enum of an asset, `"prefab"` or `"asset"`. Asset sources are usually just `["asset"]`.
+- `"type"` specifies the asset type.
+- `"data"` holds the asset data in engine-compatible processed format. 
+- `"ref_assets"` is an array of other possible assets in the project that this asset makes reference to.
 
-A Status Effect is something that applies some change to an attribute or property of an entity, like:
+##### PREFAB asset
+```json
+{
+  "id" : 4321210965438765,
+  "source" : [
+    "prefab",
+    {
+      "parentID": 0
+    }
+  ],
+  "type" : "LevelAsset",
+  "data" : {
+    "components" : [
+      {
+        "transformComponent": {
+          "position" : [0, 0, 0],
+          "scale" : [1, 1, 1],
+          "rotation" : [0, 90, 0],
+          "children": []
+        },
+        "tagComp" : {
+          "tag" : 0
+        },
+        "idComp" : 8765432165432109,
+        "meshComponent" : {
+          "ref_asset_index" : 1
+        },
+        "renderComponent": {
+          "isVisible": true
+        },
+        "behaviourComponents": [
+          "<scriptA-path-relative-to-project-root>",
+          "<scriptB-path-relative-to-project-root>",
+          "<scriptC-path-relative-to-project-root>"
+        ]
+      }
+    ]
+  },
+  "ref_assets": [
+    4321654387652109,
+    6543210987654321,
+    9028432490545838
+  ]
+}
+```
+In the example above we have a `PREFAB` asset. This is what an asset created in the editor as a prefab looks like.
+- `"source"` describes the source enum and is the first item in the source array.
+- The second element of the `"source"` value array is the prefab `parentID`. The prefab parent is the asset/entity which this prefab is made/cloned from. 
+- An `parentID` of `0` means it is a root prefab.
+- `"data"` contains entity/prefab information.
+- `"ref_asset_index"` is the index of the referenced asset in `ref_assets` array.
 
-- Increasing health by 50.
-- Reducing movement speed by 20% for 5 seconds.
-- Granting invincibility for 10 seconds.
+<hr>
 
-To implement these status effects, both a spec and a handle are involved.
+## Scripts - Behaviour Component
 
-A spec for a Status Effect represents a detailed configuration or blueprint for that effect. This spec defines the specific rules, attributes, and conditions of the effect but doesn't represent the effect as it’s applied in the game world.
+The scripts are C++ files for now, until a scripting system is introduced. To serialize scripts, we need to create a meta file for the script.
+The meta file holds the json structure of the serializable contents(mostly primitive types) in the script class.
+
+It is important that these scripts implement the BehaviourComponent class if they will be added to entities and serialized with the scene description.  
+
+##### SCRIPT `.pmeta`
+```json
+{
+  "id" : 2109654432138765,
+  "path": "<ref-script-path-relative-to-project-root>",
+  "serializable_fields" : {
+    "color": [0, 0, 1, 1],
+    "camera_offset" : [0.0, 10.0, -35.0]
+  }
+}
+```
+
+Every script should have an accompanying `.pmeta` file of the same name. and in the same directory that contains its serialization details. 
+In this case:
+
+```c++
+#include "pnt.h"
+using namespace isle_engine::math;
+using namespace pnt::graphics; 
+
+class CameraOffset : public PBehaviourScriptComponent{
+public:
+    Color color {0, 0, 1, 1};
+    Vector3f camera_offset { 0.0f, 10.0f, -35.0f};
+    
+    void start() override{
+        // ...
+    }
+    
+    void update(float deltaTime) override{
+        // ...
+    }
+};
+```
+

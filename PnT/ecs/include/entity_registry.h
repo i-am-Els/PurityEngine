@@ -7,6 +7,8 @@
 #include "pnt_core_pch.h"
 #include "entity_handle.h"
 
+
+
 namespace pnt::ecs{
     class PNT_API PEntityRegistry{
     public:
@@ -22,6 +24,11 @@ namespace pnt::ecs{
         PEntityHandle GetEntity(PUUID id);
 
         std::vector<PEntityHandle> GetEntitiesWithTag(ETags tag, const std::unordered_set<PEntityHandle>& entitiesToIgnore = {});
+
+        bool entityMapIsEmpty()
+        {
+            return m_entityMap.empty();
+        }
 
     protected:
         std::unordered_map<PUUID, std::unique_ptr<PEntity>> m_entityMap;
