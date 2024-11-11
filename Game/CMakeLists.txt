@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-project(Game VERSION 0.1.2 LANGUAGES CXX)
+project(Police_n_Thief:Game VERSION 0.1.2 LANGUAGES CXX)
 #project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -18,13 +18,15 @@ add_executable(Game
         src/quad_comp.h
 )
 
+include(GNUInstallDirs)
+
 # Add the core directory for the PnT library
 #target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
-
-find_package(PnT CONFIG REQUIRED)
+add_dependencies(Game IsleMath PnT)
+message("${CMAKE_PREFIX_PATH}")
 
 # Link against the PnT library (assuming it's built in a sibling directory)
-target_link_libraries(Game PRIVATE PnT::PnT)
+target_link_libraries(Game PRIVATE PnT IsleMath)
 
 target_compile_definitions(Game PUBLIC PNT_PLATFORM_WINDOWS)
 

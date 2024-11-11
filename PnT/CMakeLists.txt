@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-project(PnT VERSION 0.1.2 LANGUAGES CXX)
+project(Police_n_Thief:PnT VERSION 0.1.2 LANGUAGES CXX)
 #project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
@@ -27,12 +27,20 @@ endif()
 
 include(GNUInstallDirs)
 
-find_package(IsleMath CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
+
+find_dependency(kubazip CONFIG)
+find_dependency(unofficial-minizip CONFIG)
+find_dependency(pugixml CONFIG REQUIRED)
+find_dependency(poly2tri CONFIG)
+find_dependency(polyclipping CONFIG)
+find_dependency(RapidJSON CONFIG)
+find_dependency(utf8cpp CONFIG)
+find_dependency(ZLIB REQUIRED)
 
 # TO ensure that targets are exported and included in PnT install
 set(GLAD_INSTALL ON)
@@ -192,9 +200,13 @@ target_include_directories(PnT PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/PnT/scene>
         # -----------------------------------------------------------------
         $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}>
+        $<INSTALL_INTERFACE:vendors/isle_math/include>
         $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}/math>
+        $<INSTALL_INTERFACE:vendors/isle_math/include/math>
         $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}/math/vector>
+        $<INSTALL_INTERFACE:vendors/isle_math/include/math/vector>
         $<BUILD_INTERFACE:${IsleMath_INCLUDE_DIRS}/math/matrix>
+        $<INSTALL_INTERFACE:vendors/isle_math/include/math/matrix>
         # -----------------------------------------------------------------
 #        $<BUILD_INTERFACE:${assimp_INCLUDE_DIRS}>
 )
@@ -203,7 +215,7 @@ target_include_directories(PnT PUBLIC
 target_precompile_headers(PnT PRIVATE core/include/pnt_core_pch.h)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath::IsleMath cereal::cereal GTest::gtest assimp::assimp)
+target_link_libraries(PnT PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp)
 
 
 if(PNT_INSTALL)
@@ -262,15 +274,16 @@ if(PNT_INSTALL)
             COMMAND_EXPAND_LISTS
     )
 
-    string(TOUPPER CMAKE_BUILD_TYPE build_type)
 
+    string(TOUPPER CMAKE_BUILD_TYPE build_type)
+    
     message("Assimp includes  ${ASSIMP_INCLUDE_DIRS}")
     add_custom_command(TARGET PnT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${VCPKG_BIN_DIR}/pugixml.dll"
             "${CMAKE_INSTALL_PREFIX}/bin"
     )
-
+    
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_custom_command(TARGET PnT POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -284,7 +297,6 @@ if(PNT_INSTALL)
                 "${CMAKE_INSTALL_PREFIX}/bin"
         )
     endif ()
-
 endif ()
 
 if(PNT_EXPORT)
