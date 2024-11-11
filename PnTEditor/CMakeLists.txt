@@ -6,12 +6,14 @@
 # Minimum required version of CMake
 cmake_minimum_required(VERSION 3.26)
 
-project(PnTEditor VERSION 0.1.2 LANGUAGES CXX)
+project(Police_n_Thief:PnTEditor VERSION 0.1.2 LANGUAGES CXX)
 #project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
 set(BUILD_SHARED_LIBS ON)
+
+include(GNUInstallDirs)
 
 add_executable(PnTEditor
         gui/src/editor.cpp
@@ -33,10 +35,10 @@ target_include_directories(PnTEditor PRIVATE
 #        $<BUILD_INTERFACE:${PnT_INCLUDE_DIRS}/core>
 )
 
-find_package(PnT CONFIG REQUIRED)
+add_dependencies(PnTEditor IsleMath PnT)
 
 # Link against the PnT library (assuming it's built in a sibling directory)
-target_link_libraries(PnTEditor PRIVATE PnT::PnT)
+target_link_libraries(PnTEditor PRIVATE PnT)
 
 target_compile_definitions(PnTEditor PUBLIC PNT_PLATFORM_WINDOWS)
 
