@@ -4,8 +4,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-project(Police_n_Thief:IsleMath VERSION 0.1.2 LANGUAGES CXX)
-#project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
+project(PurityEngine:IsleMath VERSION 0.1.2 LANGUAGES CXX)
+#project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
 set(BUILD_SHARED_LIBS ON)
 

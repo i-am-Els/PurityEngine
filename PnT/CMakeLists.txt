@@ -4,8 +4,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-project(Police_n_Thief:PnT VERSION 0.1.2 LANGUAGES CXX)
-#project(Police_n_Thief VERSION 0.1.2 LANGUAGES CXX)
+project(PurityEngine:PnT VERSION 0.1.2 LANGUAGES CXX)
+#project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
 set(CMAKE_CXX_STANDARD 17)

@@ -6,7 +6,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Define the project name
-project(Police_n_Thief VERSION 0.1.2)
+project(PurityEngine VERSION 0.1.2)
 
 # Set the C++ standard (adjust as needed)
 set(CMAKE_CXX_STANDARD 17)
@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(USING_PACKAGE_MANAGER_VCPKG ON CACHE BOOL "Use the package manager")
 
 include(GNUInstallDirs)
+
 
 # Ensure the directories exist before installation
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin")
