@@ -2,11 +2,32 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "default",
+      "name": "debug",
       "inherits": "base",
       "environment": {
         "VCPKG_ROOT": "C:/Users/mikey/vcpkg"
       }
+    },
+    {
+      "name": "release",
+      "inherits": "debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default-build-windows",
+      "displayName": "Default",
+      "configurePreset": "debug",
+      "description": "Vanilla build"
+    },
+    {
+      "name": "release_build_windows",
+      "configurePreset": "release",
+      "displayName": "Release",
+      "description": "Vanilla Build"
     }
   ]
 }
