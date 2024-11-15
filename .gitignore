@@ -58,3 +58,5 @@ build/
 
 # Ignore Visual Studio Code settings folder
 /vcpkg_installed
+/CMakeUserPresets.json
+/CMakeUserPresets.json
