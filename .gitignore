@@ -45,6 +45,10 @@ cmake-build-debug/
 cmake-build-debug-event-trace/
 cmake-build-debug-mingw/
 cmake-build-debug-visual-studio/
+cmake-build-release/
+cmake-build-release-event-trace/
+cmake-build-release-mingw/
+cmake-build-release-visual-studio/
 build/
 
 # Ignore user-specific settings files
