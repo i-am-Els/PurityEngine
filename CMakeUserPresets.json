@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "default",
+      "inherits": "base",
+      "environment": {
+        "VCPKG_ROOT": "C:/Users/mikey/vcpkg"
+      }
+    }
+  ]
+}
