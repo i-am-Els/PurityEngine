@@ -1,0 +1,38 @@
+{
+  "id": 4321210965438765,
+  "source": "prefab",
+  "parentID": 0,
+  "type": "LevelAsset",
+  "data": {
+    "components": [
+      {
+        "transformComponent": {
+          "position": [ 0, 0, 0 ],
+          "scale": [ 1, 1, 1 ],
+          "rotation": [ 0, 90, 0 ],
+          "children": [ 8754326543216109 ]
+        },
+        "tagComp": {
+          "tag": 0
+        },
+        "idComp": 8765432165432109,
+        "meshComponent": {
+          "ref_asset_index": 1
+        },
+        "renderComponent": {
+          "isVisible": true
+        },
+        "behaviourComponents": [
+          "<scriptA-path-relative-to-project-root>",
+          "<scriptB-path-relative-to-project-root>",
+          "<scriptC-path-relative-to-project-root>"
+        ]
+      }
+    ]
+  },
+  "ref_assets": [
+    4321654387652109,
+    6543210987654321,
+    9028432490545838
+  ]
+}

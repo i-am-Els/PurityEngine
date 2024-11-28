@@ -22,11 +22,18 @@ namespace pnt::assetDB{
     // ---------------------------------------------------------
     // ---------------------- Asset Types ----------------------
     // ---------------------------------------------------------
+
+    // Add getters and setters that should be exposed to handles in the asset classes, make them public, but make the asset constructor private.
     
     class PNT_API PTextureAsset : public PAsset{
     public:
-        unsigned int id;
+        uint64_t getID() { return id; }
+        void getType(std::string _type) { type = _type; }
+        std::string getType() const { return type; }
+    private:
+        uint64_t id{};
         std::string type; // Diffuse or Specular
+        void setID(uint64_t uuid);
     };
 
     class PNT_API PSpriteAsset : public PAsset{
@@ -49,9 +56,11 @@ namespace pnt::assetDB{
     public:
         std::vector<PVertex> vertices;
         std::vector<unsigned int> indices;
+        PUUID getTextureAsset() const { return refTextureAssetID; }
 //        std::vector<PTextureAsset> textures; // I think the texture asset should only be referenced.
 
     private:
+        PUUID refTextureAssetID;
         VertexArray vao;
         VertexBuffer vbo;
         ElementBuffer ebo;
@@ -93,7 +102,7 @@ namespace pnt::assetDB{
     // ---------------------- Asset Type Handles ----------------------
     // ----------------------------------------------------------------
     template<typename AssetTypeRef>
-    class PNT_API PAssetHandle final : public fileIO::PHandleBase{
+    class PNT_API PAssetHandle final : public fileIO::PHandleBase, public AssetTypeRef {
     public:
         PAssetHandle();
         explicit PAssetHandle(AssetTypeRef* data);

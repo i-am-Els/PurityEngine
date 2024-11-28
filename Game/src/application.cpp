@@ -49,6 +49,6 @@ void Application::exit() {
 }
 
 pnt::PApplication* pnt::CreateApplication(){
-    return new Application("PnT", 700, 500);
+    return new Application("Catch The Thief", 700, 500);
 }
 

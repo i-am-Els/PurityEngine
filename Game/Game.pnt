@@ -1,6 +1,0 @@
-{
-  "project_name": "Game",
-  "start_up_scene" : "./assets/scenes/default_scene.pnts",
-
-  "projectDB" : "./assets/Game.pntDB"
-}

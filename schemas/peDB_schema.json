@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Asset"
+      }
+    }
+  },
+  "definitions": {
+    "Asset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
