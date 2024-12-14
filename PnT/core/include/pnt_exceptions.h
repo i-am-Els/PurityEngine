@@ -61,4 +61,18 @@ namespace pnt::exceptions
             return "The opengl context has change and s no more the current glfwWindow.";
         }
     };
+
+    class PNT_API FileReadError final : public std::exception
+    {
+    private:
+        std::string _message;
+    public:
+        explicit FileReadError(const char* path)
+            : _message(std::string("There was an error while reading the file '") + path + "'.") {
+        }
+        operator int() { return -1; }
+        [[nodiscard]] const char* what() const noexcept override {
+            return _message.c_str();
+        }
+    };
 }

@@ -9,9 +9,9 @@
 
 namespace pnt::artifacts{
     static std::map<std::string, const char*> hFiles{
-        {"basic_shader_vert", "PnT/artifacts/shaders/basicShader.vert"},
-        {"basic_shader_frag", "PnT/artifacts/shaders/basicShader.frag"},
-        {"basic_shader_Inv_vert", "PnT/artifacts/shaders/basicShaderInv.vert"},
-        {"basic_shader_Inv_frag", "PnT/artifacts/shaders/basicShaderInv.frag"}
+        {"basic_shader_vert", "Shaders/basicShader.vert"},
+        {"basic_shader_frag", "Shaders/basicShader.frag"},
+        {"basic_shader_Inv_vert", "Shaders/basicShaderInv.vert"},
+        {"basic_shader_Inv_frag", "Shaders/basicShaderInv.frag"}
     };
 }

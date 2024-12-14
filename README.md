@@ -72,3 +72,27 @@ You can directly copy this and change the `VCPKG_ROOT` path value to the instanc
 > No more manually copying dlls to executable location. You get the latest build in the install directory.
 
 For more help, check the vcpkg documentation _[here](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started-vs?pivots=shell-powershell)_
+
+To resolve relative path issues, use the json snippet below to setup your `launch.vs.json`
+```json
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "PnTEditor.exe (Install)",
+      "name": "PnTEditor.exe (Install)",
+      "currentDir": "${workspaceRoot}"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "Game.exe (Install)",
+      "name": "Game.exe (Install)",
+      "currentDir": "${workspaceRoot}"
+    }
+  ]
+}
+```

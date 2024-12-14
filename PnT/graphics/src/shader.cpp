@@ -30,12 +30,14 @@ void PShader::createShaders(std::unique_ptr<PShader>& shader, const std::string&
     glGetProgramiv(programID, GL_LINK_STATUS, &linkStat);
     if (linkStat != GL_TRUE){
         PLog::echoMessage(LogLevel::Error, "Linking Error");
+        programID = 0;
     }
 
     int validateStat;
     glGetProgramiv(programID, GL_VALIDATE_STATUS, &validateStat);
     if (validateStat != GL_TRUE){
         PLog::echoMessage(LogLevel::Error, "Validation Error");
+        programID = 0;
     }
 
     glDeleteShader(vs);
@@ -49,6 +51,7 @@ void PShader::createShaders(std::unique_ptr<PShader>& shader, const std::string&
 
     shader.reset();
     shader = nullptr;
+    throw std::runtime_error(pnt::exceptions::ShaderProgramCreationError().what());
 }
 
 void PShader::bindShader() const {

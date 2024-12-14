@@ -13,17 +13,18 @@ namespace pnt::fileIO{
     /// @return A std::string contained in the file.
     /// @note Works with Absolute paths too.
     std::string PFileIO::extractSourceFromFile(const char *path) {
-        std::fstream file(path);
-        std::string source;
-
-        if(file.is_open())
-        {
-            std::string line;
-            while(std::getline(file, line)){
-                source += line + "\n";
-            }
+        // Open file with RAII; automatically closes when out of scope.
+        std::ifstream file(path, std::ios::in);
+        if (!file) {
+            throw std::runtime_error(exceptions::FileReadError(path).what());
         }
-        file.close();
+
+        // Read the entire file into a string using a stringstream.
+        std::ostringstream sourceStream;
+        sourceStream << file.rdbuf();
+        std::string source = sourceStream.str();
+
+        // Log the content and return the string.
         PLog::echoMessage(source.c_str());
         return source;
     }

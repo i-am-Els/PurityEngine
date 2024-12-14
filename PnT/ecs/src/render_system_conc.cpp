@@ -18,7 +18,7 @@ namespace pnt::ecs {
         auto frag = PFileIO::extractSourceFromFile(pnt::artifacts::hFiles["basic_shader_frag"]);
 
         PShader::createShaders(shader, vert, frag);
-        if (shader->GetShaderProgramID())
+        if (shader != nullptr && shader->GetShaderProgramID())
             PLog::echoMessage("PShader Up and Running!");
         else PLog::echoMessage("PShader Set up failed!");
 

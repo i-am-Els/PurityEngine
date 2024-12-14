@@ -272,6 +272,7 @@ if(PNT_INSTALL)
     add_custom_command(TARGET PnT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy -t "${CMAKE_INSTALL_PREFIX}/bin" $<TARGET_RUNTIME_DLLS:PnT>
             COMMAND_EXPAND_LISTS
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
 
 
