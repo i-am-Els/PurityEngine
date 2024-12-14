@@ -5,6 +5,12 @@
 #pragma once
 
 
-class project_manager {
+namespace project{
+	class ProjectManager {
+	public:
+		// files
+		static void s_launchProject();
+		static bool s_validateProjectFile();
 
-};
+	}; 
+}

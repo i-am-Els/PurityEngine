@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "project_name": {
+      "type": "string"
+    },
+    "start_up_scene": {
+      "type": "string"
+    },
+    "projectDB": {
+      "type": "string"
+    }
+  }
+}

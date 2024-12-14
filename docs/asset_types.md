@@ -35,7 +35,7 @@ Animation files
 
 ### Internal Types
 Assets
-- `*.pnta`
+- `*.passet`
 
 Scripting
 - `*.pmeta`
@@ -48,13 +48,13 @@ Animation
 - `*.fbx`
 
 Scene Description
-- `*.pnts`
+- `*.pscene`
 
 AssetDB Repository file
-- `*.pntDB`
+- `*.peDB`
 
 Project File
-- `*.pnt`
+- `*.pproject`
 
 Note: First line in any section takes priority in MVP phase.
 
@@ -79,14 +79,14 @@ Note: First line in any section takes priority in MVP phase.
 ## Internal Structure of Files
 This documents the internal layout of this json files.
 
-### PnT project file `*.pnt`
+### PnT project file `*.pproject`
 The layout and key-value pair looks like so: 
 ```json
 {
   "project_name": "Game",
-  "start_up_scene" : "./assets/scenes/default_scene.pnts",
+  "start_up_scene" : "./assets/scenes/default_scene.pscene",
 
-  "projectDB" : "./assets/Game.pntDB"
+  "projectDB" : "./assets/Game.peDB"
 }
 
 ```
@@ -94,7 +94,7 @@ The layout and key-value pair looks like so:
 - `"start_up_scene"` points to the relative path to the PnTEditor launch start up scene `.pnts` file.
 - `"projectDB"`points to the asset database file in the project. 
 
-### PnT Asset DB file `*.pntDB`
+### PnT Asset DB file `*.peDB`
 This DB file represents assets that need to be present in the assetDatabase at runtime and they are loaded on launch.
 ```json
 {
@@ -115,10 +115,10 @@ This DB file represents assets that need to be present in the assetDatabase at r
 
 Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative `path`s(_value_).
 
-### PnT scene description files `*.pnts`
+### PnT scene description files `*.pscene`
 The structure of the scene file describes the hierarchical tree of entity transforms.
 
-### PnT scene description files `*.pnta`
+### PnT scene description files `*.passet`
 The structure of asset files vary, and can be determined by the asset source i.e. whether it was imported as an asset or created in the editor as a prefab.
 
 #### The Asset source enum 
@@ -132,6 +132,7 @@ An 'Asset' asset is one that was imported through the fileIO system. It has an e
 {
   "id": 6543210987654321,
   "source" : ["asset"],
+  "parentID": 0,
   "type" : "StaticMeshAsset",
   "data" : {
     "vertices" : {
@@ -148,6 +149,7 @@ The Keys:
 - `"id"` is a uuid assigned to the asset file. it is also reference in the `"assets"` map in assetDB file.
 - `"source"` describes the source enum of an asset, `"prefab"` or `"asset"`. Asset sources are usually just `["asset"]`.
 - `"type"` specifies the asset type.
+- An `parentID` of `0` means it is a root prefab.
 - `"data"` holds the asset data in engine-compatible processed format. 
 - `"ref_assets"` is an array of other possible assets in the project that this asset makes reference to.
 
@@ -155,12 +157,8 @@ The Keys:
 ```json
 {
   "id" : 4321210965438765,
-  "source" : [
-    "prefab",
-    {
-      "parentID": 0
-    }
-  ],
+  "source" : "prefab"
+  "parentID": 0,
   "type" : "LevelAsset",
   "data" : {
     "components" : [

@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["asset", "prefab"]
+    },
+    "parentID": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "string"
+    },
+    "data": {
+      "$ref": "#/definitions/Data"
+    },
+    "ref_assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Ref_asset"
+      }
+    }
+  },
+  "definitions": {
+    "Data": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Component"
+          }
+        }
+      }
+    },
+    "TransformComponent": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Position"
+          }
+        },
+        "scale": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scale"
+          }
+        },
+        "rotation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rotation"
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Children"
+          }
+        }
+      }
+    },
+    "Position": {
+      "type": "integer"
+    },
+    "Scale": {
+      "type": "integer"
+    },
+    "Rotation": {
+      "type": "integer"
+    },
+    "Children": {
+      "type": "integer"
+    },
+    "TagComp": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "integer"
+        }
+      }
+    },
+    "MeshComponent": {
+      "type": "object",
+      "properties": {
+        "ref_asset_index": {
+          "type": "integer"
+        }
+      }
+    },
+    "RenderComponent": {
+      "type": "object",
+      "properties": {
+        "isVisible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "BehaviourComponent": {
+      "type": "string"
+    },
+    "Component": {
+      "type": "object",
+      "properties": {
+        "transformComponent": {
+          "$ref": "#/definitions/TransformComponent"
+        },
+        "tagComp": {
+          "$ref": "#/definitions/TagComp"
+        },
+        "idComp": {
+          "type": "integer"
+        },
+        "meshComponent": {
+          "$ref": "#/definitions/MeshComponent"
+        },
+        "renderComponent": {
+          "$ref": "#/definitions/RenderComponent"
+        },
+        "behaviourComponents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BehaviourComponent"
+          }
+        }
+      },
+      "required": [ "idComp", "tagComp", "transformComponent" ]
+    },
+    "Ref_asset": {
+      "type": "integer"
+    }
+  }
+}

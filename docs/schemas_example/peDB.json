@@ -1,0 +1,13 @@
+{
+  "id": 1234567890123456,
+  "assets" : [
+    {
+      "id": 0,
+      "path": "<file-with-uuid-0-rel-path-to-project-root>"
+    },
+    {
+      "id": 1,
+      "path": "<file-with-uuid-1-rel-path-to-project-root>"
+    }
+  ]
+}

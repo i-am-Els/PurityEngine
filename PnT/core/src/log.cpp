@@ -10,13 +10,13 @@ namespace pnt {
 
         switch (_level) {
             case LogLevel::Error:
-                std::cout << "\033[91m[Error]: " << message << "\033[0m" << std::endl;
+                std::cout << "[Error]: \033[91m" << message << "\033[0m" << std::endl;
                 break;
             case LogLevel::Warning:
-                std::cout << "\033[93m[Warning]: " << message << "\033[0m" << std::endl;
+                std::cout << "[Warning]: \033[93m" << message << "\033[0m" << std::endl;
                 break;
             case LogLevel::Info:
-                std::cout << "\033[94m[Info]: " << message << "\033[0m" <<std::endl;
+                std::cout << "[Info]: \033[94m" << message << "\033[0m" <<std::endl;
                 break;
         }
     }
@@ -60,13 +60,13 @@ namespace pnt {
         switch (_level) {
 
             case LogLevel::Error:
-                printf("\033[91m[%s] ", stringifyLogLevel(_level).c_str());
+                printf("[%s] \033[91m", stringifyLogLevel(_level).c_str());
                 break;
             case LogLevel::Warning:
-                printf("\033[93m[%s] ", stringifyLogLevel(_level).c_str());
+                printf("[%s] \033[93m", stringifyLogLevel(_level).c_str());
                 break;
             case LogLevel::Info:
-                printf("\033[94m[%s] ", stringifyLogLevel(_level).c_str());
+                printf("[%s] \033[94m", stringifyLogLevel(_level).c_str());
                 break;
         }
         vprintf(message, args);

@@ -25,7 +25,7 @@ namespace pnt {
 
         template<class T>
          static void echoValue(T value){
-            std::cout << "[Value] " << value << std::endl;
+            std::cout << "[Value] \033[92m" << value << "\033[0m" << std::endl;
         }
         static void terminate();
         ~PLog();
