@@ -20,15 +20,15 @@ add_executable(Game
 
 include(GNUInstallDirs)
 
-# Add the core directory for the PnT library
-#target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/PnT/core)
-add_dependencies(Game IsleMath PnT)
+# Add the core directory for the Purity library
+#target_include_directories(Game PRIVATE ${CMAKE_SOURCE_DIR}/Purity/core)
+add_dependencies(Game IsleMath Purity)
 message("${CMAKE_PREFIX_PATH}")
 
-# Link against the PnT library (assuming it's built in a sibling directory)
-target_link_libraries(Game PRIVATE PnT IsleMath)
+# Link against the Purity library (assuming it's built in a sibling directory)
+target_link_libraries(Game PRIVATE Purity IsleMath)
 
-target_compile_definitions(Game PUBLIC PNT_PLATFORM_WINDOWS)
+target_compile_definitions(Game PUBLIC PURITY_PLATFORM_WINDOWS)
 
 # Specify the installation directory for the Game executable
 install(TARGETS Game DESTINATION ${CMAKE_INSTALL_BINDIR})

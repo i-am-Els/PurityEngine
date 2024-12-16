@@ -3,7 +3,7 @@
 
 <hr>
 
-# PnT - 3D Game Engine.
+# Purity - 3D Game Engine.
 <hr>
 
 ## Asset Database - Asset Types
@@ -79,7 +79,7 @@ Note: First line in any section takes priority in MVP phase.
 ## Internal Structure of Files
 This documents the internal layout of this json files.
 
-### PnT project file `*.pproject`
+### Purity project file `*.pproject`
 The layout and key-value pair looks like so: 
 ```json
 {
@@ -91,10 +91,10 @@ The layout and key-value pair looks like so:
 
 ```
 - `"project_name"` is the name of the project, also what goes into the executable name.
-- `"start_up_scene"` points to the relative path to the PnTEditor launch start up scene `.pnts` file.
+- `"start_up_scene"` points to the relative path to the PurityEditor launch start up scene `.puritys` file.
 - `"projectDB"`points to the asset database file in the project. 
 
-### PnT Asset DB file `*.peDB`
+### Purity Asset DB file `*.peDB`
 This DB file represents assets that need to be present in the assetDatabase at runtime and they are loaded on launch.
 ```json
 {
@@ -102,7 +102,7 @@ This DB file represents assets that need to be present in the assetDatabase at r
   "assets" : [
     {
       "id": 3456789012345612,
-      "path": "<file-with-uuid-0-rel-path-to-project-root>.pnta"
+      "path": "<file-with-uuid-0-rel-path-to-project-root>.puritya"
     },
     {
       "id": 8901234561234567,
@@ -111,14 +111,14 @@ This DB file represents assets that need to be present in the assetDatabase at r
   ]
 }
 ```
-- `"assets"`is a list of pairs of asset `id` (_key_) and their relative `path`s(_value_). These assets are the `.pnta` files in the project directory.
+- `"assets"`is a list of pairs of asset `id` (_key_) and their relative `path`s(_value_). These assets are the `.puritya` files in the project directory.
 
 Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative `path`s(_value_).
 
-### PnT scene description files `*.pscene`
+### Purity scene description files `*.pscene`
 The structure of the scene file describes the hierarchical tree of entity transforms.
 
-### PnT scene description files `*.passet`
+### Purity scene description files `*.passet`
 The structure of asset files vary, and can be determined by the asset source i.e. whether it was imported as an asset or created in the editor as a prefab.
 
 #### The Asset source enum 
@@ -226,9 +226,9 @@ Every script should have an accompanying `.pmeta` file of the same name. and in 
 In this case:
 
 ```c++
-#include "pnt.h"
+#include "purity.h"
 using namespace isle_engine::math;
-using namespace pnt::graphics; 
+using namespace purity::graphics; 
 
 class CameraOffset : public PBehaviourScriptComponent{
 public:
