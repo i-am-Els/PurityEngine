@@ -5,10 +5,10 @@
 #pragma once
 
 #define PNT_ENTRY_POINT
-#include "pnt.h"
+#include "purity.h"
 
-using namespace pnt;
-using namespace pnt::ecs;
+using namespace purity;
+using namespace purity::ecs;
 
 class Application : public PApplication{
 public:

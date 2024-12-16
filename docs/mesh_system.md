@@ -3,7 +3,7 @@
 
 <hr>
 
-# PnT - 3D Game Engine.
+# Purity - 3D Game Engine.
 <hr>
 
 ## ECS - Mesh System

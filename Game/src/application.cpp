@@ -5,7 +5,7 @@
 #include "application.h"
 #include "quad_comp.h"
 
-using namespace pnt;
+using namespace purity;
 
 void Application::render() {
     PApplication::render();
@@ -48,7 +48,7 @@ void Application::exit() {
     PApplication::exit();
 }
 
-pnt::PApplication* pnt::CreateApplication(){
+purity::PApplication* purity::CreateApplication(){
     return new Application("Catch The Thief", 700, 500);
 }
 

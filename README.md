@@ -67,7 +67,7 @@ You can directly copy this and change the `VCPKG_ROOT` path value to the instanc
 5. Build all projects.
 6. Run the `install` Executables. 
 
-> There are executables such as `Game.exe` and `PnTEditor.exe` in the install directories `${projectDir}/out/install/${presetName}/bin`, accompanied by the required runtime artefacts. Running these executables instead of the ones in the target binary directories will resolve the `DLL not found errors`. 
+> There are executables such as `Game.exe` and `PurityEditor.exe` in the install directories `${projectDir}/out/install/${presetName}/bin`, accompanied by the required runtime artefacts. Running these executables instead of the ones in the target binary directories will resolve the `DLL not found errors`. 
 
 > No more manually copying dlls to executable location. You get the latest build in the install directory.
 
@@ -82,8 +82,8 @@ To resolve relative path issues, use the json snippet below to setup your `launc
     {
       "type": "default",
       "project": "CMakeLists.txt",
-      "projectTarget": "PnTEditor.exe (Install)",
-      "name": "PnTEditor.exe (Install)",
+      "projectTarget": "PurityEditor.exe (Install)",
+      "name": "PurityEditor.exe (Install)",
       "currentDir": "${workspaceRoot}"
     },
     {
@@ -91,6 +91,13 @@ To resolve relative path issues, use the json snippet below to setup your `launc
       "project": "CMakeLists.txt",
       "projectTarget": "Game.exe (Install)",
       "name": "Game.exe (Install)",
+      "currentDir": "${workspaceRoot}"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "PurityGem.exe (Install)",
+      "name": "PurityGem.exe (Install)",
       "currentDir": "${workspaceRoot}"
     }
   ]

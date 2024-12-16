@@ -6,7 +6,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Define the project name
-project(PurityEngine VERSION 0.1.2)
+project(PurityEngine VERSION 0.1.2  LANGUAGES CXX)
 
 # Set the C++ standard (adjust as needed)
 set(CMAKE_CXX_STANDARD 17)
@@ -23,8 +23,9 @@ file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include")
 
 
 add_subdirectory(vendors/isle_math)
-add_subdirectory(PnT)
+add_subdirectory(Purity)
 add_subdirectory(Game)
-add_subdirectory(PnTEditor)
+add_subdirectory(PurityEditor)
+add_subdirectory(PurityGem)
 
 message("CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
