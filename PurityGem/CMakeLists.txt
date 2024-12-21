@@ -1,5 +1,5 @@
 # This file handles building each task as sub-project.
-#
+
 # Each task becomes an independent project in which you can experiment.
 
 
@@ -17,13 +17,24 @@ include(GNUInstallDirs)
 add_executable(PurityGem
         project/include/project_manager.h
         project/src/project_manager.cpp
+        project/include/actions.h
+        project/src/actions.cpp
 )
 
+ find_package(glfw3 CONFIG REQUIRED)
+ find_package(glad CONFIG REQUIRED)
+ find_package(imgui CONFIG REQUIRED)
 
 # Add the core directory for the Purity library
 target_include_directories(PurityGem PRIVATE
         project/include
 )
+
+target_include_directories(PurityGem PRIVATE 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/project>
+)
+
+target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad)
 
 target_compile_definitions(PurityGem PUBLIC PURITY_PLATFORM_WINDOWS)
 

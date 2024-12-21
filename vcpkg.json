@@ -2,26 +2,42 @@
   "name" : "purity-engine",
   "version-string" : "1.0.0",
   "builtin-baseline" : "bb1ca2757bca8f8e372a4deb35943828e3b0d155",
-  "dependencies" : [ {
-    "name" : "gtest",
-    "version>=" : "1.15.2"
-  }, {
-    "name" : "vcpkg-cmake-config",
-    "version>=" : "2024-05-23"
-  }, {
-    "name" : "vcpkg-cmake",
-    "version>=" : "2024-04-23"
-  }, {
-    "name" : "cereal",
-    "version>=" : "1.3.2#1"
-  }, {
-    "name" : "glfw3",
-    "version>=" : "3.4#1"
-  }, {
-    "name" : "glad",
-    "version>=" : "0.1.36"
-  }, {
-    "name" : "assimp",
-    "version>=" : "5.4.3"
-  } ]
+  "dependencies": [
+    {
+      "name": "gtest",
+      "version>=": "1.15.2"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "version>=": "2024-05-23"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "version>=": "2024-04-23"
+    },
+    {
+      "name": "cereal",
+      "version>=": "1.3.2#1"
+    },
+    {
+      "name": "glfw3",
+      "version>=": "3.4#1"
+    },
+    {
+      "name": "glad",
+      "version>=": "0.1.36"
+    },
+    {
+      "name": "assimp",
+      "version>=": "5.4.3"
+    },
+    {
+      "name": "imgui",
+      "version>=": "1.91.5",
+      "features": [
+        "opengl3-binding",
+        "glfw-binding"
+      ]
+    }
+  ]
 }

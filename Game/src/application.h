@@ -4,7 +4,7 @@
 
 #pragma once
 
-#define PNT_ENTRY_POINT
+#define PURITY_ENTRY_POINT
 #include "purity.h"
 
 using namespace purity;
