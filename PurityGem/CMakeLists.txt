@@ -21,6 +21,7 @@ add_executable(PurityGem
         project/src/actions.cpp
 )
 
+ find_package(cereal CONFIG REQUIRED)
  find_package(glfw3 CONFIG REQUIRED)
  find_package(glad CONFIG REQUIRED)
  find_package(imgui CONFIG REQUIRED)
@@ -34,7 +35,7 @@ target_include_directories(PurityGem PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/project>
 )
 
-target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad)
+target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad cereal::cereal)
 
 target_compile_definitions(PurityGem PUBLIC PURITY_PLATFORM_WINDOWS)
 

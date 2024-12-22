@@ -4,8 +4,26 @@
 
 #include "project_manager.h"
 
-void project::ProjectManager::launchWindow()
-{
+#include "cereal/cereal.hpp"
 
+#include <string.h>
+
+
+namespace project {
+
+    ProjectDataStructure ProjectManager::validateProject(const char* projectFilePath)
+    {
+        if (projectFilePath == "")
+            projectFilePath = "Game/Game.pproject";
+        
+        // open_file
+        return {};
+    }
+    bool ProjectManager::createProject(ProjectDataStructure pDS)
+    {
+        return false;
+    }
+    void ProjectManager::launchProject(ProjectDataStructure pDS)
+    {
+    }
 }
-

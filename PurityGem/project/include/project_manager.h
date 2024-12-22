@@ -16,11 +16,10 @@
 namespace project{
 	class ProjectManager {
 	public:
-		// files
-		void launchWindow();
-		/*static void s_getOption();
-		static bool s_();
-		void loadTemplates();
+		ProjectDataStructure validateProject(const char* projectFilePath);
+		bool createProject(ProjectDataStructure pDS);
+		void launchProject(ProjectDataStructure pDS);
+		/*void loadTemplates();
 		void loadRecentProjects();
 		void loadFileDialog();*/
 
@@ -34,12 +33,22 @@ namespace project{
 		int win_w, win_h;
 	};
 
+	enum class ProjectSelectionChoice
+	{ 
+		SelectFromTemplate, 
+		OpenExisting
+	};
+
 	struct ProjectManagerState {
-		bool selectRecent = false;
-		bool selectFromTemplate = true;
-		bool openExisting = false;
+		ProjectSelectionChoice selectionChoice = ProjectSelectionChoice::SelectFromTemplate;
 	};
 	
+	struct ProjectDataStructure
+	{
+		bool successfulValidation;
+		const char* filePath;
+		const char* projectDir;
+	};
 }
 
 static void glfw_error_callback(int error, const char* description)
@@ -107,15 +116,40 @@ int main() {
 		// ImGui Window Widget Rendering
 		{
 			ImGui::Begin("Hello, Purity Gem!");
-
-			ImGui::Text("Create a new project from template.");
-			ImGui::Text("Open existing projects.");
-			ImGui::Text("Recent projects.");
-			
+			if (ImGui::BeginMainMenuBar()) {
+				if (ImGui::BeginMenu("Selection Choice")) {
+					if (ImGui::MenuItem("New Project", "Ctrl+N", false, true)) 
+					{ 
+						pms.selectionChoice = project::ProjectSelectionChoice::SelectFromTemplate;  
+					}
+					if (ImGui::MenuItem("Open Recent", "Ctrl+O", false, true))
+					{
+						pms.selectionChoice = project::ProjectSelectionChoice::OpenExisting;
+					}
+					ImGui::EndMenu();
+				}
+				ImGui::EndMainMenuBar();
+			}
 
 			// All widgets go in here
-
-			if (ImGui::Button("Open"))
+			switch (pms.selectionChoice)
+			{
+			case project::ProjectSelectionChoice::OpenExisting:
+				ImGui::Text("Open existing projects from drive.");
+				ImGui::Text("Select from Recent projects.");
+				if (ImGui::Button("Launch")) {
+					projectManager.launchProject(projectManager.validateProject(""));
+				}
+				break;
+			case project::ProjectSelectionChoice::SelectFromTemplate:
+				ImGui::Text("Create a new project from template.");
+				if (ImGui::Button("Start")) {
+					projectManager.createProject(projectManager.validateProject(""));
+				}
+				break;
+			default:
+				break;
+			}
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 			ImGui::End();
