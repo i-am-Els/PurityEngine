@@ -15,6 +15,8 @@ namespace project {
     {
         if (projectFilePath == "")
             projectFilePath = "Game/Game.pproject";
+        const char* p = "Game";
+        projectFilePath = "%s/%s.pproject";
         
         // open_file
         return {};
