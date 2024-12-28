@@ -14,6 +14,31 @@
 
 
 namespace project{
+
+	struct ProjectManagerProperties {
+		const char* win_name;
+		ImVec4 clear_color;
+		int win_w, win_h;
+	};
+
+	enum class ProjectSelectionChoice
+	{
+		SelectFromTemplate,
+		OpenExisting
+	};
+
+	struct ProjectManagerState {
+		ProjectSelectionChoice selectionChoice = ProjectSelectionChoice::SelectFromTemplate;
+	};
+
+	struct ProjectDataStructure
+	{
+		bool successfulValidation;
+		const char* filePath;
+		const char* projectDir;
+	};
+
+
 	class ProjectManager {
 	public:
 		ProjectDataStructure validateProject(const char* projectFilePath);
@@ -26,29 +51,6 @@ namespace project{
 		GLFWwindow* window;
 	private:
 	}; 
-
-	struct ProjectManagerProperties {
-		const char* win_name;
-		ImVec4 clear_color;
-		int win_w, win_h;
-	};
-
-	enum class ProjectSelectionChoice
-	{ 
-		SelectFromTemplate, 
-		OpenExisting
-	};
-
-	struct ProjectManagerState {
-		ProjectSelectionChoice selectionChoice = ProjectSelectionChoice::SelectFromTemplate;
-	};
-	
-	struct ProjectDataStructure
-	{
-		bool successfulValidation;
-		const char* filePath;
-		const char* projectDir;
-	};
 }
 
 static void glfw_error_callback(int error, const char* description)
