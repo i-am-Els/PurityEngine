@@ -139,6 +139,7 @@ int main() {
 			case project::ProjectSelectionChoice::OpenExisting:
 				ImGui::Text("Open existing projects from drive.");
 				ImGui::Text("Select from Recent projects.");
+
 				if (ImGui::Button("Launch")) {
 					projectManager.launchProject(projectManager.validateProject(""));
 				}
