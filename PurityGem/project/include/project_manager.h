@@ -10,6 +10,8 @@
 
 #include "GLFW/glfw3.h"
 
+#include "ImGuiFileDialog.h"
+
 #include <iostream>
 
 
@@ -34,22 +36,24 @@ namespace project{
 	struct ProjectDataStructure
 	{
 		bool successfulValidation;
-		const char* filePath;
-		const char* projectDir;
+		std::string filePath;
+		std::string projectName;
+		std::string projectDir;
 	};
 
 
 	class ProjectManager {
 	public:
-		ProjectDataStructure validateProject(const char* projectFilePath);
+		ProjectDataStructure validateProject(std::string projectFilePath, std::string fileName="");
 		bool createProject(ProjectDataStructure pDS);
 		void launchProject(ProjectDataStructure pDS);
-		/*void loadTemplates();
-		void loadRecentProjects();
-		void loadFileDialog();*/
 
 		GLFWwindow* window;
 	private:
+		//void loadTemplates();
+		//void loadRecentProjects();
+		void selectProjectFolderDialog();
+		void openProjectFromFileDialog();
 	}; 
 }
 
@@ -62,10 +66,6 @@ int main() {
 	project::ProjectManager projectManager;
 	project::ProjectManagerProperties pmp{ "Purity Gem", ImVec4(0.45f, 0.55f, 0.60f, 1.00f), 600, 480};
 	project::ProjectManagerState pms;
-	/*
-	projectManager.loadTemplates();
-	projectManager.loadRecentProjects();
-	*/
 
 	glfwSetErrorCallback(glfw_error_callback);
 	if (glfwInit() != GLFW_TRUE) {
@@ -141,13 +141,49 @@ int main() {
 				ImGui::Text("Select from Recent projects.");
 
 				if (ImGui::Button("Launch")) {
-					projectManager.launchProject(projectManager.validateProject(""));
+					IGFD::FileDialogConfig config; config.path = ".";
+					config.countSelectionMax = 1;
+					config.flags = ImGuiFileDialogFlags_Modal;
+					ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Purity Project File(*.pproject)", ".pproject", config);
+				}
+
+				// Render the file dialog
+				if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+					if (ImGuiFileDialog::Instance()->IsOk()) {
+						// User selected a file
+						std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+						std::string fileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
+
+						// Validate the file or use it to create the project
+						projectManager.launchProject(projectManager.validateProject(filePath, fileName));
+					}
+
+					// Close the dialog after processing the result
+					ImGuiFileDialog::Instance()->Close();
 				}
 				break;
 			case project::ProjectSelectionChoice::SelectFromTemplate:
-				ImGui::Text("Create a new project from template.");
-				if (ImGui::Button("Start")) {
-					projectManager.createProject(projectManager.validateProject(""));
+				ImGui::Text("Create a new empty project or start with a template.");
+				if (ImGui::Button("Select Save Directory")) {
+					IGFD::FileDialogConfig config; config.path = ".";
+					config.countSelectionMax = 1;
+					config.flags = ImGuiFileDialogFlags_Modal;
+					// Select Directory, "uses nullptr as filter"
+					ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Project Directory", nullptr, config);
+				}
+
+				// Render the file dialog
+				if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+					if (ImGuiFileDialog::Instance()->IsOk()) {
+						// User selected a file
+						std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+
+						// Validate the file or use it to create the project
+						projectManager.createProject(projectManager.validateProject(filePath));
+					}
+
+					// Close the dialog after processing the result
+					ImGuiFileDialog::Instance()->Close();
 				}
 				break;
 			default:

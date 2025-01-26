@@ -19,6 +19,7 @@ add_executable(PurityGem
         project/src/project_manager.cpp
         project/include/actions.h
         project/src/actions.cpp
+        ../vendors/ImGuiFileDialog/ImGuiFileDialog.cpp
 )
 
  find_package(cereal CONFIG REQUIRED)
@@ -33,11 +34,15 @@ target_include_directories(PurityGem PRIVATE
 
 target_include_directories(PurityGem PRIVATE 
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/project>
+        ../vendors/ImGuiFileDialog
 )
 
 target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad cereal::cereal)
 
+target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
+
 target_compile_definitions(PurityGem PUBLIC PURITY_PLATFORM_WINDOWS)
+
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityGem DESTINATION ${CMAKE_INSTALL_BINDIR})
