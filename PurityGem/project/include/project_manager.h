@@ -13,6 +13,7 @@
 #include "ImGuiFileDialog.h"
 
 #include <iostream>
+#include <string.h>
 
 
 namespace project{
@@ -29,10 +30,6 @@ namespace project{
 		OpenExisting
 	};
 
-	struct ProjectManagerState {
-		ProjectSelectionChoice selectionChoice = ProjectSelectionChoice::SelectFromTemplate;
-	};
-
 	struct ProjectDataStructure
 	{
 		bool successfulValidation;
@@ -41,6 +38,10 @@ namespace project{
 		std::string projectDir;
 	};
 
+	struct ProjectManagerState {
+		ProjectSelectionChoice selectionChoice = ProjectSelectionChoice::SelectFromTemplate;
+		ProjectDataStructure pDS;
+	};
 
 	class ProjectManager {
 	public:
@@ -118,77 +119,76 @@ int main() {
 		// ImGui Window Widget Rendering
 		{
 			ImGui::Begin("Hello, Purity Gem!");
-			if (ImGui::BeginMainMenuBar()) {
-				if (ImGui::BeginMenu("Selection Choice")) {
-					if (ImGui::MenuItem("New Project", "Ctrl+N", false, true)) 
-					{ 
-						pms.selectionChoice = project::ProjectSelectionChoice::SelectFromTemplate;  
-					}
-					if (ImGui::MenuItem("Open Recent", "Ctrl+O", false, true))
-					{
-						pms.selectionChoice = project::ProjectSelectionChoice::OpenExisting;
-					}
-					ImGui::EndMenu();
-				}
-				ImGui::EndMainMenuBar();
-			}
-
-			// All widgets go in here
-			switch (pms.selectionChoice)
+			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+			if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
 			{
-			case project::ProjectSelectionChoice::OpenExisting:
-				ImGui::Text("Open existing projects from drive.");
-				ImGui::Text("Select from Recent projects.");
-
-				if (ImGui::Button("Launch")) {
-					IGFD::FileDialogConfig config; config.path = ".";
-					config.countSelectionMax = 1;
-					config.flags = ImGuiFileDialogFlags_Modal;
-					ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Purity Project File(*.pproject)", ".pproject", config);
-				}
-
-				// Render the file dialog
-				if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
-					if (ImGuiFileDialog::Instance()->IsOk()) {
-						// User selected a file
-						std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
-						std::string fileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
-
-						// Validate the file or use it to create the project
-						projectManager.launchProject(projectManager.validateProject(filePath, fileName));
+				// Select New Project
+				if (ImGui::BeginTabItem("New Project"))
+				{
+					pms.selectionChoice = project::ProjectSelectionChoice::SelectFromTemplate;
+					ImGui::Text("Create a new empty project or start with a template.");
+					if (ImGui::Button("Select Save Directory")) {
+						IGFD::FileDialogConfig config; config.path = ".";
+						config.countSelectionMax = 1;
+						config.flags = ImGuiFileDialogFlags_Modal;
+						// Select Directory, "uses nullptr as filter"
+						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Project Directory", nullptr, config);
 					}
 
-					// Close the dialog after processing the result
-					ImGuiFileDialog::Instance()->Close();
-				}
-				break;
-			case project::ProjectSelectionChoice::SelectFromTemplate:
-				ImGui::Text("Create a new empty project or start with a template.");
-				if (ImGui::Button("Select Save Directory")) {
-					IGFD::FileDialogConfig config; config.path = ".";
-					config.countSelectionMax = 1;
-					config.flags = ImGuiFileDialogFlags_Modal;
-					// Select Directory, "uses nullptr as filter"
-					ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Project Directory", nullptr, config);
-				}
+					// Render the file dialog
+					if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+						if (ImGuiFileDialog::Instance()->IsOk()) {
+							// User selected a file
+							std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 
-				// Render the file dialog
-				if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
-					if (ImGuiFileDialog::Instance()->IsOk()) {
-						// User selected a file
-						std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+							// Validate the file or use it to create the project
+							pms.pDS = projectManager.validateProject(filePath);
+							projectManager.createProject(pms.pDS);
+						}
 
-						// Validate the file or use it to create the project
-						projectManager.createProject(projectManager.validateProject(filePath));
+						// Close the dialog after processing the result
+						ImGuiFileDialog::Instance()->Close();
 					}
-
-					// Close the dialog after processing the result
-					ImGuiFileDialog::Instance()->Close();
+					ImGui::EndTabItem();
 				}
-				break;
-			default:
-				break;
+
+				// Open Recent Tab
+				if (ImGui::BeginTabItem("Open Recent"))
+				{
+					pms.selectionChoice = project::ProjectSelectionChoice::OpenExisting; 
+					ImGui::Text("Select existing projects from drive.");
+					ImGui::SameLine();
+					if (ImGui::Button("Choose")) {
+						IGFD::FileDialogConfig config; config.path = ".";
+						config.countSelectionMax = 1;
+						config.flags = ImGuiFileDialogFlags_Modal;
+						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Purity Project File(*.pproject)", ".pproject", config);
+					}
+					
+					if (!pms.pDS.filePath.empty())
+						ImGui::Text("%s", pms.pDS.filePath.c_str());
+
+					// Render the file dialog
+					if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+						if (ImGuiFileDialog::Instance()->IsOk()) {
+							// User selected a file
+							std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+							std::string fileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
+
+							// Validate the file or use it to create the project
+							pms.pDS = projectManager.validateProject(filePath);
+							projectManager.launchProject(pms.pDS);
+							std::cout << pms.pDS.filePath << std::endl;
+						}
+
+						// Close the dialog after processing the result
+						ImGuiFileDialog::Instance()->Close();
+					}
+					ImGui::EndTabItem();
+				}
+				ImGui::EndTabBar();
 			}
+			ImGui::Separator();
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 			ImGui::End();
