@@ -36,8 +36,17 @@
       "version>=": "1.91.5",
       "features": [
         "opengl3-binding",
-        "glfw-binding"
+        "glfw-binding",
+        "docking-experimental"
       ]
+    },
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.11.3#1"
+    },
+    {
+      "name": "json-schema-validator",
+      "version>=": "2.3.0#2"
     }
   ]
 }

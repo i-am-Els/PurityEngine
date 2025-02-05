@@ -11,5 +11,6 @@
     "projectDB": {
       "type": "string"
     }
-  }
+  },
+  "required": [ "project_name", "projectDB" ]
 }

@@ -12,6 +12,7 @@
       }
     }
   },
+  "required": [ "id", "assets" ],
   "definitions": {
     "Asset": {
       "type": "object",
