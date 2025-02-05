@@ -28,7 +28,8 @@ const ordered_json pProjectSchema = R"(
 			"type": "string"
 		},
 		"start_up_scene" : {
-			"type": "string"
+			"type": "string",
+			"default": "assets/scene/SampleScene.pscene"
 		},
 		"projectDB" : {
 			"type": "string"
@@ -70,14 +71,14 @@ const ordered_json pDatabaseSchema = R"(
 
 
 namespace project {
-	ProjectManager::ProjectManager() : window{ nullptr }, pms{ nullptr }
+	ProjectManager::ProjectManager() : m_window{ nullptr }, m_pms{ nullptr }
 	{
 	}
 
 	ProjectManager::~ProjectManager()
 	{
-		delete window;
-		delete pms;
+		delete m_window;
+		delete m_pms;
 	}
 
 	ProjectDataStructure ProjectManager::validateProject(std::string projectDir, std::string projectName)
@@ -100,65 +101,72 @@ namespace project {
 
 	bool ProjectManager::createProject(ProjectDataStructure pDS)
 	{
-		pms->pDS = pDS;
+		m_pms->pDS = pDS;
 		bool skipDirCreation = false;
-		auto project_dir_path = std::filesystem::path(pms->pDS.projectDir);
-		if (std::filesystem::is_directory(project_dir_path))
+		auto project_dir_path = std::filesystem::path(m_pms->pDS.projectDir);
+		// Project Dir Path may or may not already exist
+		// If it exists, then it must be an empty directory.
+		if (std::filesystem::exists(project_dir_path))
 		{
-			if (!std::filesystem::is_empty(project_dir_path)) {
-				pms->pDS.successfulValidation = false;
-				pms->pDS.statusMessage = "Project Directory already exists and is not empty!, it is fine if the folder already exists, just keep it empty.";
-				pms->pDS.Log();
+			if (!std::filesystem::is_directory(project_dir_path)) {
+				m_pms->pDS.successfulValidation = false;
+				m_pms->pDS.statusMessage = "Path is probably not a directory.";
+				m_pms->pDS.Log();
 				return false;
 			}
-
+			if (!std::filesystem::is_empty(project_dir_path)) {
+				m_pms->pDS.successfulValidation = false;
+				m_pms->pDS.statusMessage = "Path is not empty!, it is fine that the folder already exists, just keep it empty.";
+				m_pms->pDS.Log();
+				return false;
+			}
 			skipDirCreation = true;
 		}
 
-		if (!skipDirCreation) {
-			std::filesystem::create_directory(project_dir_path);
-			// write pproject file, asset, script and config, assets/scene, and assets/prefabs folders, pedb and pscene files,
-			// do it in this scope, it is safe.
-		}
+		if (!skipDirCreation) { std::filesystem::create_directory(project_dir_path); }
+		// write pproject file, asset, script and config, assets/scene, and assets/prefabs folders, pedb and pscene files,
+		// set startup scene in struct to default name 'assets/scene/SampleScene'
 
-		return false;
+		m_pms->pDS.Log();
+		return true;
 	}
 
 	bool ProjectManager::launchProject(ProjectDataStructure pDS)
 	{
-		pms->pDS = pDS;
+		m_pms->pDS = pDS;
 		if (!_validateProjectFile()) { return false; }
 
-		std::ifstream data(pms->pDS.filePath);
+		std::ifstream data(m_pms->pDS.filePath);
 		json data_json = json::parse(data);
-		if (data_json["project_name"] != pms->pDS.projectName) 
+		if (data_json["project_name"] != m_pms->pDS.projectName) 
 		{
-			pms->pDS.successfulValidation = false;
-			pms->pDS.statusMessage = "Project Name Mismatch!, Ensure that '.pproject' file, project folder and the internally stored projoct name share the same name.";
-			pms->pDS.Log();
+			m_pms->pDS.successfulValidation = false;
+			m_pms->pDS.statusMessage = "Project Name Mismatch!, Ensure that '.pproject' file, project folder and the internally stored projoct name share the same name.";
+			m_pms->pDS.Log();
 			return false;
 		}
 
-		std::string pDBfilePath = "assets\\" + pms->pDS.projectName + "\\.peDB";
+		std::string pDBfilePath = "assets\\" + m_pms->pDS.projectName + "\\.peDB";
 		if (data_json["projectDB"] != pDBfilePath)
 		{
-			pms->pDS.successfulValidation = false;
-			pms->pDS.statusMessage = "Project DataBase File Path Mismatch!, Ensure that '.peDB' file's relative path is correct.";
-			pms->pDS.Log();
+			m_pms->pDS.successfulValidation = false;
+			m_pms->pDS.statusMessage = "Project DataBase File Path Mismatch!, Ensure that '.peDB' file's relative path is correct.";
+			m_pms->pDS.Log();
 			return false;
 		}
 		if (!_validateDBFile()) { return false; }
-
+		m_pms->pDS.startupScene = data_json["start_up_scene"];
+		m_pms->pDS.Log();
 		return true;
 	}
 
 	bool ProjectManager::_validateProjectFile()
 	{
-		if (!_validateFileExistence(pms->pDS.filePath) && !_validateSchemaAdherence(pms->pDS.filePath, JsonSchemaType::PProjectSchema))
+		if (!_validateFileExistence(m_pms->pDS.filePath) && !_validateSchemaAdherence(m_pms->pDS.filePath, JsonSchemaType::PProjectSchema))
 		{ 
-			pms->pDS.successfulValidation = false;
-			pms->pDS.statusMessage = "Project File Validation Failed!, Ensure the file path exists and the '.pproject' file adheres to its schema specifications.";
-			pms->pDS.Log();
+			m_pms->pDS.successfulValidation = false;
+			m_pms->pDS.statusMessage = "Project File Validation Failed!, Ensure the file path exists and the '.pproject' file adheres to its schema specifications.";
+			m_pms->pDS.Log();
 			return false; 
 		}
 		return true;
@@ -166,13 +174,13 @@ namespace project {
 
 	bool ProjectManager::_validateDBFile()
 	{
-		std::string pDBfilePath = pms->pDS.projectDir + "\\assets\\" + pms->pDS.projectName + "\\.peDB";
+		std::string pDBfilePath = m_pms->pDS.projectDir + "\\assets\\" + m_pms->pDS.projectName + "\\.peDB";
 		std::cout << pDBfilePath << std::endl;
 		if (!_validateFileExistence(pDBfilePath) || !_validateSchemaAdherence(pDBfilePath, JsonSchemaType::PDatabaseSchema))
 		{
-			pms->pDS.successfulValidation = false;
-			pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in '.\\assets\\' and that the '.peDB' file adheres to its schema specifications.";
-			pms->pDS.Log();
+			m_pms->pDS.successfulValidation = false;
+			m_pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in '.\\assets\\' and that the '.peDB' file adheres to its schema specifications.";
+			m_pms->pDS.Log();
 			return false; 
 		}
 		return true;
@@ -222,7 +230,7 @@ namespace project {
 void ShowNewProjectTab(project::ProjectManager* projectManager) {
 	if (ImGui::BeginTabItem("New Project"))
 	{
-		projectManager->pms->selectionChoice = project::ProjectSelectionChoice::SelectFromTemplate;
+		projectManager->m_pms->selectionChoice = project::ProjectSelectionChoice::SelectFromTemplate;
 
 		// Enter Project Name
 		static char buf[24];
@@ -241,18 +249,18 @@ void ShowNewProjectTab(project::ProjectManager* projectManager) {
 			ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Project Directory", nullptr, config);
 		}
 
-		if (!projectManager->pms->pDS.projectDir.empty())
+		if (!projectManager->m_pms->pDS.projectDir.empty())
 		{
 			ImGui::TextColored(ImVec4(0.7f, 0.1f, 0.6f, 1.f), "Project Location: ");
 			ImGui::SameLine();
-			ImGui::Text("%s", projectManager->pms->pDS.projectDir.c_str());
+			ImGui::Text("%s", projectManager->m_pms->pDS.projectDir.c_str());
 		}
 
 		// Render the file dialog for Selecting Project Location
 		if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
 			if (ImGuiFileDialog::Instance()->IsOk()) {
 				// User selected Dir
-				projectManager->pms->pDS.projectDir = ImGuiFileDialog::Instance()->GetCurrentPath();
+				projectManager->m_pms->pDS.projectDir = ImGuiFileDialog::Instance()->GetCurrentPath();
 			}
 			// Close the dialog after processing the result
 			ImGuiFileDialog::Instance()->Close();
@@ -263,12 +271,12 @@ void ShowNewProjectTab(project::ProjectManager* projectManager) {
 			ImGui::SameLine();
 			ImGui::Text("%s", buf);
 		}
-		if (ImGui::Button("Create") && buf[0] != '\0' && !projectManager->pms->pDS.projectDir.empty())
+		if (ImGui::Button("Create") && buf[0] != '\0' && !projectManager->m_pms->pDS.projectDir.empty())
 		{
 			// Validate the file or use it to create the project
-			projectManager->pms->pDS = projectManager->validateProject(projectManager->pms->pDS.projectDir, buf);
-			if (!projectManager->createProject(projectManager->pms->pDS)) { return; }
-			std::cout << projectManager->pms->pDS << std::endl;
+			projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.projectDir, buf);
+			if (!projectManager->createProject(projectManager->m_pms->pDS)) { return; }
+			std::cout << projectManager->m_pms->pDS << std::endl;
 			buf[0] = '\0';
 		}
 		ImGui::EndTabItem();
@@ -279,7 +287,7 @@ void ShowOpenExistingProjectTab(project::ProjectManager* projectManager)
 {
 	if (ImGui::BeginTabItem("Open Recent"))
 	{
-		projectManager->pms->selectionChoice = project::ProjectSelectionChoice::OpenExisting;
+		projectManager->m_pms->selectionChoice = project::ProjectSelectionChoice::OpenExisting;
 		ImGui::Text("Select existing projects from drive.");
 		ImGui::SameLine();
 		if (ImGui::Button("Choose")) {
@@ -293,21 +301,21 @@ void ShowOpenExistingProjectTab(project::ProjectManager* projectManager)
 		if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
 			if (ImGuiFileDialog::Instance()->IsOk()) {
 				// User selected a file
-				projectManager->pms->pDS.filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+				projectManager->m_pms->pDS.filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 			}
 			// Close the dialog after processing the result
 			ImGuiFileDialog::Instance()->Close();
 		}
 
-		if (!projectManager->pms->pDS.filePath.empty())
+		if (!projectManager->m_pms->pDS.filePath.empty())
 		{
-			ImGui::Text("%s", projectManager->pms->pDS.filePath.c_str());
+			ImGui::Text("%s", projectManager->m_pms->pDS.filePath.c_str());
 			if (ImGui::Button("Open"))
 			{
 				// Validate the file or use it to create the project
-				projectManager->pms->pDS = projectManager->validateProject(projectManager->pms->pDS.filePath);
-				if (!projectManager->launchProject(projectManager->pms->pDS)) { return; }
-				std::cout << projectManager->pms->pDS << std::endl;
+				projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.filePath);
+				if (!projectManager->launchProject(projectManager->m_pms->pDS)) { return; }
+				std::cout << projectManager->m_pms->pDS << std::endl;
 			}
 		}
 		ImGui::EndTabItem();
@@ -340,13 +348,13 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	projectManager.window = glfwCreateWindow(pmp.win_w, pmp.win_h, pmp.win_name, nullptr, nullptr);
-	if (projectManager.window == nullptr) {
+	projectManager.m_window = glfwCreateWindow(pmp.win_w, pmp.win_h, pmp.win_name, nullptr, nullptr);
+	if (projectManager.m_window == nullptr) {
 		glfwTerminate();
 		return 1;
 	}
 
-	glfwMakeContextCurrent(projectManager.window);
+	glfwMakeContextCurrent(projectManager.m_window);
 	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	if (!status)
 		std::cout << "Failed to load Glad." << std::endl;
@@ -375,12 +383,12 @@ int main() {
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
-	ImGui_ImplGlfw_InitForOpenGL(projectManager.window, true);
+	ImGui_ImplGlfw_InitForOpenGL(projectManager.m_window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	while (!glfwWindowShouldClose(projectManager.window)) {
+	while (!glfwWindowShouldClose(projectManager.m_window)) {
 		glfwPollEvents();
-		if (glfwGetWindowAttrib(projectManager.window, GLFW_ICONIFIED) != 0)
+		if (glfwGetWindowAttrib(projectManager.m_window, GLFW_ICONIFIED) != 0)
 		{
 			ImGui_ImplGlfw_Sleep(10);
 			continue;
@@ -403,7 +411,7 @@ int main() {
 				// Open Recent Tab
 				ShowOpenExistingProjectTab(&projectManager);
 
-				if (showTemplate = projectManager.pms->selectionChoice == project::ProjectSelectionChoice::SelectFromTemplate ? true : false)
+				if (showTemplate = projectManager.m_pms->selectionChoice == project::ProjectSelectionChoice::SelectFromTemplate ? true : false)
 				{
 					ShowTemplateWindow(&projectManager);
 				}
@@ -419,7 +427,7 @@ int main() {
 		ImGui::Render();
 		int display_w, display_h;
 		// Get the real-time size of the window
-		glfwGetFramebufferSize(projectManager.window, &display_w, &display_h);
+		glfwGetFramebufferSize(projectManager.m_window, &display_w, &display_h);
 		// Use that size to set the viewport
 		glViewport(0, 0, display_w, display_h);
 		glClearColor(pmp.clear_color.x, pmp.clear_color.y, pmp.clear_color.z, pmp.clear_color.w);
@@ -434,7 +442,7 @@ int main() {
 			glfwMakeContextCurrent(backup_current_context);
 		}
 
-		glfwSwapBuffers(projectManager.window);
+		glfwSwapBuffers(projectManager.m_window);
 	}
 
 	// Cleanup
@@ -442,7 +450,7 @@ int main() {
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 
-	glfwDestroyWindow(projectManager.window);
+	glfwDestroyWindow(projectManager.m_window);
 	glfwTerminate();
 
 	return 0;

@@ -37,7 +37,7 @@ namespace project {
 		std::string projectName = "";
 		std::string projectDir = "";
 		std::string statusMessage = "";
-		std::string statupScene = "";
+		std::string startupScene = "";
 
 		void Log() const {
 			std::cout << "Status: " << statusMessage << std::endl;
@@ -45,7 +45,7 @@ namespace project {
 	};
 
 	std::ostream& operator<<(std::ostream& os, const ProjectDataStructure& pDS) {
-		os << "Project Data Structure \n{ \n\tValidated: " << pDS.successfulValidation << ", \n\tFile Path: \"" << pDS.filePath << "\", \n\tProject Name: \"" << pDS.projectName << "\", \n\tProject Dir: \"" << pDS.projectDir << "\", \n\tStartup Scene: " << pDS.statupScene << "\", \n\tStatus Message: \"" << pDS.statusMessage << "\"\n}" << std::endl;
+		os << "Project Data Structure \n{ \n\tValidated: " << pDS.successfulValidation << ", \n\tFile Path: \"" << pDS.filePath << "\", \n\tProject Name: \"" << pDS.projectName << "\", \n\tProject Dir: \"" << pDS.projectDir << "\", \n\tStartup Scene: " << pDS.startupScene << "\", \n\tStatus Message: \"" << pDS.statusMessage << "\"\n}" << std::endl;
 		return os;  // Return the stream to allow chaining
 	}
 
@@ -67,8 +67,9 @@ namespace project {
 		ProjectDataStructure validateProject(std::string filePath);
 		bool createProject(ProjectDataStructure pDS);
 		bool launchProject(ProjectDataStructure pDS);
-		GLFWwindow* window;
-		ProjectManagerState* pms;
+		GLFWwindow* m_window;
+		ProjectManagerState* m_pms
+			;
 	private:
 		// Existing Project
 		bool _validateProjectFile();
