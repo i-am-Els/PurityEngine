@@ -200,7 +200,179 @@ In the example above we have a `PREFAB` asset. This is what an asset created in 
 - An `parentID` of `0` means it is a root prefab.
 - `"data"` contains entity/prefab information.
 - `"ref_asset_index"` is the index of the referenced asset in `ref_assets` array.
+<hr>
 
+## REFERENCE ASSET
+A `Ref<T>` asset such as `Ref<Texture>` is typically a smart pointer or reference-counted wrapper around an object of type T, in this case `Texture`. It is commonly used in game engines or graphics libraries to manage the lifetime of resources (like textures) efficiently. The purpose of `Ref` is to handle reference counting, ensuring that resources are properly released when no longer needed, while avoiding memory leaks or dangling pointers.
+
+Here’s an overview of how you can implement something like `Ref<T>` in C++:
+
+---
+
+### Implementation of `Ref<T>`
+Below is a simplified implementation of a `Ref` class for reference counting:
+
+```cpp
+#include <iostream>
+#include <atomic>
+
+// Forward declaration
+template<typename T>
+class Ref;
+
+// Base class for reference-counted objects
+class RefCounted {
+protected:
+    mutable std::atomic<int> refCount{0};
+
+    virtual ~RefCounted() = default; // Ensure proper polymorphic destruction
+
+    template<typename T>
+    friend class Ref;
+
+public:
+    void addRef() const {
+        refCount.fetch_add(1, std::memory_order_relaxed);
+    }
+
+    void release() const {
+        if (refCount.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+            delete this;
+        }
+    }
+
+    int getRefCount() const {
+        return refCount.load(std::memory_order_relaxed);
+    }
+};
+
+// Example texture class
+class Texture : public RefCounted {
+public:
+    Texture() {
+        std::cout << "Texture created\n";
+    }
+
+    ~Texture() {
+        std::cout << "Texture destroyed\n";
+    }
+};
+
+// Reference-counting wrapper
+template<typename T>
+class Ref {
+private:
+    T* ptr{nullptr};
+
+public:
+    Ref() = default;
+
+    explicit Ref(T* object) : ptr(object) {
+        if (ptr) {
+            ptr->addRef();
+        }
+    }
+
+    Ref(const Ref& other) : ptr(other.ptr) {
+        if (ptr) {
+            ptr->addRef();
+        }
+    }
+
+    Ref(Ref&& other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;
+    }
+
+    ~Ref() {
+        if (ptr) {
+            ptr->release();
+        }
+    }
+
+    Ref& operator=(const Ref& other) {
+        if (this != &other) {
+            if (ptr) {
+                ptr->release();
+            }
+            ptr = other.ptr;
+            if (ptr) {
+                ptr->addRef();
+            }
+        }
+        return *this;
+    }
+
+    Ref& operator=(Ref&& other) noexcept {
+        if (this != &other) {
+            if (ptr) {
+                ptr->release();
+            }
+            ptr = other.ptr;
+            other.ptr = nullptr;
+        }
+        return *this;
+    }
+
+    T* operator->() const {
+        return ptr;
+    }
+
+    T& operator*() const {
+        return *ptr;
+    }
+
+    T* get() const {
+        return ptr;
+    }
+
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+};
+
+int main() {
+    Ref<Texture> tex1(new Texture()); // Texture created
+    Ref<Texture> tex2 = tex1;         // Shared ownership
+    Ref<Texture> tex3;                // Empty ref
+    tex3 = tex2;                      // Shared ownership
+    // All references go out of scope; Texture destroyed
+
+    return 0;
+}
+```
+
+---
+
+### Key Features of the Implementation:
+
+1. **Reference Counting:**
+   - The `RefCounted` base class tracks the reference count using an `std::atomic<int>` to allow thread-safe usage.
+
+2. **Automatic Lifetime Management:**
+   - The `Ref` class ensures that the underlying object is deleted when the last reference is released.
+
+3. **Copy and Move Semantics:**
+   - Copying a `Ref` increments the reference count.
+   - Moving transfers ownership without incrementing the reference count.
+
+4. **Polymorphic Destruction:**
+   - The destructor of `RefCounted` is declared `virtual` to ensure proper destruction of derived classes.
+
+5. **Safety:**
+   - The `Ref` class handles null pointers gracefully and provides convenient syntax for accessing the underlying object.
+
+---
+
+### Usage in a Game Engine
+In a game engine, `Ref<T>` might be used for resources like textures, meshes, or shaders. These resources are often expensive to create and destroy, so reference counting ensures they are shared and reused efficiently.
+
+For example:
+- A `Texture` might be loaded once, stored in a cache, and shared across multiple objects.
+- When all references to the `Texture` are gone, it is automatically released from memory.
+
+Let me know if you'd like further enhancements to this implementation or its integration with a real-world game engine!
+
+<hr>
 <hr>
 
 ## Scripts - Behaviour Component

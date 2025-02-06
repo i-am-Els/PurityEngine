@@ -23,7 +23,7 @@
 #include "tag_comp.h"
 #include "scripting.h"
 
-#ifdef PNT_ENTRY_POINT
+#ifdef PURITY_ENTRY_POINT
 #include "entry.h"
 #endif
 

@@ -1,5 +1,5 @@
 # This file handles building each task as sub-project.
-#
+
 # Each task becomes an independent project in which you can experiment.
 
 
@@ -15,17 +15,36 @@ set(BUILD_SHARED_LIBS ON)
 include(GNUInstallDirs)
 
 add_executable(PurityGem
-        project/include/project_manager.h
+        project/include/actions.h
+        project/src/actions.cpp
+        project/include/project_manager.h 
         project/src/project_manager.cpp
+        ../vendors/ImGuiFileDialog/ImGuiFileDialog.cpp
 )
 
+ find_package(cereal CONFIG REQUIRED)
+ find_package(glfw3 CONFIG REQUIRED)
+ find_package(glad CONFIG REQUIRED)
+ find_package(imgui CONFIG REQUIRED)
+ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 
 # Add the core directory for the Purity library
 target_include_directories(PurityGem PRIVATE
         project/include
 )
 
+target_include_directories(PurityGem PRIVATE 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/project>
+        ../vendors/ImGuiFileDialog
+)
+
+target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad cereal::cereal nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
+
+target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
+
 target_compile_definitions(PurityGem PUBLIC PURITY_PLATFORM_WINDOWS)
+
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityGem DESTINATION ${CMAKE_INSTALL_BINDIR})
