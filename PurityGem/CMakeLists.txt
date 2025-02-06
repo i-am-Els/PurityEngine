@@ -27,7 +27,7 @@ add_executable(PurityGem
  find_package(glad CONFIG REQUIRED)
  find_package(imgui CONFIG REQUIRED)
  find_package(nlohmann_json CONFIG REQUIRED)
- find_package(nlohmann_json_schema_validator REQUIRED)
+ find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 
 # Add the core directory for the Purity library
 target_include_directories(PurityGem PRIVATE
@@ -39,7 +39,7 @@ target_include_directories(PurityGem PRIVATE
         ../vendors/ImGuiFileDialog
 )
 
-target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad cereal::cereal nlohmann_json::nlohmann_json nlohmann_json_schema_validator)
+target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad cereal::cereal nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
 
 target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 

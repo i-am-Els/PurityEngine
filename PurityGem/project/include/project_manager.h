@@ -16,12 +16,16 @@
 #include <string.h>
 
 
+using fs_path = std::filesystem::path;
+
+
 namespace project {
 
 	struct ProjectManagerProperties {
 		const char* win_name;
 		ImVec4 clear_color;
 		int win_w, win_h;
+		bool show_error_popup = false;
 	};
 
 	enum class ProjectSelectionChoice
@@ -45,13 +49,14 @@ namespace project {
 	};
 
 	std::ostream& operator<<(std::ostream& os, const ProjectDataStructure& pDS) {
-		os << "Project Data Structure \n{ \n\tValidated: " << pDS.successfulValidation << ", \n\tFile Path: \"" << pDS.filePath << "\", \n\tProject Name: \"" << pDS.projectName << "\", \n\tProject Dir: \"" << pDS.projectDir << "\", \n\tStartup Scene: " << pDS.startupScene << "\", \n\tStatus Message: \"" << pDS.statusMessage << "\"\n}" << std::endl;
+		os << "Project Data Structure \n{ \n\tValidated: " << pDS.successfulValidation << ", \n\tFile Path: \"" << pDS.filePath << "\", \n\tProject Name: \"" << pDS.projectName << "\", \n\tProject Dir: \"" << pDS.projectDir << "\", \n\tStartup Scene: \"" << pDS.startupScene << "\", \n\tStatus Message: \"" << pDS.statusMessage << "\"\n}" << std::endl;
 		return os;  // Return the stream to allow chaining
 	}
 
 	struct ProjectManagerState {
 		ProjectSelectionChoice selectionChoice = ProjectSelectionChoice::SelectFromTemplate;
-		ProjectDataStructure pDS;
+		ProjectDataStructure pDS{};
+		ProjectManagerProperties pmp{};
 	};
 
 	enum class JsonSchemaType
@@ -76,6 +81,9 @@ namespace project {
 		bool _validateDBFile();
 		bool _validateFileExistence(std::string path) const;
 		bool _validateSchemaAdherence(std::string path, JsonSchemaType type) const;
+		bool _createProjectFile();
+		bool _createDBFile(fs_path assets_dir);
+		bool _createDefaultSceneFile(fs_path scenes_dir);
 	};
 }
 

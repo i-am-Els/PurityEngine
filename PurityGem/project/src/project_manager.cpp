@@ -21,7 +21,7 @@ using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
 const ordered_json pProjectSchema = R"(
 {
-	"$schema": "http://json-schema.org/draft-04/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
 	"type" : "object",
 	"properties" : {
 		"project_name": {
@@ -29,18 +29,18 @@ const ordered_json pProjectSchema = R"(
 		},
 		"start_up_scene" : {
 			"type": "string",
-			"default": "assets/scene/SampleScene.pscene"
+			"default": "Assets/Scene/DefaultScene.pscene"
 		},
 		"projectDB" : {
 			"type": "string"
 		}
-	}
-	"required": ["project_name", "projectDB"],
+	},
+	"required": ["project_name", "projectDB"]
 })"_json;
 
 const ordered_json pDatabaseSchema = R"(
 {
-	"$schema": "http://json-schema.org/draft-04/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
 	"type": "object",
 	"properties": {
 	  "id": {
@@ -71,19 +71,19 @@ const ordered_json pDatabaseSchema = R"(
 
 
 namespace project {
-	ProjectManager::ProjectManager() : m_window{ nullptr }, m_pms{ nullptr }
+	ProjectManager::ProjectManager() : m_window{ nullptr }
 	{
+		m_pms = new ProjectManagerState{ ProjectSelectionChoice::SelectFromTemplate, { false, "", "", "", "", "" }, {} };
 	}
 
 	ProjectManager::~ProjectManager()
 	{
-		delete m_window;
 		delete m_pms;
 	}
 
 	ProjectDataStructure ProjectManager::validateProject(std::string projectDir, std::string projectName)
 	{
-		std::filesystem::path projectPath = { projectDir };
+		fs_path projectPath = { projectDir };
 		if (!std::filesystem::is_directory(projectPath)) { return { false, "", "", "", "Project Directory does not exist.", "" }; }
 		projectDir = projectDir + "\\" + projectName;
 		std::string projectFilePath = projectDir + "\\" + projectName + ".pproject";
@@ -92,18 +92,79 @@ namespace project {
 
 	ProjectDataStructure ProjectManager::validateProject(std::string filePath)
 	{
-		std::filesystem::path _filepath = { filePath };
+		fs_path _filepath = { filePath };
 		if (!std::filesystem::exists(_filepath)) { return { false, "", "", "", "Project File path does not exist.", "" }; }
 		std::string projectName = _filepath.stem().string();
 		std::string projectDir = _filepath.parent_path().string();
 		return { true, filePath, projectName, projectDir, "Okay", "" };
 	}
 
+	bool ProjectManager::_createProjectFile() 
+	{
+		// Define the default project JSON structure
+		json project_json = {
+			{"project_name", m_pms->pDS.projectName},
+			{"start_up_scene", "./Aassets/Scenes/DefaultScene.pscene"},
+			{"projectDB", "./Assets/" + m_pms->pDS.projectName + ".peDB"}
+		};
+
+		std::fstream project_file(m_pms->pDS.filePath, std::ios::out | std::ios::trunc);
+		if (project_file.is_open()) {
+			project_file << project_json.dump(4); // Example placeholder
+			project_file.close();
+		}
+		else {
+			std::cerr << "Failed to create .pproject file!" << std::endl;
+			return false;
+		}
+		return true;
+	}
+
+	bool ProjectManager::_createDBFile(fs_path assets_dir) 
+	{
+		// Define the default database JSON structure
+		json db_json = {
+			{"id", 0},  // UUID for reference
+			{"assets", json::array()}  // Empty asset list
+		};
+
+		std::string dbFileName = m_pms->pDS.projectName + ".peDB";
+		fs_path pDBfilePath = assets_dir / dbFileName;
+		std::fstream peDB_file(pDBfilePath.string(), std::ios::out | std::ios::trunc);
+		if (peDB_file.is_open()) {
+			peDB_file << db_json.dump(4); // Example placeholder
+			peDB_file.close();
+		}
+		else {
+			std::cerr << "Failed to create .peDB file!" << std::endl;
+			return false;
+		}
+		return true;
+	}
+
+	bool ProjectManager::_createDefaultSceneFile(fs_path scenes_dir)
+	{
+		// Define the default database JSON structure
+		json scene_json = R"({})"_json;
+
+		fs_path psceneFilePath = scenes_dir / "DefaultScene.pscene";
+		std::fstream pscene_file(psceneFilePath.string(), std::ios::out | std::ios::trunc);
+		if (pscene_file.is_open()) {
+			pscene_file << scene_json.dump(4); // Example placeholder
+			pscene_file.close();
+		}
+		else {
+			std::cerr << "Failed to create .pscene file!" << std::endl;
+			return false;
+		}
+		return true;
+	}
+
 	bool ProjectManager::createProject(ProjectDataStructure pDS)
 	{
 		m_pms->pDS = pDS;
 		bool skipDirCreation = false;
-		auto project_dir_path = std::filesystem::path(m_pms->pDS.projectDir);
+		auto project_dir_path = fs_path(m_pms->pDS.projectDir);
 		// Project Dir Path may or may not already exist
 		// If it exists, then it must be an empty directory.
 		if (std::filesystem::exists(project_dir_path))
@@ -124,8 +185,26 @@ namespace project {
 		}
 
 		if (!skipDirCreation) { std::filesystem::create_directory(project_dir_path); }
-		// write pproject file, asset, script and config, assets/scene, and assets/prefabs folders, pedb and pscene files,
-		// set startup scene in struct to default name 'assets/scene/SampleScene'
+		// create asset folder and inner folders
+		auto asset_dir = project_dir_path / "Assets";
+		auto prefabs_dir = asset_dir / "Prefabs";
+		auto scene_dir = asset_dir / "Scene";
+		auto script_dir = project_dir_path / "Scripts";
+		auto config_dir = project_dir_path / "Config";
+
+		std::filesystem::create_directory(asset_dir);
+		std::filesystem::create_directory(prefabs_dir);
+		std::filesystem::create_directory(scene_dir);
+		std::filesystem::create_directory(script_dir);
+		std::filesystem::create_directory(config_dir);
+
+		// write pproject file, pedb and pscene files.
+		_createProjectFile();
+		_createDBFile(asset_dir);
+		_createDefaultSceneFile(scene_dir);
+
+		// set startup scene in struct to default name 'Assets/Scene/DefaultScene.pscene'
+		m_pms->pDS.startupScene = "./Aassets/Scenes/DefaultScene.pscene";
 
 		m_pms->pDS.Log();
 		return true;
@@ -146,7 +225,7 @@ namespace project {
 			return false;
 		}
 
-		std::string pDBfilePath = "assets\\" + m_pms->pDS.projectName + "\\.peDB";
+		std::string pDBfilePath = "./Assets/" + m_pms->pDS.projectName + ".peDB";
 		if (data_json["projectDB"] != pDBfilePath)
 		{
 			m_pms->pDS.successfulValidation = false;
@@ -174,12 +253,12 @@ namespace project {
 
 	bool ProjectManager::_validateDBFile()
 	{
-		std::string pDBfilePath = m_pms->pDS.projectDir + "\\assets\\" + m_pms->pDS.projectName + "\\.peDB";
+		std::string pDBfilePath = m_pms->pDS.projectDir + "/Assets/" + m_pms->pDS.projectName + ".peDB";
 		std::cout << pDBfilePath << std::endl;
 		if (!_validateFileExistence(pDBfilePath) || !_validateSchemaAdherence(pDBfilePath, JsonSchemaType::PDatabaseSchema))
 		{
 			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in '.\\assets\\' and that the '.peDB' file adheres to its schema specifications.";
+			m_pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in './Assets/' and that the '.peDB' file adheres to its schema specifications.";
 			m_pms->pDS.Log();
 			return false; 
 		}
@@ -188,7 +267,7 @@ namespace project {
 
 	bool ProjectManager::_validateFileExistence(std::string path) const
 	{
-		std::filesystem::path _filepath = { path };
+		fs_path _filepath = { path };
 		return std::filesystem::exists(_filepath);
 	}
 
@@ -223,7 +302,36 @@ namespace project {
 		// Further schema validation logic can go here
 		return true;
 	}
+}
 
+// Call this function inside your ImGui render loop
+void RaiseErrorMessageBox(project::ProjectManager* projectManager) {
+	ImGui::OpenPopup("Error");
+
+	// Center the pop-up in the application window
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Centered
+
+	// Set a minimum and maximum size for the pop-up
+	ImGui::SetNextWindowSize(ImVec2(400, 0), ImGuiCond_Appearing); // 400 width, auto height
+
+	if (ImGui::BeginPopupModal("Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+		// Ensure text wraps properly
+		ImGui::PushTextWrapPos(380); // Wrap text at ~380 pixels
+		ImGui::Text("%s", projectManager->m_pms->pDS.statusMessage.c_str());
+		ImGui::PopTextWrapPos();
+
+		ImGui::Separator();
+
+		if (ImGui::Button("OK", ImVec2(120, 0))) {
+			projectManager->m_pms->pmp.show_error_popup = false;
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SetItemDefaultFocus(); // Auto-focus on the OK button
+
+		ImGui::EndPopup();
+	}
 }
 
 
@@ -249,6 +357,16 @@ void ShowNewProjectTab(project::ProjectManager* projectManager) {
 			ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Project Directory", nullptr, config);
 		}
 
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
+		if (ImGui::Button("Clear")) {
+			projectManager->m_pms->pDS = { false, "", "", "", "", "" };
+			buf[0] = '\0';
+		}
+		ImGui::PopStyleColor(3);
+
 		if (!projectManager->m_pms->pDS.projectDir.empty())
 		{
 			ImGui::TextColored(ImVec4(0.7f, 0.1f, 0.6f, 1.f), "Project Location: ");
@@ -271,13 +389,22 @@ void ShowNewProjectTab(project::ProjectManager* projectManager) {
 			ImGui::SameLine();
 			ImGui::Text("%s", buf);
 		}
-		if (ImGui::Button("Create") && buf[0] != '\0' && !projectManager->m_pms->pDS.projectDir.empty())
+
+		if (buf[0] != '\0' && !projectManager->m_pms->pDS.projectDir.empty())
 		{
-			// Validate the file or use it to create the project
-			projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.projectDir, buf);
-			if (!projectManager->createProject(projectManager->m_pms->pDS)) { return; }
-			std::cout << projectManager->m_pms->pDS << std::endl;
-			buf[0] = '\0';
+			if (ImGui::Button("Create"))
+			{
+				// Validate the file or use it to create the project
+				projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.projectDir, buf);
+				if (!projectManager->createProject(projectManager->m_pms->pDS)) 
+				{
+					projectManager->m_pms->pmp.show_error_popup = true;
+					ImGui::EndTabItem(); 
+					return; 
+				}
+				std::cout << projectManager->m_pms->pDS << std::endl;
+				buf[0] = '\0';
+			}
 		}
 		ImGui::EndTabItem();
 	}
@@ -297,6 +424,15 @@ void ShowOpenExistingProjectTab(project::ProjectManager* projectManager)
 			ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Purity Project File(*.pproject)", ".pproject", config);
 		}
 
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
+		if (ImGui::Button("Clear")) {
+			projectManager->m_pms->pDS = { false, "", "", "", "", "" };
+		}
+		ImGui::PopStyleColor(3);
+
 		// Render the file dialog
 		if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
 			if (ImGuiFileDialog::Instance()->IsOk()) {
@@ -309,12 +445,18 @@ void ShowOpenExistingProjectTab(project::ProjectManager* projectManager)
 
 		if (!projectManager->m_pms->pDS.filePath.empty())
 		{
+			ImGui::TextColored(ImVec4(0.7f, 0.1f, 0.6f, 1.f), "Project File: "); ImGui::SameLine();
 			ImGui::Text("%s", projectManager->m_pms->pDS.filePath.c_str());
 			if (ImGui::Button("Open"))
 			{
 				// Validate the file or use it to create the project
 				projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.filePath);
-				if (!projectManager->launchProject(projectManager->m_pms->pDS)) { return; }
+				if (!projectManager->launchProject(projectManager->m_pms->pDS)) 
+				{
+					projectManager->m_pms->pmp.show_error_popup = true;
+					ImGui::EndTabItem(); 
+					return; 
+				}
 				std::cout << projectManager->m_pms->pDS << std::endl;
 			}
 		}
@@ -326,7 +468,7 @@ void ShowTemplateWindow(project::ProjectManager* projectManager)
 {
 	if (ImGui::Begin("Templates"))
 	{
-		ImGui::Text("I am fulfilled today");
+		ImGui::Text("This window is meant to contain a list of Templates to select from.");
 		ImGui::End();
 	}
 }
@@ -334,7 +476,7 @@ void ShowTemplateWindow(project::ProjectManager* projectManager)
 
 int main() {
 	project::ProjectManager projectManager;
-	project::ProjectManagerProperties pmp{ "Purity Gem", ImVec4(0.45f, 0.55f, 0.60f, 1.00f), 600, 480 };
+	projectManager.m_pms->pmp = { "Purity Gem", ImVec4(0.45f, 0.55f, 0.60f, 1.00f), 600, 480 };
 	bool showTemplate;
 
 	glfwSetErrorCallback(glfw_error_callback);
@@ -348,7 +490,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	projectManager.m_window = glfwCreateWindow(pmp.win_w, pmp.win_h, pmp.win_name, nullptr, nullptr);
+	projectManager.m_window = glfwCreateWindow(projectManager.m_pms->pmp.win_w, projectManager.m_pms->pmp.win_h, projectManager.m_pms->pmp.win_name, nullptr, nullptr);
 	if (projectManager.m_window == nullptr) {
 		glfwTerminate();
 		return 1;
@@ -400,9 +542,11 @@ int main() {
 
 		// ImGui Window Widget Rendering
 		{
-			ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
+			ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+			//ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
 
-			ImGui::Begin("Project Manager", nullptr, ImGuiWindowFlags_NoMove);
+			ImGui::Begin("Project Manager");
+			//ImGui::Begin("Project Manager", nullptr, ImGuiWindowFlags_NoMove);
 			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 			if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
 			{
@@ -414,6 +558,9 @@ int main() {
 				if (showTemplate = projectManager.m_pms->selectionChoice == project::ProjectSelectionChoice::SelectFromTemplate ? true : false)
 				{
 					ShowTemplateWindow(&projectManager);
+				}
+				if (projectManager.m_pms->pmp.show_error_popup){
+					RaiseErrorMessageBox(&projectManager);
 				}
 				ImGui::EndTabBar();
 			}
@@ -430,7 +577,7 @@ int main() {
 		glfwGetFramebufferSize(projectManager.m_window, &display_w, &display_h);
 		// Use that size to set the viewport
 		glViewport(0, 0, display_w, display_h);
-		glClearColor(pmp.clear_color.x, pmp.clear_color.y, pmp.clear_color.z, pmp.clear_color.w);
+		glClearColor(projectManager.m_pms->pmp.clear_color.x, projectManager.m_pms->pmp.clear_color.y, projectManager.m_pms->pmp.clear_color.z, projectManager.m_pms->pmp.clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

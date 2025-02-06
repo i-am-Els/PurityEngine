@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
     "project_name": {
@@ -7,7 +7,7 @@
     },
     "start_up_scene": {
       "type": "string",
-      "default": "assets/scene/SampleScene.pscene"
+      "default": "Assets/Scene/SampleScene.pscene"
     },
     "projectDB": {
       "type": "string"
