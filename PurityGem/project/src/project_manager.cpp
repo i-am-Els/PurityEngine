@@ -81,22 +81,32 @@ namespace project {
 		delete m_pms;
 	}
 
-	ProjectDataStructure ProjectManager::validateProject(std::string projectDir, std::string projectName)
+	bool ProjectManager::extractProjectInformation(std::string projectDir, std::string projectName)
 	{
 		fs_path projectPath = { projectDir };
-		if (!std::filesystem::is_directory(projectPath)) { return { false, "", "", "", "Project Directory does not exist.", "" }; }
+		if (!std::filesystem::is_directory(projectPath)) 
+		{ 
+			m_pms->pDS = { false, "", "", "", "Project Directory does not exist.", "" };
+			return false; 
+		}
 		projectDir = projectDir + "\\" + projectName;
 		std::string projectFilePath = projectDir + "\\" + projectName + ".pproject";
-		return { true, projectFilePath, projectName, projectDir, "Okay", "" };
+		m_pms->pDS = { true, projectFilePath, projectName, projectDir, "Okay", "" };
+		return true;
 	}
 
-	ProjectDataStructure ProjectManager::validateProject(std::string filePath)
+	bool ProjectManager::extractProjectInformation(std::string filePath)
 	{
 		fs_path _filepath = { filePath };
-		if (!std::filesystem::exists(_filepath)) { return { false, "", "", "", "Project File path does not exist.", "" }; }
+		if (!std::filesystem::exists(_filepath)) 
+		{ 
+			m_pms->pDS = { false, "", "", "", "Project File path does not exist.", "" };
+			return false; 
+		}
 		std::string projectName = _filepath.stem().string();
 		std::string projectDir = _filepath.parent_path().string();
-		return { true, filePath, projectName, projectDir, "Okay", "" };
+		m_pms->pDS = { true, filePath, projectName, projectDir, "Okay", "" };
+		return true;
 	}
 
 	bool ProjectManager::_createProjectFile() 
@@ -104,7 +114,7 @@ namespace project {
 		// Define the default project JSON structure
 		json project_json = {
 			{"project_name", m_pms->pDS.projectName},
-			{"start_up_scene", "./Aassets/Scenes/DefaultScene.pscene"},
+			{"start_up_scene", "./Assets/Scenes/DefaultScene.pscene"},
 			{"projectDB", "./Assets/" + m_pms->pDS.projectName + ".peDB"}
 		};
 
@@ -160,9 +170,13 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::createProject(ProjectDataStructure pDS)
+	bool ProjectManager::createProject(std::string projectDir, std::string fileName)
 	{
-		m_pms->pDS = pDS;
+		if (!extractProjectInformation(projectDir, fileName)) 
+		{ 
+			m_pms->pDS.Log(); 
+			return false; 
+		}
 		bool skipDirCreation = false;
 		auto project_dir_path = fs_path(m_pms->pDS.projectDir);
 		// Project Dir Path may or may not already exist
@@ -204,15 +218,19 @@ namespace project {
 		_createDefaultSceneFile(scene_dir);
 
 		// set startup scene in struct to default name 'Assets/Scene/DefaultScene.pscene'
-		m_pms->pDS.startupScene = "./Aassets/Scenes/DefaultScene.pscene";
+		m_pms->pDS.startupScene = "./Assets/Scenes/DefaultScene.pscene";
 
 		m_pms->pDS.Log();
 		return true;
 	}
 
-	bool ProjectManager::launchProject(ProjectDataStructure pDS)
+	bool ProjectManager::launchProject(std::string filePath)
 	{
-		m_pms->pDS = pDS;
+		if (!extractProjectInformation(filePath))
+		{
+			m_pms->pDS.Log();
+			return false;
+		}
 		if (!_validateProjectFile()) { return false; }
 
 		std::ifstream data(m_pms->pDS.filePath);
@@ -394,9 +412,7 @@ void ShowNewProjectTab(project::ProjectManager* projectManager) {
 		{
 			if (ImGui::Button("Create"))
 			{
-				// Validate the file or use it to create the project
-				projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.projectDir, buf);
-				if (!projectManager->createProject(projectManager->m_pms->pDS)) 
+				if (!projectManager->createProject(projectManager->m_pms->pDS.projectDir, buf))
 				{
 					projectManager->m_pms->pmp.show_error_popup = true;
 					ImGui::EndTabItem(); 
@@ -449,9 +465,7 @@ void ShowOpenExistingProjectTab(project::ProjectManager* projectManager)
 			ImGui::Text("%s", projectManager->m_pms->pDS.filePath.c_str());
 			if (ImGui::Button("Open"))
 			{
-				// Validate the file or use it to create the project
-				projectManager->m_pms->pDS = projectManager->validateProject(projectManager->m_pms->pDS.filePath);
-				if (!projectManager->launchProject(projectManager->m_pms->pDS)) 
+				if (!projectManager->launchProject(projectManager->m_pms->pDS.filePath))
 				{
 					projectManager->m_pms->pmp.show_error_popup = true;
 					ImGui::EndTabItem(); 
@@ -474,8 +488,39 @@ void ShowTemplateWindow(project::ProjectManager* projectManager)
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
 	project::ProjectManager projectManager;
+
+	if (argc == 2) {
+		if (std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h")
+		{
+			std::cout << "PurityGem Command-Line Utilities." << std::endl;
+			std::cout << "\tFor help                    \"--help\" or \"-h\"." << std::endl;
+			std::cout << "\tCreate New Project          \"--create\" or \"-c\" followed by Project Save Directory and Project Name." << std::endl;
+			std::cout << "\tLaunch Existing project     \"--launch\" or \"-l\" followed by '.pproject' file path." << std::endl;
+			std::cout << "Note: String Arguments should be passed in order stated here. e.g." << std::endl;
+			std::cout << "\t>.\\PurityGem.exe --create \"C:\\Dev\\TestFolder\" \"CMDTestProject\"" << std::endl;
+			std::cout << "\t>.\\PurityGem.exe --launch \"C:\\Dev\\TestFolder\\CMDTestProject\\CMDTestProject.pproject\"" << std::endl;
+			return 0;
+		}
+		std::cout << "Invalid Command Line Arguements!" << std::endl;
+		return 1;
+	}
+	if (argc >= 3) {
+		if ((std::string(argv[1]) == "--create" || std::string(argv[1]) == "-c") && argc == 4) {
+			projectManager.createProject(std::string(argv[2]), std::string(argv[3]));
+			std::cout << "Project Created Successfully!" << std::endl; 
+			return 0;
+		}
+		else if ((std::string(argv[1]) == "--launch" || std::string(argv[1]) == "-l") && argc == 3) {
+			projectManager.launchProject(std::string(argv[2]));
+			std::cout << "Project Launched Successfully!" << std::endl;
+			return 0;
+		}
+		std::cout << "Invalid Command Line Arguements!" << std::endl;
+		return 1;
+	}
+
 	projectManager.m_pms->pmp = { "Purity Gem", ImVec4(0.45f, 0.55f, 0.60f, 1.00f), 600, 480 };
 	bool showTemplate;
 

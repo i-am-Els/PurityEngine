@@ -68,10 +68,10 @@ namespace project {
 	public:
 		ProjectManager();
 		~ProjectManager();
-		ProjectDataStructure validateProject(std::string projectDir, std::string fileName);
-		ProjectDataStructure validateProject(std::string filePath);
-		bool createProject(ProjectDataStructure pDS);
-		bool launchProject(ProjectDataStructure pDS);
+		bool extractProjectInformation(std::string projectDir, std::string fileName);
+		bool extractProjectInformation(std::string filePath);
+		bool createProject(std::string projectDir, std::string fileName);
+		bool launchProject(std::string filePath);
 		GLFWwindow* m_window;
 		ProjectManagerState* m_pms
 			;
