@@ -11,6 +11,8 @@
 #ifdef PURITY_PLATFORM_WINDOWS
 PURITY_API int main(int argc, const char* argv[]){
     purity::PApplication* application;
+
+#ifndef PURITY_MODE_DEBUG
     if (argc == 5) {
         if ((
                 std::string(argv[1]) != "--projectFile" 
@@ -36,7 +38,7 @@ PURITY_API int main(int argc, const char* argv[]){
         auto startUpScene = std::string(argv[4]);
         purity::PApplication::ProjectEditorInfo peInfo(projectFilePath, startUpScene);
         purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), 1280, 720);
-        std::cout << "Project Name: " << peInfo.getProjectName() << " | " << appInfo.title << std::endl;
+        std::cout << "Project Name: " << appInfo.title << std::endl;
         application = purity::CreateApplication();
         application->m_applicationInfo = appInfo;
         application->m_projectEditorInfo = peInfo;
@@ -46,7 +48,14 @@ PURITY_API int main(int argc, const char* argv[]){
         std::cout << argc << " ==== " << argv << std::endl;
         return 1;
     }
-
+#else
+    purity::PApplication::ProjectEditorInfo peInfo(projectFilePath, startUpScene);
+    purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), 1280, 720);
+    std::cout << "Project Name: " << appInfo.title << std::endl;
+    application = purity::CreateApplication();
+    application->m_applicationInfo = appInfo;
+    application->m_projectEditorInfo = peInfo;
+#endif
 
     application->init();
     application->start();

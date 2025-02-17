@@ -29,8 +29,6 @@ namespace purity {
     void PWindow::createWindow(const std::unique_ptr<PWindow>& window, int width, int height, const char* title, int gl_major_v, int gl_minor_v) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         setVersion(gl_major_v, gl_minor_v);
-        PLog::echoValue(height);
-        PLog::echoValue(width);
 
         window->m_glfwWindow = glfwCreateWindow(
                 width,
