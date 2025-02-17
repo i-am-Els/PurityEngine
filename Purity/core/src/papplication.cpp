@@ -48,6 +48,7 @@
 #include "input.h"
 #include "ecs_service_conc.h"
 #include "layer.h"
+#include <window_events.h>
 
 using namespace isle_engine::math;
 using namespace purity::ecs;
@@ -75,7 +76,7 @@ namespace purity{
 
         // Set up window
         PWindow::bindWindowBackendAPI();
-        PWindow::createWindow(window, applicationInfo.width, applicationInfo.height, applicationInfo.title.c_str());
+        PWindow::createWindow(window, m_applicationInfo.width, m_applicationInfo.height, m_applicationInfo.title.c_str());
 
         // Create all Services
         auto ecsService = std::make_shared<PECSService>(window.get());
@@ -93,6 +94,7 @@ namespace purity{
     void PApplication::destroy() {
         // Call the destroy method on all the services
 
+        serviceLocator->getService<ILayerService>()->destroy();
         serviceLocator->getService<IECSService>()->destroy();
     }
 
@@ -105,9 +107,31 @@ namespace purity{
         serviceLocator->getConcreteService<IECSService, PECSService>()->start();
     }
 
-    PApplication::PApplication(std::string title, int width, int height)
-    : applicationInfo(title, width, height), serviceLocator(std::make_shared<PServiceLocator>())
+    PApplication::PApplication()
+    : serviceLocator(std::make_shared<PServiceLocator>())
     {
         window = std::make_unique<PWindow>();
+    }
+
+    void PApplication::onEvent(Event& event)
+    {
+        EventDispatcher dispatcher(event);
+        // To close forward the WindowCloseEvent to the
+        // dispatcher.dispatch<WindowCloseEvent>(std::bind(&PApplication::windowShouldClose, this, std::placeholders::_1)); // OR
+        //        dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
+        //            return windowShouldClose(std::forward<decltype(placeholder1)>(placeholder1));
+        //        });
+        auto layerService = serviceLocator->getConcreteService<ILayerService, PLayerService>();
+        for (auto it = layerService->layerStack.end(); it != layerService->layerStack.begin();) {
+            auto _tmp = (*--it);
+            if (_tmp == nullptr) continue;
+            (_tmp)->eventFired(event);
+            if (event.getHandled()) break;
+        }
+        std::cout << event;
+    }
+
+    void PApplication::shouldClose()
+    {
     }
 }

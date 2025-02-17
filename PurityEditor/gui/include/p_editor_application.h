@@ -12,7 +12,7 @@ namespace gui {
 
     class PEditorApplication : public PApplication{
     public:
-        PEditorApplication(const std::string &title, int width, int height);
+        PEditorApplication();
 
         ~PEditorApplication() override;
 

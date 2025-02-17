@@ -117,7 +117,7 @@ namespace project {
 			{"start_up_scene", "./Assets/Scenes/DefaultScene.pscene"},
 			{"projectDB", "./Assets/" + m_pms->pDS.projectName + ".peDB"}
 		};
-
+		
 		std::fstream project_file(m_pms->pDS.filePath, std::ios::out | std::ios::trunc);
 		if (project_file.is_open()) {
 			project_file << project_json.dump(4); // Example placeholder

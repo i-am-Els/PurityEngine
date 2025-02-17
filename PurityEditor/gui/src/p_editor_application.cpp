@@ -38,12 +38,12 @@ namespace gui {
         PApplication::exit();
     }
 
-    PEditorApplication::PEditorApplication(const std::string &title, int width, int height) : PApplication(title, width, height) {
+    PEditorApplication::PEditorApplication() : PApplication() {
     }
 } // gui
 
 
 
 purity::PApplication* purity::CreateApplication(){
-    return new gui::PEditorApplication("Purity Editor", 1280, 700);
+    return new gui::PEditorApplication();
 }

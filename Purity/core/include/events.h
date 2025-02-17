@@ -100,6 +100,10 @@ namespace purity{
         stream << e.ToString() << std::endl;
         return stream;
     }
+
+    class PURITY_API EventQueue {
+
+    };
 }
 
 

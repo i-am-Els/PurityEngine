@@ -6,12 +6,47 @@
 
 #include "papplication.h"
 
-
 //extern purity::PApplication * purity::CreateApplication();
 
 #ifdef PURITY_PLATFORM_WINDOWS
-PURITY_API int main(){
-    auto application = purity::CreateApplication();
+PURITY_API int main(int argc, const char* argv[]){
+    purity::PApplication* application;
+    if (argc == 5) {
+        if ((
+                std::string(argv[1]) != "--projectFile" 
+                && std::string(argv[1]) != "-p"
+            )
+            || 
+                std::string(argv[2]).empty()
+            || 
+            (
+                std::string(argv[3]) != "--startUpScene"
+                && std::string(argv[3]) != "-s"
+            ) 
+            || 
+                std::string(argv[4]).empty()
+            )
+        {
+            std::cout << "Unknown token" << std::endl;
+            std::cout << argv[0] << " | " << argv[1] << " | " << argv[2] << " | " << argv[3] << " | " << argv[4] << " | " << std::endl;
+            return 1;
+        }
+
+        auto projectFilePath = std::string(argv[2]);
+        auto startUpScene = std::string(argv[4]);
+        purity::PApplication::ProjectEditorInfo peInfo(projectFilePath, startUpScene);
+        purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), 1280, 720);
+        std::cout << "Project Name: " << peInfo.getProjectName() << " | " << appInfo.title << std::endl;
+        application = purity::CreateApplication();
+        application->m_applicationInfo = appInfo;
+        application->m_projectEditorInfo = peInfo;
+    }
+    else {
+        std::cout << "Cannot Instantiate Editor" << std::endl;
+        std::cout << argc << " ==== " << argv << std::endl;
+        return 1;
+    }
+
 
     application->init();
     application->start();

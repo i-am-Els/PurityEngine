@@ -29,6 +29,8 @@ namespace purity {
     void PWindow::createWindow(const std::unique_ptr<PWindow>& window, int width, int height, const char* title, int gl_major_v, int gl_minor_v) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         setVersion(gl_major_v, gl_minor_v);
+        PLog::echoValue(height);
+        PLog::echoValue(width);
 
         window->m_glfwWindow = glfwCreateWindow(
                 width,
@@ -48,6 +50,10 @@ namespace purity {
         glfwMakeContextCurrent(window->m_glfwWindow);
         int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         PURITY_ASSERT_MSG(status, "Failed to initialize GLAD!");
+
+        glfwSetMouseButtonCallback(window->m_glfwWindow, [](GLFWwindow* window, int button, int action, int mod) {
+
+            });
    }
 
     void PWindow::setVersion(int major, int minor) {
@@ -66,8 +72,8 @@ namespace purity {
         PLog::echoMessage("Window Deleted!");
     }
 
-//    void PWindow::terminate() {
-//    }
+    /*void PWindow::terminate() {
+    }*/
 
     bool PWindow::windowClose(){
         if (glfwWindowShouldClose(m_glfwWindow)){

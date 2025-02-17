@@ -1,0 +1,1 @@
+.\out\install\debug\bin\PurityEditor.exe -p "C:\Dev\TestFolder\TestProject\TestProject.pproject" -s "./Assets/Scenes/DefaultScene.pscene"
