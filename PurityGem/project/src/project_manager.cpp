@@ -8,6 +8,8 @@
 
 #include <filesystem>
 
+#include <windows.h>
+
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
@@ -165,6 +167,53 @@ namespace project {
 		}
 		else {
 			std::cerr << "Failed to create .pscene file!" << std::endl;
+			return false;
+		}
+		return true;
+	}
+
+	bool ProjectManager::_createEditorProcess()
+	{
+		char path[MAX_PATH];
+		GetModuleFileName(NULL, path, MAX_PATH);
+
+		std::filesystem::path exeDir = std::filesystem::path(std::string(path)).parent_path();
+
+		std::string editorName = "PurityEditor.exe";
+
+		auto editorPath = (exeDir / editorName).string();
+		// Check if the editor exists
+		if (!std::filesystem::exists(editorPath)) {
+			std::cerr << "Editor not found at: " << editorPath << std::endl;
+			return false;
+		}
+
+		std::string commandLine = editorPath + " -p " + m_pms->pDS.filePath + " -s " + m_pms->pDS.startupScene;
+		//std::string commandLine = "\"" + editorPath + "\"";
+		/*for (const auto& arg : args) {
+			commandLine += " " + arg;
+		}*/
+
+		STARTUPINFO si = { sizeof(si) };
+		PROCESS_INFORMATION pi;
+
+		if (CreateProcess(
+			NULL,
+			&commandLine[0],
+			NULL,
+			NULL,
+			FALSE,
+			0,
+			NULL,
+			NULL,
+			&si,
+			&pi
+		)) {
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
+		}
+		else {
+			std::cerr << "CreateProcess failed (" << GetLastError() << ")." << std::endl;
 			return false;
 		}
 		return true;
@@ -420,6 +469,12 @@ void ShowNewProjectTab(project::ProjectManager* projectManager) {
 				}
 				std::cout << projectManager->m_pms->pDS << std::endl;
 				buf[0] = '\0';
+				if (projectManager->_createEditorProcess()) {
+					glfwSetWindowShouldClose(projectManager->m_window, true);
+				}
+				else {
+					std::cout << "Could not create process." << std::endl;
+				}
 			}
 		}
 		ImGui::EndTabItem();
@@ -472,6 +527,12 @@ void ShowOpenExistingProjectTab(project::ProjectManager* projectManager)
 					return; 
 				}
 				std::cout << projectManager->m_pms->pDS << std::endl;
+				if (projectManager->_createEditorProcess()) {
+					glfwSetWindowShouldClose(projectManager->m_window, true);
+				}
+				else {
+					std::cout << "Could not create process." << std::endl;
+				}
 			}
 		}
 		ImGui::EndTabItem();
