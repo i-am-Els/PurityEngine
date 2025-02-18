@@ -59,6 +59,11 @@ PURITY_API int main(int argc, const char* argv[]){
     application->m_projectEditorInfo = peInfo;
 #endif
 
+    if (!application->verify()) {
+        purity::PLog::echoMessage("Verification Process Failed", purity::LogLevel::Error);
+        return 1;
+    }
+
     application->init();
     application->start();
     while(!application->window->windowClose())

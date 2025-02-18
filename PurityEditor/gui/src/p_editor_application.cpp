@@ -6,6 +6,38 @@
 
 namespace gui {
 
+    bool PEditorApplication::verify() {
+        auto assets = validateDBFile();
+        if (!assets.first) { return false; }
+        if (!validateSceneFile()) { return false; }
+        if (!assets.second.empty())
+        {
+            for (const auto& pair : assets.second) {
+                if (!validateAssetFiles(pair.second)) { reportInvalidAssets(pair.first); }
+            }
+        }
+        return true;
+    }
+
+    std::pair<bool, std::map<PUUID, std::string>> PEditorApplication::validateDBFile()
+    {
+        return std::pair(false, std::map<PUUID, std::string>());
+    }
+
+    bool PEditorApplication::validateSceneFile()
+    {
+        return false;
+    }
+
+    bool PEditorApplication::validateAssetFiles(const std::string& asset)
+    {
+        return false;
+    }
+
+    void PEditorApplication::reportInvalidAssets(PUUID file_id)
+    {
+    }
+
     PEditorApplication::~PEditorApplication() {
         PLog::echoMessage("Deleting PEditorApplication");
     }

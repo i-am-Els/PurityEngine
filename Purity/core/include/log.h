@@ -9,7 +9,7 @@
 #include <cstdarg>
 
 namespace purity {
-    enum class LogLevel{
+    enum class PURITY_API LogLevel{
         Error = 0, Warning, Info
     };
 

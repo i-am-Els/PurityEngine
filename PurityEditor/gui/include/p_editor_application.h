@@ -29,6 +29,14 @@ namespace gui {
         void destroy() override;
 
         void exit() override;
+
+        bool verify() override;
+
+    private:
+        std::pair<bool, std::map<PUUID, std::string>> validateDBFile();
+        bool validateSceneFile();
+        bool validateAssetFiles(const std::string& asset);
+        void reportInvalidAssets(PUUID file_id);
     };
 
 } // gui

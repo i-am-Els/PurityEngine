@@ -15,8 +15,6 @@ set(BUILD_SHARED_LIBS ON)
 include(GNUInstallDirs)
 
 add_executable(PurityGem
-        project/include/actions.h
-        project/src/actions.cpp
         project/include/project_manager.h 
         project/src/project_manager.cpp
         ../vendors/ImGuiFileDialog/ImGuiFileDialog.cpp

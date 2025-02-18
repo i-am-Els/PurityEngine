@@ -401,7 +401,6 @@ void RaiseErrorMessageBox(project::ProjectManager* projectManager) {
 	}
 }
 
-
 void ShowNewProjectTab(project::ProjectManager* projectManager) {
 	if (ImGui::BeginTabItem("New Project"))
 	{
