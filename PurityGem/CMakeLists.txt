@@ -22,7 +22,6 @@ add_executable(PurityGem
         ../vendors/ImGuiFileDialog/ImGuiFileDialog.cpp
 )
 
- find_package(cereal CONFIG REQUIRED)
  find_package(glfw3 CONFIG REQUIRED)
  find_package(glad CONFIG REQUIRED)
  find_package(imgui CONFIG REQUIRED)
@@ -39,7 +38,7 @@ target_include_directories(PurityGem PRIVATE
         ../vendors/ImGuiFileDialog
 )
 
-target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad cereal::cereal nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
+target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
 
 target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 

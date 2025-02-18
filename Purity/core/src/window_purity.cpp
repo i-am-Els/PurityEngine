@@ -48,6 +48,10 @@ namespace purity {
         glfwMakeContextCurrent(window->m_glfwWindow);
         int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         PURITY_ASSERT_MSG(status, "Failed to initialize GLAD!");
+
+        glfwSetMouseButtonCallback(window->m_glfwWindow, [](GLFWwindow* window, int button, int action, int mod) {
+
+            });
    }
 
     void PWindow::setVersion(int major, int minor) {
@@ -66,8 +70,8 @@ namespace purity {
         PLog::echoMessage("Window Deleted!");
     }
 
-//    void PWindow::terminate() {
-//    }
+    /*void PWindow::terminate() {
+    }*/
 
     bool PWindow::windowClose(){
         if (glfwWindowShouldClose(m_glfwWindow)){

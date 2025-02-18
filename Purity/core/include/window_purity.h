@@ -23,6 +23,8 @@ namespace purity{
         static void unbind(); // UnBind
         static void createWindow(const std::unique_ptr<PWindow>& window, int width, int height, const char *title = "Purity Window", int gl_major_v = 4, int gl_minor_v = 5);
 
+        static void setWindowsEventCallbacks();
+
         void update();
 
         inline GLFWwindow*& getWindow()

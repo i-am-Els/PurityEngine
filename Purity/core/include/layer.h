@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../../../core/include/purity_core_pch.h"
+#include "purity_core_pch.h"
 
 #include "service_base.h"
 #include "layer_service.h"

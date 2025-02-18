@@ -15,6 +15,13 @@ set(BUILD_SHARED_LIBS ON)
 
 include(GNUInstallDirs)
 
+find_package(cereal CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
+
 add_executable(PurityEditor
         gui/src/editor.cpp
         gui/include/editor.h
@@ -34,7 +41,7 @@ target_include_directories(PurityEditor PRIVATE
 add_dependencies(PurityEditor IsleMath Purity)
 
 # Link against the Purity library (assuming it's built in a sibling directory)
-target_link_libraries(PurityEditor PRIVATE Purity)
+target_link_libraries(PurityEditor PRIVATE Purity cereal::cereal imgui::imgui glfw glad::glad ImGuiFileDialog nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
 
 target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS)
 

@@ -13,7 +13,7 @@ using namespace purity::ecs;
 class Application : public PApplication{
 public:
 
-    Application(const std::string &title, int width, int height);
+    Application();
 
     void render() override;
 

@@ -73,8 +73,8 @@ namespace project {
 		bool createProject(std::string projectDir, std::string fileName);
 		bool launchProject(std::string filePath);
 		GLFWwindow* m_window;
-		ProjectManagerState* m_pms
-			;
+		ProjectManagerState* m_pms;
+		bool _createEditorProcess();
 	private:
 		// Existing Project
 		bool _validateProjectFile();

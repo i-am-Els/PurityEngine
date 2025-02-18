@@ -40,7 +40,7 @@ void Application::destroy() {
     PApplication::destroy();
 }
 
-Application::Application(const std::string &title, int width, int height) : PApplication(title, width, height) {
+Application::Application() : PApplication() {
 
 }
 
@@ -49,6 +49,6 @@ void Application::exit() {
 }
 
 purity::PApplication* purity::CreateApplication(){
-    return new Application("Catch The Thief", 700, 500);
+    return new Application();
 }
 
