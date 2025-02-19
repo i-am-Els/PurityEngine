@@ -47,10 +47,13 @@ namespace gui {
         bool verify() override;
 
     private:
+        std::map<PUUID, std::string> assetdbData;
+
         std::optional<DatabaseData> validateDBFile();
         bool validateSceneFile();
-        bool validateAssetFiles(const std::string& asset);
-        void reportInvalidAssets(PUUID file_id);
+        bool validateAssetFiles(PUUID id, const std::string& assetPath);
+        void reportInvalidAssets(PUUID file_id, const std::string& assetPath);
+        void storeValidAssets(PUUID file_id, const std::string& assetPath);
     };
 
 } // gui

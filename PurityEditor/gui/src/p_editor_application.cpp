@@ -15,10 +15,14 @@ namespace gui {
         auto assetDB_arr = dbData.value();
         if (!assetDB_arr.assets.empty())
         {
-            //for (const auto& map_ : assets.second) {
-                /*map_["id"]
-                if (!validateAssetFiles(pair.second)) { reportInvalidAssets(pair.first); }*/
-            //}
+            for (const auto& map_ : assetDB_arr.assets) {
+                PUUID id = PUUID::fromString(map_.at("id"));
+                if (!validateAssetFiles(id, map_.at("path"))) { 
+                    reportInvalidAssets(id, map_.at("path"));
+                    continue;
+                }
+                storeValidAssets(id, map_.at("path"));
+            }
         }
         return true;
     }
@@ -60,13 +64,23 @@ namespace gui {
         return true;
     }
 
-    bool PEditorApplication::validateAssetFiles(const std::string& asset)
+    bool PEditorApplication::validateAssetFiles(PUUID id, const std::string& assetPath)
     {
-        return false;
+        if (!id) { return false; }
+        std::filesystem::path assetfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / assetPath;
+        if (!commons::_validateFileExistence(assetfilePath) || !commons::_validateSchemaAdherence(assetfilePath.string(), commons::pAssetSchema)) { return false; }
+        return true;
     }
 
-    void PEditorApplication::reportInvalidAssets(PUUID file_id)
+    void PEditorApplication::reportInvalidAssets(PUUID file_id, const std::string& assetPath)
     {
+        PLog::echoMessage(LogLevel::Warning, "%s %s %s %s %s", "Asset of id", static_cast<std::string>(file_id).c_str(), "at", assetPath.c_str(), "is not valid, hence removed from asset database.");
+    }
+
+    void PEditorApplication::storeValidAssets(PUUID file_id, const std::string& assetPath)
+    {
+        PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(file_id).c_str(), "and path:", assetPath.c_str(), "to the queue going to the asset database.");
+        assetdbData[file_id] = assetPath;
     }
 
     PEditorApplication::~PEditorApplication() {

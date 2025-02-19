@@ -6,8 +6,7 @@
 
 #include "papplication.h"
 
-#define PURITY_MODE_DEBUG
-
+//#define PURITY_MODE_DEBUG
 //extern purity::PApplication * purity::CreateApplication();
 
 #ifdef PURITY_PLATFORM_WINDOWS

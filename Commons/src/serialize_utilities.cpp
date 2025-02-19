@@ -22,7 +22,7 @@ namespace commons {
 		validator.set_root_schema(schema);
 		try {
 			validator.validate(data_json);
-			std::cout << "Validation succeeded\n";
+			std::cout << "Validation of file " << path << " succeeded\n";
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Validation failed, here is why: " << e.what() << "\n";
