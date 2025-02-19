@@ -10,6 +10,8 @@
 #include "buffer.h"
 #include "handle_base.h"
 
+
+using namespace commons;
 using namespace isle_engine::math;
 using namespace purity::graphics;
 

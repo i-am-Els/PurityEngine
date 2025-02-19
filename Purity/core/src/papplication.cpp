@@ -54,6 +54,10 @@ using namespace isle_engine::math;
 using namespace purity::ecs;
 
 namespace purity{
+    bool PApplication::verify()
+    {
+        return false;
+    }
 
     void PApplication::process() {
         // Call the process method on all the services

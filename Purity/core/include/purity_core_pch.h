@@ -36,6 +36,7 @@
 #endif
 
 #include "uuid.h"
+#include "serialize_utilities.h"
 #include "core_macros.h"
 #include "purity_exceptions.h"
 #include "log.h"

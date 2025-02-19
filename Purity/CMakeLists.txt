@@ -89,7 +89,6 @@ add_library(Purity
         core/include/service_base.h
         core/include/service_locator.h
         core/include/system_finder.h
-        core/include/uuid.h
         core/include/window_purity.h
         core/include/events/keyboard_events.h
         core/include/events/mouse_events.h
@@ -138,7 +137,6 @@ add_library(Purity
         assetDB/src/assetdb_utility.cpp
         assetDB/src/assets_types.cpp
         #--------------------------------
-        core/src/uuid.cpp
         core/src/ecs_service_conc.cpp
         core/src/input.cpp
         core/src/layer.cpp
@@ -209,13 +207,15 @@ target_include_directories(Purity PUBLIC
         $<INSTALL_INTERFACE:vendors/isle_math/include/math/matrix>
         # -----------------------------------------------------------------
 #        $<BUILD_INTERFACE:${assimp_INCLUDE_DIRS}>
+        $<BUILD_INTERFACE:${Commons_INCLUDE_DIRS}>
+        $<INSTALL_INTERFACE:Commons/include>
 )
 
 
 target_precompile_headers(Purity PRIVATE core/include/purity_core_pch.h)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp)
+target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp Commons)
 
 
 if(PURITY_INSTALL)

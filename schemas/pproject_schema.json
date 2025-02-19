@@ -7,7 +7,7 @@
     },
     "start_up_scene": {
       "type": "string",
-      "default": "Assets/Scene/SampleScene.pscene"
+      "default": "Assets/Scenes/SampleScene.pscene"
     },
     "projectDB": {
       "type": "string"

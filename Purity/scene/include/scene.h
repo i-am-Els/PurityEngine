@@ -19,6 +19,8 @@ namespace purity::scene{
         void DestroyEntityWithUUID(PUUID uuid);
 
         static bool HasAnythingToRender();
+        static bool LoadScene(PUUID scene_id);
+        static bool UnloadScene();
 
     private:
         ecs::PEntityRegistry m_registry;

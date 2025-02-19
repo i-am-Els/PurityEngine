@@ -13,7 +13,7 @@ namespace purity::scene{
     }
 
     // TODO  Replace Entity return with Entity Handle
-    PEntityHandle PScene::CreateEntityWithUUID(purity::PUUID uuid, const std::string& name) {
+    PEntityHandle PScene::CreateEntityWithUUID(commons::PUUID uuid, const std::string& name) {
         // Add entity to Entity Registry
         auto entity = m_registry.Create(uuid, name);
         // Add ID Component
@@ -33,7 +33,7 @@ namespace purity::scene{
 
     }
 
-    void PScene::DestroyEntityWithUUID(purity::PUUID uuid) {
+    void PScene::DestroyEntityWithUUID(commons::PUUID uuid) {
 
     }
 

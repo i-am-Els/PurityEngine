@@ -24,6 +24,7 @@ file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include")
 
 add_subdirectory(vendors/isle_math)
 add_subdirectory(vendors/ImGuiFileDialog)
+add_subdirectory(Commons)
 add_subdirectory(Purity)
 add_subdirectory(Game)
 add_subdirectory(PurityEditor)

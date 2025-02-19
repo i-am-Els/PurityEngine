@@ -34,14 +34,17 @@ target_include_directories(PurityGem PRIVATE
 target_include_directories(PurityGem PRIVATE 
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/project>
         ../vendors/ImGuiFileDialog
+        $<BUILD_INTERFACE:${Commons_INCLUDE_DIRS}>
+        $<INSTALL_INTERFACE:Commons/include>
 )
 
-target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
+target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator Commons)
 
 target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
 target_compile_definitions(PurityGem PUBLIC PURITY_PLATFORM_WINDOWS)
 
+add_dependencies(PurityGem Commons)
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityGem DESTINATION ${CMAKE_INSTALL_BINDIR})

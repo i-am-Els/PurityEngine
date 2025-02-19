@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+set(Commons_INCLUDE_DIRS ${PACKAGE_PREFIX_DIR}/include/Commons CACHE STRING "Include directories for Commmons")
+
+include("${CMAKE_CURRENT_LIST_DIR}/CommonsTargets.cmake")

@@ -5,10 +5,24 @@
 #pragma once
 #define PURITY_ENTRY_POINT
 #include "purity.h"
+#include <nlohmann/json.hpp>
+#include <nlohmann/json-schema.hpp>
+
+#include <optional>
+
+using namespace commons;
+
+using json = nlohmann::json;
+using json_schema_validator = nlohmann::json_schema::json_validator;
+using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
 using namespace purity;
 
 namespace gui {
+    struct DatabaseData {
+        PUUID id;
+        std::vector<std::map<std::string, std::string>> assets;
+    };
 
     class PEditorApplication : public PApplication{
     public:
@@ -33,7 +47,7 @@ namespace gui {
         bool verify() override;
 
     private:
-        std::pair<bool, std::map<PUUID, std::string>> validateDBFile();
+        std::optional<DatabaseData> validateDBFile();
         bool validateSceneFile();
         bool validateAssetFiles(const std::string& asset);
         void reportInvalidAssets(PUUID file_id);
