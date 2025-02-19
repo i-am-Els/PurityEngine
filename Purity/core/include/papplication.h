@@ -32,6 +32,7 @@ namespace purity{
         virtual void destroy();
         virtual void exit();
         virtual void shouldClose();
+        virtual bool verify();
 
         virtual void onEvent(Event& event);
 

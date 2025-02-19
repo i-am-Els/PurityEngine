@@ -3,73 +3,20 @@
 //
 
 #include "project_manager.h"
+#include "serialize_utilities.h"
 
 #include "cereal/cereal.hpp"
 
 #include <filesystem>
-
 #include <windows.h>
 
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
-#include <nlohmann/json.hpp>
-#include <nlohmann/json-schema.hpp>
 
 using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
-
-
-const ordered_json pProjectSchema = R"(
-{
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"type" : "object",
-	"properties" : {
-		"project_name": {
-			"type": "string"
-		},
-		"start_up_scene" : {
-			"type": "string",
-			"default": "Assets/Scene/DefaultScene.pscene"
-		},
-		"projectDB" : {
-			"type": "string"
-		}
-	},
-	"required": ["project_name", "projectDB"]
-})"_json;
-
-const ordered_json pDatabaseSchema = R"(
-{
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"type": "object",
-	"properties": {
-	  "id": {
-	    "type": "integer"
-	  },
-	  "assets": {
-	    "type": "array",
-	    "items": {
-	      "$ref": "#/definitions/Asset"
-	    }
-	  }
-	},
-	"required": ["id", "assets"],
-	"definitions": {
-	  "Asset": {
-	    "type": "object",
-	    "properties": {
-	      "id": {
-	        "type": "integer"
-	      },
-	      "path": {
-	        "type": "string"
-	      }
-	    }
-	  }
-	}
-})"_json;
 
 
 namespace project {
@@ -116,8 +63,8 @@ namespace project {
 		// Define the default project JSON structure
 		json project_json = {
 			{"project_name", m_pms->pDS.projectName},
-			{"start_up_scene", "./Assets/Scenes/DefaultScene.pscene"},
-			{"projectDB", "./Assets/" + m_pms->pDS.projectName + ".peDB"}
+			{"start_up_scene", "Assets/Scenes/DefaultScene.pscene"},
+			{"projectDB", "Assets/" + m_pms->pDS.projectName + ".peDB"}
 		};
 		
 		std::fstream project_file(m_pms->pDS.filePath, std::ios::out | std::ios::trunc);
@@ -132,13 +79,23 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::_createDBFile(fs_path assets_dir) 
+	bool ProjectManager::_createDBFile(fs_path assets_dir, commons::PUUID id)
 	{
 		// Define the default database JSON structure
+		// Create the database JSON object with a unique id
 		json db_json = {
-			{"id", 0},  // UUID for reference
-			{"assets", json::array()}  // Empty asset list
+			{"id", commons::PUUID()},  // Replace with your UUID generation function
+			{"assets", json::array()}  // Initialize assets as an empty array
 		};
+
+		// Add an asset to the assets array
+		db_json["assets"].push_back({
+			{"id", id},  // Replace with your asset's unique id
+			{"path", "Assets/Scenes/DefaultScene.pscene"}
+			});
+
+		// Output the JSON object
+		std::cout << db_json.dump(4) << std::endl;
 
 		std::string dbFileName = m_pms->pDS.projectName + ".peDB";
 		fs_path pDBfilePath = assets_dir / dbFileName;
@@ -154,10 +111,18 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::_createDefaultSceneFile(fs_path scenes_dir)
+	commons::PUUID ProjectManager::_createDefaultSceneFile(fs_path scenes_dir)
 	{
-		// Define the default database JSON structure
-		json scene_json = R"({})"_json;
+		// Define the scene database JSON structure
+		commons::PUUID id{};
+		json scene_json = {
+			{"id", id},
+			{"source", "scene"},
+			{"parentID", "0"},
+			{"type_", "LevelAsset"},
+			{"data_", json::object()},
+			{"ref_assets", json::array() }
+		};
 
 		fs_path psceneFilePath = scenes_dir / "DefaultScene.pscene";
 		std::fstream pscene_file(psceneFilePath.string(), std::ios::out | std::ios::trunc);
@@ -167,9 +132,10 @@ namespace project {
 		}
 		else {
 			std::cerr << "Failed to create .pscene file!" << std::endl;
-			return false;
+			return commons::PUUID(0);
 		}
-		return true;
+
+		return id;
 	}
 
 	bool ProjectManager::_createEditorProcess()
@@ -182,17 +148,31 @@ namespace project {
 		std::string editorName = "PurityEditor.exe";
 
 		auto editorPath = (exeDir / editorName).string();
-		// Check if the editor exists
+
 		if (!std::filesystem::exists(editorPath)) {
 			std::cerr << "Editor not found at: " << editorPath << std::endl;
 			return false;
 		}
 
-		std::string commandLine = editorPath + " -p " + m_pms->pDS.filePath + " -s " + m_pms->pDS.startupScene;
+		// Validate project file and scene
+		if (!std::filesystem::exists(m_pms->pDS.filePath)) {
+			std::cerr << "Project file not found: " << m_pms->pDS.filePath << std::endl;
+			return false;
+		}
+		if (!std::filesystem::exists(m_pms->pDS.projectDir + "/" + m_pms->pDS.startupScene)) {
+			std::cerr << "Startup scene not found: " << m_pms->pDS.startupScene << std::endl;
+			return false;
+		}
+
+		std::string commandLine = editorPath + " -p \"" + m_pms->pDS.filePath + "\" -s \"" + m_pms->pDS.startupScene + "\"";
 		//std::string commandLine = "\"" + editorPath + "\"";
 		/*for (const auto& arg : args) {
 			commandLine += " " + arg;
 		}*/
+		/*std::string commandLine = "\"" + editorPath + "\""
+			+ " -p \"" + m_pms->pDS.filePath + "\""
+			+ " -s \"" + m_pms->pDS.startupScene + "\"";
+		std::cout << commandLine << std::endl;*/
 
 		STARTUPINFO si = { sizeof(si) };
 		PROCESS_INFORMATION pi;
@@ -251,7 +231,7 @@ namespace project {
 		// create asset folder and inner folders
 		auto asset_dir = project_dir_path / "Assets";
 		auto prefabs_dir = asset_dir / "Prefabs";
-		auto scene_dir = asset_dir / "Scene";
+		auto scene_dir = asset_dir / "Scenes";
 		auto script_dir = project_dir_path / "Scripts";
 		auto config_dir = project_dir_path / "Config";
 
@@ -263,11 +243,17 @@ namespace project {
 
 		// write pproject file, pedb and pscene files.
 		_createProjectFile();
-		_createDBFile(asset_dir);
-		_createDefaultSceneFile(scene_dir);
+		auto id = _createDefaultSceneFile(scene_dir);
+		if (!id) { 
+			m_pms->pDS.successfulValidation = false;
+			m_pms->pDS.statusMessage = "Scene ID is invalid";
+			
+			return false; 
+		}
+		_createDBFile(asset_dir, id);
 
-		// set startup scene in struct to default name 'Assets/Scene/DefaultScene.pscene'
-		m_pms->pDS.startupScene = "./Assets/Scenes/DefaultScene.pscene";
+		// set startup scene in struct to default name 'Assets/Scenes/DefaultScene.pscene'
+		m_pms->pDS.startupScene = "Assets/Scenes/DefaultScene.pscene";
 
 		m_pms->pDS.Log();
 		return true;
@@ -292,7 +278,7 @@ namespace project {
 			return false;
 		}
 
-		std::string pDBfilePath = "./Assets/" + m_pms->pDS.projectName + ".peDB";
+		std::string pDBfilePath = "Assets/" + m_pms->pDS.projectName + ".peDB";
 		if (data_json["projectDB"] != pDBfilePath)
 		{
 			m_pms->pDS.successfulValidation = false;
@@ -308,7 +294,7 @@ namespace project {
 
 	bool ProjectManager::_validateProjectFile()
 	{
-		if (!_validateFileExistence(m_pms->pDS.filePath) && !_validateSchemaAdherence(m_pms->pDS.filePath, JsonSchemaType::PProjectSchema))
+		if (!commons::_validateFileExistence(m_pms->pDS.filePath) && !commons::_validateSchemaAdherence(m_pms->pDS.filePath, commons::pProjectSchema))
 		{ 
 			m_pms->pDS.successfulValidation = false;
 			m_pms->pDS.statusMessage = "Project File Validation Failed!, Ensure the file path exists and the '.pproject' file adheres to its schema specifications.";
@@ -322,51 +308,13 @@ namespace project {
 	{
 		std::string pDBfilePath = m_pms->pDS.projectDir + "/Assets/" + m_pms->pDS.projectName + ".peDB";
 		std::cout << pDBfilePath << std::endl;
-		if (!_validateFileExistence(pDBfilePath) || !_validateSchemaAdherence(pDBfilePath, JsonSchemaType::PDatabaseSchema))
+		if (!commons::_validateFileExistence(pDBfilePath) || !commons::_validateSchemaAdherence(pDBfilePath, commons::pDatabaseSchema))
 		{
 			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in './Assets/' and that the '.peDB' file adheres to its schema specifications.";
+			m_pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in '/Assets/' and that the '.peDB' file adheres to its schema specifications.";
 			m_pms->pDS.Log();
 			return false; 
 		}
-		return true;
-	}
-
-	bool ProjectManager::_validateFileExistence(std::string path) const
-	{
-		fs_path _filepath = { path };
-		return std::filesystem::exists(_filepath);
-	}
-
-	bool ProjectManager::_validateSchemaAdherence(std::string path, JsonSchemaType type) const {
-		
-		std::ifstream data(path); 
-		json data_json = json::parse(data);
-		if (!data && !data_json) { return false; }
-		json schema;
-		switch (type)
-		{
-		case project::JsonSchemaType::PProjectSchema:
-			schema = pProjectSchema;
-			break;
-		case project::JsonSchemaType::PDatabaseSchema:
-			schema = pDatabaseSchema;
-			break;
-		default:
-			break;
-		}
-
-		json_schema_validator validator;
-		validator.set_root_schema(schema);
-		try {
-			validator.validate(data_json);
-			std::cout << "Validation succeeded\n";
-		}
-		catch (const std::exception& e) {
-			std::cerr << "Validation failed, here is why: " << e.what() << "\n";
-			return false;
-		}
-		// Further schema validation logic can go here
 		return true;
 	}
 }
@@ -400,7 +348,6 @@ void RaiseErrorMessageBox(project::ProjectManager* projectManager) {
 		ImGui::EndPopup();
 	}
 }
-
 
 void ShowNewProjectTab(project::ProjectManager* projectManager) {
 	if (ImGui::BeginTabItem("New Project"))

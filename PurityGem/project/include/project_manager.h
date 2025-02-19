@@ -2,6 +2,7 @@
 // Created by Eniola Olawale on 10/10/2024.
 //
 #pragma once
+#include "uuid.h"
 #include "glad/glad.h"
 
 #include "imgui.h"
@@ -11,9 +12,12 @@
 #include "GLFW/glfw3.h"
 
 #include "ImGuiFileDialog.h"
-
 #include <iostream>
 #include <string.h>
+
+
+#include <nlohmann/json.hpp>
+#include <nlohmann/json-schema.hpp>
 
 
 using fs_path = std::filesystem::path;
@@ -59,10 +63,6 @@ namespace project {
 		ProjectManagerProperties pmp{};
 	};
 
-	enum class JsonSchemaType
-	{
-		PProjectSchema = 0, PDatabaseSchema
-	};
 
 	class ProjectManager {
 	public:
@@ -76,14 +76,11 @@ namespace project {
 		ProjectManagerState* m_pms;
 		bool _createEditorProcess();
 	private:
-		// Existing Project
 		bool _validateProjectFile();
 		bool _validateDBFile();
-		bool _validateFileExistence(std::string path) const;
-		bool _validateSchemaAdherence(std::string path, JsonSchemaType type) const;
 		bool _createProjectFile();
-		bool _createDBFile(fs_path assets_dir);
-		bool _createDefaultSceneFile(fs_path scenes_dir);
+		bool _createDBFile(fs_path assets_dir, commons::PUUID id);
+		commons::PUUID _createDefaultSceneFile(fs_path scenes_dir);
 	};
 }
 

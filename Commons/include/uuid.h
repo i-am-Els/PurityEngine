@@ -5,15 +5,15 @@
 #pragma once
 
 //#include <xhash>
-#include "core_macros.h"
+#include "common_macros.h"
 #include <sstream>
 
-namespace purity{
-    class PURITY_API PUUID {
+namespace commons{
+    class COMMON_API PUUID {
     public:
         PUUID();
         explicit PUUID(uint64_t id);
-        PUUID(const PUUID&) = default;
+        PUUID(const PUUID& uuid);
 
         operator uint64_t() const { return m_UUID;}
         operator std::string() const {
@@ -22,6 +22,13 @@ namespace purity{
 //            stream << std::hex << std::setfill('0') << std::setw(16) << m_UUID;
             return stream.str();
             return stream.str();
+        }
+
+        static PUUID fromString(std::string str) {
+            uint64_t id;
+            std::istringstream istream(str);
+            istream >> id;
+            return PUUID(static_cast<uint64_t>(id));
         }
 
         PUUID& operator=(PUUID id){
@@ -45,8 +52,8 @@ namespace purity{
 
 namespace std{
     template<>
-    struct hash<purity::PUUID>{
-        std::size_t operator()(const purity::PUUID& uuid) const{
+    struct hash<commons::PUUID>{
+        std::size_t operator()(const commons::PUUID& uuid) const{
             return hash<uint64_t>()((uint64_t)uuid);
         }
     };

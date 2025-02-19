@@ -22,11 +22,11 @@ namespace purity::ecs{
 
     }
 
-    void PEntityRegistry::Destroy(purity::PUUID uuid) {
+    void PEntityRegistry::Destroy(commons::PUUID uuid) {
 
     }
 
-    PEntityHandle PEntityRegistry::GetEntity(purity::PUUID id) {
+    PEntityHandle PEntityRegistry::GetEntity(commons::PUUID id) {
         for(const auto& [uuid, entity] : m_entityMap){
             if (entity->m_instanceID == id){
                 return PEntityHandle(entity.get());

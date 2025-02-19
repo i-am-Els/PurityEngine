@@ -1,5 +1,5 @@
 {
   "project_name": "Game",
-  "start_up_scene" : "./Assets/Scenes/DefaultScene.pscene",
-  "projectDB" : "./Assets/Game.peDB"
+  "start_up_scene" : "Assets/Scenes/DefaultScene.pscene",
+  "projectDB" : "Assets/Game.peDB"
 }

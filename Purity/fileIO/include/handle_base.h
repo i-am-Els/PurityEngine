@@ -5,10 +5,11 @@
 #pragma once
 
 #include "core_macros.h"
+#include "uuid.h"
 
 namespace purity::fileIO{
     struct PURITY_API PHandleBase{
-        purity::PUUID m_handleId;
+        commons::PUUID m_handleId;
         PHandleBase() {
             purity::PLog::echoValue(m_handleId);
         }

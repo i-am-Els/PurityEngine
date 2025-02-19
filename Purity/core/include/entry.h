@@ -6,8 +6,7 @@
 
 #include "papplication.h"
 
-#define PURITY_MODE_DEBUG
-
+//#define PURITY_MODE_DEBUG
 //extern purity::PApplication * purity::CreateApplication();
 
 #ifdef PURITY_PLATFORM_WINDOWS
@@ -51,13 +50,18 @@ PURITY_API int main(int argc, const char* argv[]){
         return 1;
     }
 #else
-    purity::PApplication::ProjectEditorInfo peInfo("C:\\Dev\\PurityEngine\\TestGame\\TestGame.pproject", "./Assets/Scenes/DefaultScene.pscene");
+    purity::PApplication::ProjectEditorInfo peInfo("C:\\Dev\\PurityEngine\\TestGame\\TestGame.pproject", "Assets/Scenes/DefaultScene.pscene");
     purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), 1280, 720);
     std::cout << "Project Name: " << appInfo.title << std::endl;
     application = purity::CreateApplication();
     application->m_applicationInfo = appInfo;
     application->m_projectEditorInfo = peInfo;
 #endif
+
+    if (!application->verify()) {
+        purity::PLog::echoMessage("Verification Process Failed", purity::LogLevel::Error);
+        return 1;
+    }
 
     application->init();
     application->start();

@@ -84,9 +84,9 @@ The layout and key-value pair looks like so:
 ```json
 {
   "project_name": "Game",
-  "start_up_scene" : "./assets/scenes/default_scene.pscene",
+  "start_up_scene" : "assets/scenes/default_scene.pscene",
 
-  "projectDB" : "./assets/Game.peDB"
+  "projectDB" : "assets/Game.peDB"
 }
 
 ```
@@ -98,14 +98,14 @@ The layout and key-value pair looks like so:
 This DB file represents assets that need to be present in the assetDatabase at runtime and they are loaded on launch.
 ```json
 {
-  "id": 1234567890123456,
+  "id": "1234567890123456",
   "assets" : [
     {
-      "id": 3456789012345612,
+      "id": "3456789012345612",
       "path": "<file-with-uuid-0-rel-path-to-project-root>.puritya"
     },
     {
-      "id": 8901234561234567,
+      "id": "8901234561234567",
       "path": "<file-with-uuid-1-rel-path-to-project-root>.pmeta"
     }
   ]
@@ -118,7 +118,23 @@ Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative 
 ### Purity scene description files `*.pscene`
 The structure of the scene file describes the hierarchical tree of entity transforms.
 
-### Purity scene description files `*.passet`
+> Note: A pscene is a `PAsset file` with its `source` set to `LevelAsset` and its `parentID` set to `0`. This is **mandatory**
+
+```json
+{
+  "id": "6543210987654321",
+  "source" : "scene",
+  "parentID": 0,
+  "type_" : "LevelAsset",
+  "data_" : {
+  },
+  "ref_assets": []
+}
+```
+
+It is treated as a `LevelAsset` just like a `prefab` with the source being the only difference and the `data_` contained in them. The `source` attribute is the most essential in differentiating a scene from a prefab.
+
+### Purity asset files `*.passet`
 The structure of asset files vary, and can be determined by the asset source i.e. whether it was imported as an asset or created in the editor as a prefab.
 
 #### The Asset source enum 
@@ -130,11 +146,11 @@ An 'Asset' asset is one that was imported through the fileIO system. It has an e
 
 ```json
 {
-  "id": 6543210987654321,
-  "source" : ["asset"],
+  "id": "6543210987654321",
+  "source" : "asset",
   "parentID": 0,
-  "type" : "StaticMeshAsset",
-  "data" : {
+  "type_" : "StaticMeshAsset",
+  "data_" : {
     "vertices" : {
       "position": [],
       "textureCoord" : [],
@@ -147,20 +163,20 @@ An 'Asset' asset is one that was imported through the fileIO system. It has an e
 ```
 The Keys:
 - `"id"` is a uuid assigned to the asset file. it is also reference in the `"assets"` map in assetDB file.
-- `"source"` describes the source enum of an asset, `"prefab"` or `"asset"`. Asset sources are usually just `["asset"]`.
-- `"type"` specifies the asset type.
+- `"source"` describes the source enum of an asset, `"prefab"` or `"asset"`. Asset sources are usually just `"asset"`.
+- `"type_"` specifies the asset type.
 - An `parentID` of `0` means it is a root prefab.
-- `"data"` holds the asset data in engine-compatible processed format. 
+- `"data_"` holds the asset data in engine-compatible processed format. 
 - `"ref_assets"` is an array of other possible assets in the project that this asset makes reference to.
 
 ##### PREFAB asset
 ```json
 {
-  "id" : 4321210965438765,
+  "id" : "4321210965438765",
   "source" : "prefab"
   "parentID": 0,
-  "type" : "LevelAsset",
-  "data" : {
+  "type_" : "LevelAsset",
+  "data_" : {
     "components" : [
       {
         "transformComponent": {
@@ -172,7 +188,7 @@ The Keys:
         "tagComp" : {
           "tag" : 0
         },
-        "idComp" : 8765432165432109,
+        "idComp" : "8765432165432109",
         "meshComponent" : {
           "ref_asset_index" : 1
         },
@@ -188,9 +204,9 @@ The Keys:
     ]
   },
   "ref_assets": [
-    4321654387652109,
-    6543210987654321,
-    9028432490545838
+    "4321654387652109",
+    "6543210987654321",
+    "9028432490545838"
   ]
 }
 ```
@@ -198,7 +214,7 @@ In the example above we have a `PREFAB` asset. This is what an asset created in 
 - `"source"` describes the source enum and is the first item in the source array.
 - The second element of the `"source"` value array is the prefab `parentID`. The prefab parent is the asset/entity which this prefab is made/cloned from. 
 - An `parentID` of `0` means it is a root prefab.
-- `"data"` contains entity/prefab information.
+- `"data_"` contains entity/prefab information.
 - `"ref_asset_index"` is the index of the referenced asset in `ref_assets` array.
 <hr>
 

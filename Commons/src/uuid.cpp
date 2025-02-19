@@ -2,10 +2,10 @@
 // Created by Eniola Olawale on 9/17/2024.
 //
 
-#include "purity_core_pch.h"
+#include <random>
 #include "uuid.h"
 
-namespace purity{
+namespace commons{
 
     static std::random_device s_RandomDevice;
     static std::mt19937_64 s_Engine(s_RandomDevice());
@@ -17,6 +17,10 @@ namespace purity{
     }
 
     PUUID::PUUID(uint64_t id) : m_UUID(id){
+
+    }
+
+    PUUID::PUUID(const PUUID& uuid) : m_UUID(uuid.m_UUID) {
 
     }
 }

@@ -8,6 +8,7 @@
 #include "entity_handle.h"
 
 
+using namespace commons;
 
 namespace purity::ecs{
     class PURITY_API PEntityRegistry{

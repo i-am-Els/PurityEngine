@@ -7,6 +7,9 @@
 #include "log.h"
 #include "uuid.h"
 
+using namespace commons;
+
+
 #define P_GET_COMPONENT_TYPE(type) static PComponentType s_GetStaticType() { return type; } \
                                 virtual PComponentType getComponentType() const override { return s_GetStaticType(); } \
                                 virtual const char* getName() const override { return #type; }  \
