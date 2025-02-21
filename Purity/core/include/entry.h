@@ -65,7 +65,7 @@ PURITY_API int main(int argc, const char* argv[]){
 
     application->init();
     application->start();
-    while(!application->window->windowClose())
+    while(application->m_runningApp)
     {
         // Poll PInput
         application->process();

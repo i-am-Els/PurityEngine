@@ -89,6 +89,7 @@ namespace gui {
 
     void PEditorApplication::init() {
         PApplication::init();
+        
     }
 
     void PEditorApplication::start() {
