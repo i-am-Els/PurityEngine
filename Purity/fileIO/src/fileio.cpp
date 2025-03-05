@@ -28,4 +28,12 @@ namespace purity::fileIO{
         PLog::echoMessage(source.c_str());
         return source;
     }
+
+    /*PIOStream::PIOStream()
+    {
+    }
+
+    PIOStream::~PIOStream()
+    {
+    }*/
 }

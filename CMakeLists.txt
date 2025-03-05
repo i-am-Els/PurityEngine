@@ -15,6 +15,20 @@ set(USING_PACKAGE_MANAGER_VCPKG ON CACHE BOOL "Use the package manager")
 
 include(GNUInstallDirs)
 
+# Check for MSVC compiler
+if(MSVC)
+    message(STATUS "Using Microsoft Visual Studio Compiler")
+    # Set specific flags for MSVC
+    add_compile_options(/W4)  # Set warning level to 4
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Using GCC Compiler")
+    # Set specific flags for GCC
+    add_compile_options(-Wall -Wextra)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(STATUS "Using Clang Compiler")
+    # Set specific flags for Clang
+    add_compile_options(-Wall -Wextra)
+endif()
 
 # Ensure the directories exist before installation
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin")

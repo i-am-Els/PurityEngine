@@ -33,7 +33,7 @@ namespace purity::ecs{
         SMeshProfile m_MeshProfile;
 
     private:
-        assetDB::PAssetHandle<assetDB::PStaticMeshAsset>* meshHandle;
+        assetDB::Ref<assetDB::PStaticMeshAsset>* meshHandle;
         static unsigned int s_count; // All components must have this
 
     protected:

@@ -12,7 +12,7 @@ namespace purity::scene{
     public:
         PScene() = default;
         ~PScene();
-        explicit PScene(const ecs::PEntityRegistry& registry );
+        //explicit PScene(const ecs::PEntityRegistry& registry );
         ecs::PEntityHandle CreateEntity(const std::string& name);
         ecs::PEntityHandle CreateEntityWithUUID(PUUID uuid, const std::string& name);
         void DestroyEntity(PEntityHandle entity);

@@ -24,6 +24,9 @@ namespace purity::ecs {
         explicit PEntity(PUUID uuid);
 //        PEntity(const PEntity& entity);
         ~PEntity() override{
+            for (auto comp : m_components) {
+                RemoveComponent(comp);
+            }
             PLog::echoMessage("Destroying Entity...");
         } // Destructor destroys all components
 
@@ -31,6 +34,8 @@ namespace purity::ecs {
             return m_instanceID;
         }
 
+        // Callbacks
+        // OnInit, OnDestroy etc...
     private:
         std::string m_name{};
         friend class PEntityRegistry;

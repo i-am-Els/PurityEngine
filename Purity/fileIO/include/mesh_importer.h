@@ -23,6 +23,8 @@ namespace purity::fileIO{
 
         bool ImportFile(const std::string& file);
 
+        void SceneProcessing(const aiScene* aiScene);
+
     };
 
 }

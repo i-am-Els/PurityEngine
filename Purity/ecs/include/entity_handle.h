@@ -8,6 +8,11 @@
 #include "entity.h"
 
 
+namespace purity::scene {
+    class PScene;
+}
+
+
 namespace purity::ecs {
 
     /// @brief This class is an Entity Handle that exposes only operations that is expected of client code on the entity
@@ -24,7 +29,8 @@ namespace purity::ecs {
         explicit PEntityHandle(PEntity* entity) : PHandleBase(), m_data(entity) {}
 
         bool operator==(PEntityHandle & handle) const{
-            return m_data->getInstanceID() == handle.m_data->getInstanceID();
+            if (!m_data || !handle.m_data) { return false; }
+            return m_data->getInstanceID() == handle.m_data->getInstanceID() && m_data == handle.m_data;
         }
 
 //        PEntityHandle(PEntityHandle&& handle) noexcept ;
@@ -37,27 +43,34 @@ namespace purity::ecs {
             PLog::echoMessage("Destroying PEntityHandle.");
         }
 
+        void destroy();
+
         template<typename T>
         T *GetComponent() {
+            if (!m_data) { return nullptr; }
             return m_data->GetComponent<T>();
         }
 
         template<typename T>
         void RemoveComponent(T* component) {
+            if (!m_data) { return; }
             m_data->RemoveComponent(component);
         }
 
         template<typename T>
         bool HasComponent() {
+            if (!m_data) { return false; }
             return m_data->HasComponent<T>();
         }
 
         template<typename T>
         T *AddComponent() {
+            if (!m_data) { return nullptr; }
             return m_data->AddComponent<T>();
         }
 
         [[nodiscard]] inline PUUID getInstanceID() const {
+            if (!m_data) { return PUUID(0); }
             return m_data->getInstanceID();
         }
 
@@ -70,9 +83,9 @@ namespace purity::ecs {
 
         // Other entity operations...
 
-    // Allow move constructor and move assignment operator
     };
 
+    // Allow move constructor and move assignment operator
 //    PEntityHandle::PEntityHandle(PEntityHandle &&handle) noexcept {
 //        m_handleId = handle.m_handleId;
 //        m_data = handle.m_data;
@@ -90,6 +103,7 @@ namespace purity::ecs {
 //    }
 
     inline bool operator==(const PEntityHandle & l_handle, const  PEntityHandle & r_handle){
+        if (!l_handle.m_data || !r_handle.m_data) { return false; }
         return l_handle.m_data->getInstanceID() == r_handle.m_data->getInstanceID();
     }
 }

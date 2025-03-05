@@ -30,15 +30,11 @@ namespace purity::scene{
     }
 
     void PScene::DestroyEntity(PEntityHandle entity) {
-
+        m_registry.Destroy(entity.getInstanceID());
     }
 
     void PScene::DestroyEntityWithUUID(commons::PUUID uuid) {
-
-    }
-
-    PScene::PScene(const PEntityRegistry& registry) {
-
+        m_registry.Destroy(uuid);
     }
 
     PScene::~PScene() {
