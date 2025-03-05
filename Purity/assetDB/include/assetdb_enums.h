@@ -12,7 +12,7 @@ namespace purity::assetDB{
         Read, Write, Update, Delete
     };
 
-    enum class QueryAssetType{
+    enum class AssetType{
         None,
         TextureAsset,
         SpriteAsset,

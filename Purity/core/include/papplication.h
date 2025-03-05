@@ -8,7 +8,7 @@
 #include "service_locator.h"
 #include "window_purity.h"
 #include "scene.h"
-#include "events.h"
+#include "window_events.h"
 
 #include <filesystem>
 
@@ -19,6 +19,7 @@ namespace purity{
         PApplication();
 
     public:
+        bool m_runningApp = true;
         std::unique_ptr<PWindow> window;
 
         virtual ~PApplication() {
@@ -31,10 +32,10 @@ namespace purity{
         virtual void render();
         virtual void destroy();
         virtual void exit();
-        virtual void shouldClose();
+        virtual bool shouldClose(const WindowCloseEvent& event);
         virtual bool verify();
 
-        virtual void onEvent(Event& event);
+        virtual void onEvent(Event& placeholder1);
 
         std::shared_ptr<PServiceLocator> serviceLocator;
         scene::PScene Scene{};

@@ -21,14 +21,15 @@
       "name": "debug",
       "inherits": "base",
       "environment": {
-        "VCPKG_ROOT": "C:/path/to/vcpkg"
+        "VCPKG_ROOT": "path-to-vcpkg"
       }
     },
     {
       "name": "release",
       "inherits": "debug",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "/DWIN32 /D_WINDOWS /O2 /GR /EHsc"
       }
     }
   ],
@@ -103,3 +104,22 @@ To resolve relative path issues, use the json snippet below to setup your `launc
   ]
 }
 ```
+
+## CLion Setup
+Everything above is to configure `Visual Studio Community`. Do the following in addition if you wish to build the projects and contribute using either `CLion` or `VS Code`...
+### CLion
+1. Open CLion configurations.
+2. If no targets are set, create new targets for the following(Select `CMake Application` as Target type).
+    - PurityEditor `exe`
+    - Purity `dll`
+    - PurityGem `exe`
+    - Commons `dll`
+    - Game(Optional) `exe`
+    - IsleMath `dll`
+    - ImGuiFileDialog `lib`
+3. For all Targets of type `exe`, Set the `Executable` field to the target found in the `install` folder.
+   - > e.g C:\Path-to-PurityEngine\out\install\debug\bin\PurityGem.exe
+
+   - Make sure the executables selected are the one located in the install folder at `out/install/debug/bin` for example
+4. Set the working directory of all the targets to the `$ProjectFileDir$` macro.
+5. Optionally, make the toolchain the Visual Studio Toolchain. Not tested with MinGW.

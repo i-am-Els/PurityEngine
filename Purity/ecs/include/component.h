@@ -38,6 +38,7 @@ namespace purity::ecs {
 
         virtual void update(float deltaTime){}
         virtual void start(){}
+        virtual void destroy(){}
 
         [[nodiscard]] inline PUUID getID() const{ return m_id; }
 

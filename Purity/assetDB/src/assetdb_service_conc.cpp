@@ -30,42 +30,4 @@ namespace purity::assetDB{
 
     }
 
-    PHandleBase* PAssetDatabase::queryDBForAsset(const PAssetDBQuery& assetDBQuery) {
-
-        switch (assetDBQuery.operation)
-        {
-        case QueryOperation::Read:
-            return performGetOperation(assetDBQuery.spec);
-        case QueryOperation::Write:
-            return performAddOperation(assetDBQuery.spec);
-        case QueryOperation::Update:
-            return performUpdateOperation(assetDBQuery.spec);
-        case QueryOperation::Delete:
-            return performDeleteOperation(assetDBQuery.spec);
-        default:
-            break;
-        }
-        return nullptr;
-    }
-
-    PHandleBase* PAssetDatabase::performGetOperation(const QuerySpec& spec)
-    {
-        return spec.strategy->ReadOperation();
-    }
-
-    PHandleBase* PAssetDatabase::performAddOperation(const QuerySpec& spec)
-    {
-        return spec.strategy->WriteOperation();
-    }
-
-    PHandleBase* PAssetDatabase::performUpdateOperation(const QuerySpec& spec)
-    {
-        return spec.strategy->UpdateOperation();
-    }
-
-    PHandleBase* PAssetDatabase::performDeleteOperation(const QuerySpec& spec)
-    {
-        return spec.strategy->DeleteOperation();
-    }
-
 }

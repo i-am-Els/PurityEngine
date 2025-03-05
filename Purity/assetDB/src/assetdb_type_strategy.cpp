@@ -3,6 +3,7 @@
 //
 
 #include "assetdb_type_strategy.h"
+#include "assets_types.h"
 
 namespace purity::assetDB
 {
@@ -12,20 +13,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Texture Strategy.");
     }
 
-    PHandleBase *TextureAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PTextureAsset> TextureAssetOperationStrategy::ReadOperation() {
+        return Ref<PTextureAsset>();
     }
 
-    PHandleBase *TextureAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PTextureAsset> TextureAssetOperationStrategy::WriteOperation() {
+        return Ref<PTextureAsset>();
     }
 
-    PHandleBase *TextureAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PTextureAsset> TextureAssetOperationStrategy::UpdateOperation() {
+        return Ref<PTextureAsset>();
     }
 
-    PHandleBase *TextureAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PTextureAsset> TextureAssetOperationStrategy::DeleteOperation() {
+        return Ref<PTextureAsset>();
     }
 
     // Sprite Strategy
@@ -34,20 +35,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Sprite Strategy.");
     }
 
-    PHandleBase *SpriteAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PSpriteAsset> SpriteAssetOperationStrategy::ReadOperation() {
+        return Ref<PSpriteAsset>();
     }
 
-    PHandleBase *SpriteAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PSpriteAsset> SpriteAssetOperationStrategy::WriteOperation() {
+        return Ref<PSpriteAsset>();
     }
 
-    PHandleBase *SpriteAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PSpriteAsset> SpriteAssetOperationStrategy::UpdateOperation() {
+        return Ref<PSpriteAsset>();
     }
 
-    PHandleBase *SpriteAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PSpriteAsset> SpriteAssetOperationStrategy::DeleteOperation() {
+        return Ref<PSpriteAsset>();
     }
 
     // Shader Strategy
@@ -56,20 +57,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Shader Strategy.");
     }
 
-    PHandleBase *ShaderAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PShaderAsset> ShaderAssetOperationStrategy::ReadOperation() {
+        return Ref<PShaderAsset>();
     }
 
-    PHandleBase *ShaderAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PShaderAsset> ShaderAssetOperationStrategy::WriteOperation() {
+        return Ref<PShaderAsset>();
     }
 
-    PHandleBase *ShaderAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PShaderAsset> ShaderAssetOperationStrategy::UpdateOperation() {
+        return Ref<PShaderAsset>();
     }
 
-    PHandleBase *ShaderAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PShaderAsset> ShaderAssetOperationStrategy::DeleteOperation() {
+        return Ref<PShaderAsset>();
     }
 
     // Mesh Strategy
@@ -78,20 +79,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Mesh Strategy.");
     }
 
-    PHandleBase *MeshAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PMeshAsset> MeshAssetOperationStrategy::ReadOperation() {
+        return Ref<PMeshAsset>();
     }
 
-    PHandleBase *MeshAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PMeshAsset> MeshAssetOperationStrategy::WriteOperation() {
+        return Ref<PMeshAsset>();
     }
 
-    PHandleBase *MeshAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PMeshAsset> MeshAssetOperationStrategy::UpdateOperation() {
+        return Ref<PMeshAsset>();
     }
 
-    PHandleBase *MeshAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PMeshAsset> MeshAssetOperationStrategy::DeleteOperation() {
+        return Ref<PMeshAsset>();
     }
 
     // Skeleton Strategy
@@ -100,20 +101,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Skeleton Strategy.");
     }
 
-    PHandleBase *SkeletonAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PSkeletonAsset> SkeletonAssetOperationStrategy::ReadOperation() {
+        return Ref<PSkeletonAsset>();
     }
 
-    PHandleBase *SkeletonAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PSkeletonAsset> SkeletonAssetOperationStrategy::WriteOperation() {
+        return Ref<PSkeletonAsset>();
     }
 
-    PHandleBase *SkeletonAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PSkeletonAsset> SkeletonAssetOperationStrategy::UpdateOperation() {
+        return Ref<PSkeletonAsset>();
     }
 
-    PHandleBase *SkeletonAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PSkeletonAsset> SkeletonAssetOperationStrategy::DeleteOperation() {
+        return Ref<PSkeletonAsset>();
     }
 
     // StaticMesh Strategy
@@ -122,20 +123,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Static Mesh Strategy.");
     }
 
-    PHandleBase *StaticMeshAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PStaticMeshAsset> StaticMeshAssetOperationStrategy::ReadOperation() {
+        return Ref<PStaticMeshAsset>();
     }
 
-    PHandleBase *StaticMeshAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PStaticMeshAsset> StaticMeshAssetOperationStrategy::WriteOperation() {
+        return Ref<PStaticMeshAsset>();
     }
 
-    PHandleBase *StaticMeshAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PStaticMeshAsset> StaticMeshAssetOperationStrategy::UpdateOperation() {
+        return Ref<PStaticMeshAsset>();
     }
 
-    PHandleBase *StaticMeshAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PStaticMeshAsset> StaticMeshAssetOperationStrategy::DeleteOperation() {
+        return Ref<PStaticMeshAsset>();
     }
 
     // Material Strategy
@@ -144,20 +145,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Material Strategy.");
     }
 
-    PHandleBase *MaterialAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PMaterialAsset> MaterialAssetOperationStrategy::ReadOperation() {
+        return Ref<PMaterialAsset>();
     }
 
-    PHandleBase *MaterialAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PMaterialAsset> MaterialAssetOperationStrategy::WriteOperation() {
+        return Ref<PMaterialAsset>();
     }
 
-    PHandleBase *MaterialAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PMaterialAsset> MaterialAssetOperationStrategy::UpdateOperation() {
+        return Ref<PMaterialAsset>();
     }
 
-    PHandleBase *MaterialAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PMaterialAsset> MaterialAssetOperationStrategy::DeleteOperation() {
+        return Ref<PMaterialAsset>();
     }
 
     // Spline Strategy
@@ -166,20 +167,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Spline Strategy.");
     }
 
-    PHandleBase *SplineAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PSplineAsset> SplineAssetOperationStrategy::ReadOperation() {
+        return Ref<PSplineAsset>();
     }
 
-    PHandleBase *SplineAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PSplineAsset> SplineAssetOperationStrategy::WriteOperation() {
+        return Ref<PSplineAsset>();
     }
 
-    PHandleBase *SplineAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PSplineAsset> SplineAssetOperationStrategy::UpdateOperation() {
+        return Ref<PSplineAsset>();
     }
 
-    PHandleBase *SplineAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PSplineAsset> SplineAssetOperationStrategy::DeleteOperation() {
+        return Ref<PSplineAsset>();
     }
 
     // P2DPolygonMesh Strategy
@@ -188,20 +189,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying 2DPolygon Strategy.");
     }
 
-    PHandleBase *P2DPolygonMeshAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PP2DPolygonMeshAsset> P2DPolygonMeshAssetOperationStrategy::ReadOperation() {
+        return Ref<PP2DPolygonMeshAsset>();
     }
 
-    PHandleBase *P2DPolygonMeshAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PP2DPolygonMeshAsset> P2DPolygonMeshAssetOperationStrategy::WriteOperation() {
+        return Ref<PP2DPolygonMeshAsset>();
     }
 
-    PHandleBase *P2DPolygonMeshAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PP2DPolygonMeshAsset> P2DPolygonMeshAssetOperationStrategy::UpdateOperation() {
+        return Ref<PP2DPolygonMeshAsset>();
     }
 
-    PHandleBase *P2DPolygonMeshAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PP2DPolygonMeshAsset> P2DPolygonMeshAssetOperationStrategy::DeleteOperation() {
+        return Ref<PP2DPolygonMeshAsset>();
     }
 
     // SoundSource Strategy
@@ -210,20 +211,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Sound Strategy.");
     }
 
-    PHandleBase *SoundSourceAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::ReadOperation() {
+        return Ref<PSoundSourceAsset>();
     }
 
-    PHandleBase *SoundSourceAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::WriteOperation() {
+        return Ref<PSoundSourceAsset>();
     }
 
-    PHandleBase *SoundSourceAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::UpdateOperation() {
+        return Ref<PSoundSourceAsset>();
     }
 
-    PHandleBase *SoundSourceAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::DeleteOperation() {
+        return Ref<PSoundSourceAsset>();
     }
 
     // Level Strategy
@@ -232,20 +233,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Level Strategy.");
     }
 
-    PHandleBase *LevelAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PLevelAsset> LevelAssetOperationStrategy::ReadOperation() {
+        return Ref<PLevelAsset>();
     }
 
-    PHandleBase *LevelAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PLevelAsset> LevelAssetOperationStrategy::WriteOperation() {
+        return Ref<PLevelAsset>();
     }
 
-    PHandleBase *LevelAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PLevelAsset> LevelAssetOperationStrategy::UpdateOperation() {
+        return Ref<PLevelAsset>();
     }
 
-    PHandleBase *LevelAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PLevelAsset> LevelAssetOperationStrategy::DeleteOperation() {
+        return Ref<PLevelAsset>();
     }
 
     // Particle Strategy
@@ -254,20 +255,20 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Particle Strategy.");
     }
 
-    PHandleBase *ParticleAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PParticleAsset> ParticleAssetOperationStrategy::ReadOperation() {
+        return Ref<PParticleAsset>();
     }
 
-    PHandleBase *ParticleAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PParticleAsset> ParticleAssetOperationStrategy::WriteOperation() {
+        return Ref<PParticleAsset>();
     }
 
-    PHandleBase *ParticleAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PParticleAsset> ParticleAssetOperationStrategy::UpdateOperation() {
+        return Ref<PParticleAsset>();
     }
 
-    PHandleBase *ParticleAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PParticleAsset> ParticleAssetOperationStrategy::DeleteOperation() {
+        return Ref<PParticleAsset>();
     }
 
     // RenderMapAsset
@@ -276,19 +277,44 @@ namespace purity::assetDB
         PLog::echoMessage("Destroying Render Map Strategy.");
     }
 
-    PHandleBase *RenderMapAssetOperationStrategy::ReadOperation() {
-        return nullptr;
+    Ref<PRenderMapAsset> RenderMapAssetOperationStrategy::ReadOperation() {
+        return Ref<PRenderMapAsset>();
     }
 
-    PHandleBase *RenderMapAssetOperationStrategy::WriteOperation() {
-        return nullptr;
+    Ref<PRenderMapAsset> RenderMapAssetOperationStrategy::WriteOperation() {
+        return Ref<PRenderMapAsset>();
     }
 
-    PHandleBase *RenderMapAssetOperationStrategy::UpdateOperation() {
-        return nullptr;
+    Ref<PRenderMapAsset> RenderMapAssetOperationStrategy::UpdateOperation() {
+        return Ref<PRenderMapAsset>();
     }
 
-    PHandleBase *RenderMapAssetOperationStrategy::DeleteOperation() {
-        return nullptr;
+    Ref<PRenderMapAsset> RenderMapAssetOperationStrategy::DeleteOperation() {
+        return Ref<PRenderMapAsset>();
     }
+
+    P3DSoundSourceAssetOperationStrategy::~P3DSoundSourceAssetOperationStrategy()
+    {
+    }
+
+    Ref<PP3DSoundSourceAsset> P3DSoundSourceAssetOperationStrategy::ReadOperation()
+    {
+        return Ref<PP3DSoundSourceAsset>();
+    }
+
+    Ref<PP3DSoundSourceAsset> P3DSoundSourceAssetOperationStrategy::WriteOperation()
+    {
+        return Ref<PP3DSoundSourceAsset>();
+    }
+
+    Ref<PP3DSoundSourceAsset> P3DSoundSourceAssetOperationStrategy::DeleteOperation()
+    {
+        return Ref<PP3DSoundSourceAsset>();
+    }
+
+    Ref<PP3DSoundSourceAsset> P3DSoundSourceAssetOperationStrategy::UpdateOperation()
+    {
+        return Ref<PP3DSoundSourceAsset>();
+    }
+
 }

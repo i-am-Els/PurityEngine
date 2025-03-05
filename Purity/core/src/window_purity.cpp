@@ -4,6 +4,9 @@
 
 #include "window_purity.h"
 #include "log.h"
+#include <window_events.h>
+#include <keyboard_events.h>
+#include <mouse_events.h>
 
 namespace purity {
 
@@ -26,11 +29,11 @@ namespace purity {
         }
     }
 
-    void PWindow::createWindow(const std::unique_ptr<PWindow>& window, int width, int height, const char* title, int gl_major_v, int gl_minor_v) {
+    void PWindow::createWindow(int width, int height, const char* title, int gl_major_v, int gl_minor_v) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         setVersion(gl_major_v, gl_minor_v);
 
-        window->m_glfwWindow = glfwCreateWindow(
+        m_glfwWindow = glfwCreateWindow(
                 width,
                 height,
                 title,
@@ -38,21 +41,103 @@ namespace purity {
                 nullptr
         );
 
-        if(!window->m_glfwWindow){
+        if(!m_glfwWindow){
             PLog::echoMessage("Something Went wrong while creating a Window. That's all we know", LogLevel::Error);
             return;
         }else{
             PLog::echoMessage("Window creation completed successfully!");
         }
 
-        glfwMakeContextCurrent(window->m_glfwWindow);
+        glfwMakeContextCurrent(m_glfwWindow);
         int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         PURITY_ASSERT_MSG(status, "Failed to initialize GLAD!");
 
-        glfwSetMouseButtonCallback(window->m_glfwWindow, [](GLFWwindow* window, int button, int action, int mod) {
+        glfwSetWindowUserPointer(m_glfwWindow, &m_data);
+        setVSync(true);
 
-            });
-   }
+        glfwSetWindowSizeCallback(m_glfwWindow, [](GLFWwindow* window, int width, int height){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+            info.width = width;
+            info.height = height;
+
+            WindowResizeEvent event(width, height);
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetWindowCloseCallback(m_glfwWindow, [](GLFWwindow* window){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowCloseEvent event;
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetKeyCallback(m_glfwWindow, [](GLFWwindow* window, int key, int scanCode, int action, int mods){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+            // USE ISLE KEYCODE
+
+            switch (action) {
+                case GLFW_PRESS:
+                {
+                    KeyPressedEvent event(key, 0);
+                    info.eventCallbackFunction(event);
+                    break;
+                }
+                case GLFW_RELEASE:
+                {
+                    KeyReleasedEvent event(key);
+                    info.eventCallbackFunction(event);
+                    break;
+                }
+                case GLFW_REPEAT:
+                {
+                    KeyPressedEvent event(key, 1);
+                    info.eventCallbackFunction(event);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        });
+
+        glfwSetMouseButtonCallback(m_glfwWindow, [](GLFWwindow* window, int button, int action, int mods){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            switch (action) {
+                case GLFW_PRESS:
+                {
+                    MouseButtonPressedEvent event(button);
+                    info.eventCallbackFunction(event);
+                    break;
+                }
+                case GLFW_RELEASE:
+                {
+                    MouseButtonReleasedEvent event(button);
+                    info.eventCallbackFunction(event);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        });
+
+        glfwSetScrollCallback(m_glfwWindow, [](GLFWwindow* window, double xOffset, double yOffset){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            MouseScrolledEvent event((float)xOffset, (float)yOffset);
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetCursorPosCallback(m_glfwWindow, [](GLFWwindow* window, double xPos, double yPos){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            MouseMovedEvent event((float)xPos, (float)yPos);
+            info.eventCallbackFunction(event);
+        });
+    }
 
     void PWindow::setVersion(int major, int minor) {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
@@ -73,13 +158,6 @@ namespace purity {
     /*void PWindow::terminate() {
     }*/
 
-    bool PWindow::windowClose(){
-        if (glfwWindowShouldClose(m_glfwWindow)){
-            deleteWindow();
-            return true;
-        }
-        return false;
-    }
 
     void PWindow::update() {
 

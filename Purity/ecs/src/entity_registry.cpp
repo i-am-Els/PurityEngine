@@ -18,12 +18,10 @@ namespace purity::ecs{
         return PEntityHandle(m_entityMap[uuid].get());
     }
 
-    void PEntityRegistry::Destroy() {
-
-    }
-
     void PEntityRegistry::Destroy(commons::PUUID uuid) {
-
+        if (auto it = m_entityMap.find(uuid); it != m_entityMap.end()) {
+            m_entityMap.erase(it);
+        }
     }
 
     PEntityHandle PEntityRegistry::GetEntity(commons::PUUID id) {

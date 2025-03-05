@@ -6,7 +6,6 @@
 #include "papplication.h"
 #include "service_locator.h"
 #include "ecs_service_conc.h"
-#include "scene.h"
 
 namespace purity{
     PApplication* PSystemFinder::application = nullptr;

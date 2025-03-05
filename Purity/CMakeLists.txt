@@ -68,6 +68,7 @@ add_library(Purity
         assetDB/include/assetdb_type_strategy.h
         assetDB/include/assetdb_utility.h
         assetDB/include/assets_types.h
+        assetDB/include/ref_counted.h
         #--------------------------------
         core/include/assetdb_service.h
         core/include/core_macros.h
@@ -151,6 +152,7 @@ add_library(Purity
         ecs/src/component.cpp
         ecs/src/components_behavior.cpp
         ecs/src/entity.cpp
+        ecs/src/entity_handle.cpp
         ecs/src/entity_registry.cpp
         ecs/src/id_comp.cpp
         ecs/src/mesh.cpp
@@ -174,7 +176,7 @@ add_library(Purity
         graphics/src/vertex_array.cpp
         #--------------------------------
         scene/src/scene.cpp
-)
+         )
 
 target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS PURITY_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE GLAD_DLL)
 

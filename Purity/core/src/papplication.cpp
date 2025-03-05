@@ -79,8 +79,10 @@ namespace purity{
         purity::PSystemFinder::application = this;
 
         // Set up window
-        PWindow::bindWindowBackendAPI();
-        PWindow::createWindow(window, m_applicationInfo.width, m_applicationInfo.height, m_applicationInfo.title.c_str());
+        PWindow::bindWindowBackendAPI(); 
+        window->createWindow(m_applicationInfo.width, m_applicationInfo.height, m_applicationInfo.title.c_str());
+        PWindow::EventCallbackFunction boundCallback = [this](auto&& placeholder1) { onEvent(std::forward<decltype(placeholder1)>(placeholder1)); };
+        window->setWindowsEventCallbacks(boundCallback);
 
         // Create all Services
         auto ecsService = std::make_shared<PECSService>(window.get());
@@ -93,11 +95,12 @@ namespace purity{
         // Call the init method on all the services
         serviceLocator->getService<IECSService>()->init();
 
+        // Set windows call event update function
     }
 
     void PApplication::destroy() {
         // Call the destroy method on all the services
-
+        window->deleteWindow();
         serviceLocator->getService<ILayerService>()->destroy();
         serviceLocator->getService<IECSService>()->destroy();
     }
@@ -121,10 +124,10 @@ namespace purity{
     {
         EventDispatcher dispatcher(event);
         // To close forward the WindowCloseEvent to the
-        // dispatcher.dispatch<WindowCloseEvent>(std::bind(&PApplication::windowShouldClose, this, std::placeholders::_1)); // OR
-        //        dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
-        //            return windowShouldClose(std::forward<decltype(placeholder1)>(placeholder1));
-        //        });
+        dispatcher.dispatch<WindowCloseEvent>(std::bind(&PApplication::shouldClose, this, std::placeholders::_1)); // OR
+        /*dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
+            return shouldClose(std::forward<decltype(placeholder1)>(placeholder1));
+        });*/
         auto layerService = serviceLocator->getConcreteService<ILayerService, PLayerService>();
         for (auto it = layerService->layerStack.end(); it != layerService->layerStack.begin();) {
             auto _tmp = (*--it);
@@ -135,7 +138,9 @@ namespace purity{
         std::cout << event;
     }
 
-    void PApplication::shouldClose()
+    bool PApplication::shouldClose(const WindowCloseEvent& event)
     {
+        m_runningApp = false;
+        return true;
     }
 }

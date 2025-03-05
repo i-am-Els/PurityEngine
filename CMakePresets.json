@@ -30,7 +30,10 @@
         "CMAKE_PREFIX_PATH": "${sourceDir}/out/build/${presetName}/vcpkg_installed/x64-windows;${sourceDir}/out/build/${presetName}/vcpkg_installed/x64-windows/debug;${sourceDir}/out/build/${presetName}/vcpkg_installed/x64-windows/share",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
         "VCPKG_BIN_DIR": "${sourceDir}/out/build/${presetName}/vcpkg_installed/x64-windows/bin",
-        "VCPKG_DEBUG_BIN_DIR": "${sourceDir}/out/build/${presetName}/vcpkg_installed/x64-windows/debug/bin"
+        "VCPKG_DEBUG_BIN_DIR": "${sourceDir}/out/build/${presetName}/vcpkg_installed/x64-windows/debug/bin",
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_CXX_FLAGS": "/DWIN32 /D_WINDOWS /Wall /GR /EHsc"
       }
     }
   ]

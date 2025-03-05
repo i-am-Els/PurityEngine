@@ -17,17 +17,6 @@ namespace purity::assetDB{
     // TODO - Implement the Specs GetAssetHandle methods...
 
 
-    struct PURITY_API PAssetDBQuery{
-        PAssetDBQuery(const QuerySpec& spec, QueryOperation operation)
-            : spec(spec),
-              operation(operation)
-        {
-        }
-
-        QuerySpec spec;
-        QueryOperation operation;
-    };
-
     class PURITY_API PAssetDatabase final : public PServiceBase<IAssetDBService>{
     public:
         ~PAssetDatabase() override{
@@ -46,21 +35,71 @@ namespace purity::assetDB{
 
         void destroy() override;
 
-        static PHandleBase* queryDBForAsset(const PAssetDBQuery& assetDBQuery);
+        template<typename T>
+        static Ref<T> queryDBForAsset(const QuerySpec<T>& spec, QueryOperation operation);
 
-        void setupAsset();
+        /*void setupAsset();*/
 
 
     private:
-        [[nodiscard]]static PHandleBase* performGetOperation(const QuerySpec& spec);
-        [[nodiscard]]static PHandleBase* performAddOperation(const QuerySpec& spec);
-        [[nodiscard]]static PHandleBase* performUpdateOperation(const QuerySpec& spec);
-        [[nodiscard]]static PHandleBase* performDeleteOperation(const QuerySpec& spec); // handle id is nullptr in this case if deletion succeeded...
+        template<typename T>
+        [[nodiscard]]static Ref<T> performGetOperation(const QuerySpec<T>& spec);
+        template<typename T>
+        [[nodiscard]]static Ref<T> performAddOperation(const QuerySpec<T>& spec);
+        template<typename T>
+        [[nodiscard]]static Ref<T> performUpdateOperation(const QuerySpec<T>& spec);
+        template<typename T>
+        [[nodiscard]]static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
 
+        
         // Switch on QueryType...
-        std::map<PUUID, PAsset*> m_AssetContainer;
+        std::map<PUUID, AssetMetadata> m_AssetContainer;
+        std::map<PUUID, Ref<PAsset>> m_LoadedAssetContainer;
 
     };
+
+    template<typename T>
+    Ref<T> PAssetDatabase::queryDBForAsset(const QuerySpec<T>& spec, QueryOperation operation) {
+
+        switch (operation)
+        {
+        case QueryOperation::Read:
+            return performGetOperation(spec);
+        case QueryOperation::Write:
+            return performAddOperation(spec);
+        case QueryOperation::Update:
+            return performUpdateOperation(spec);
+        case QueryOperation::Delete:
+            return performDeleteOperation(spec);
+        default:
+            break;
+        }
+        return nullptr;
+    }
+
+    template<typename T>
+    Ref<T> PAssetDatabase::performGetOperation(const QuerySpec<T>& spec)
+    {
+        return spec.strategy->ReadOperation();
+    }
+
+    template<typename T>
+    Ref<T> PAssetDatabase::performAddOperation(const QuerySpec<T>& spec)
+    {
+        return spec.strategy->WriteOperation();
+    }
+
+    template<typename T>
+    Ref<T> PAssetDatabase::performUpdateOperation(const QuerySpec<T>& spec)
+    {
+        return spec.strategy->UpdateOperation();
+    }
+
+    template<typename T>
+    Ref<T> PAssetDatabase::performDeleteOperation(const QuerySpec<T>& spec)
+    {
+        return spec.strategy->DeleteOperation();
+    }
 }
 
 
