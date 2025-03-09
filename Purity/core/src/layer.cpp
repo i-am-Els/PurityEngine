@@ -149,6 +149,38 @@ namespace purity {
         }
     }
 
+    void PLayerService::preInit(std::any data)
+    {
+    }
+
+    void PLayerService::postInit()
+    {
+    }
+
+    void PLayerService::start()
+    {
+    }
+
+    void PLayerService::process()
+    {
+    }
+
+    void PLayerService::preRender()
+    {
+    }
+
+    void PLayerService::render()
+    {
+    }
+
+    void PLayerService::postsRender()
+    {
+    }
+
+    void PLayerService::update(float deltaTime)
+    {
+    }
+
     void PLayerService::init() {
 
     }

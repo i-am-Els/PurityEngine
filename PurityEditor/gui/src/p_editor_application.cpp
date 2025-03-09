@@ -27,7 +27,7 @@ namespace gui {
         return true;
     }
 
-    std::optional<DatabaseData> PEditorApplication::validateDBFile()
+    std::optional<DatabaseData> PEditorApplication::validateDBFile() const
     {
         // Build the expected DB file path.
         std::filesystem::path pDBfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / "Assets" / (m_applicationInfo.title + ".peDB");
@@ -57,14 +57,14 @@ namespace gui {
         }
     }
 
-    bool PEditorApplication::validateSceneFile()
+    bool PEditorApplication::validateSceneFile() const
     {
         std::filesystem::path pscenefilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / m_projectEditorInfo.startUpSceneRelPath;
         if (!commons::_validateFileExistence(pscenefilePath) || !commons::_validateSchemaAdherence(pscenefilePath.string(), commons::pAssetSchema)) { return false; }
         return true;
     }
 
-    bool PEditorApplication::validateAssetFiles(PUUID id, const std::string& assetPath)
+    bool PEditorApplication::validateAssetFiles(const PUUID& id, const std::string& assetPath) const
     {
         if (!id) { return false; }
         std::filesystem::path assetfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / assetPath;
@@ -72,15 +72,35 @@ namespace gui {
         return true;
     }
 
-    void PEditorApplication::reportInvalidAssets(PUUID file_id, const std::string& assetPath)
+    void PEditorApplication::reportInvalidAssets(const PUUID& file_id, const std::string& assetPath)
     {
         PLog::echoMessage(LogLevel::Warning, "%s %s %s %s %s", "Asset of id", static_cast<std::string>(file_id).c_str(), "at", assetPath.c_str(), "is not valid, hence removed from asset database.");
     }
 
-    void PEditorApplication::storeValidAssets(PUUID file_id, const std::string& assetPath)
+    void PEditorApplication::storeValidAssets(const PUUID& file_id, const std::string& assetPath)
     {
         PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(file_id).c_str(), "and path:", assetPath.c_str(), "to the queue going to the asset database.");
         assetdbData[file_id] = assetPath;
+    }
+
+    void PEditorApplication::preInit()
+    {
+        PApplication::preInit();
+    }
+
+    void PEditorApplication::postInit()
+    {
+        PApplication::postInit();
+    }
+
+    bool PEditorApplication::shouldClose(const WindowCloseEvent& event)
+    {
+        return PApplication::shouldClose(event);
+    }
+
+    void PEditorApplication::onEvent(Event& placeholder1)
+    {
+        PApplication::onEvent(placeholder1);
     }
 
     PEditorApplication::~PEditorApplication() {

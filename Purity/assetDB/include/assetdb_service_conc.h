@@ -23,15 +23,19 @@ namespace purity::assetDB{
             PLog::echoMessage("Destroying AssetDB.");
         }
 
+        void preInit(std::any data) override;
         void init() override;
+        void postInit() override;
 
-        void start();
+        void start() override;
 
-        void process();
+        void process() override;
 
-        void render();
+        void preRender() override;
+        void render() override;
+        void postsRender() override;
 
-        void update(float deltaTime);
+        void update(float deltaTime) override;
 
         void destroy() override;
 
@@ -51,7 +55,6 @@ namespace purity::assetDB{
         template<typename T>
         [[nodiscard]]static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
 
-        
         // Switch on QueryType...
         std::map<PUUID, AssetMetadata> m_AssetContainer;
         std::map<PUUID, Ref<PAsset>> m_LoadedAssetContainer;

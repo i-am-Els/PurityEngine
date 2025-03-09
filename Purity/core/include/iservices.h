@@ -21,15 +21,19 @@ namespace purity{
         /// Should be overridden in each service interface to return the typeid of the base interface.
         [[nodiscard]] virtual std::type_index getTypeIndex() const = 0;
 
+        virtual void preInit(std::any data) = 0;
         virtual void init() = 0;
+        virtual void postInit() = 0;
 
-//        virtual void start() = 0;
-//
-//        virtual void process() = 0;
-//
-//        virtual void render() = 0;
-//
-//        virtual void update(float deltaTime) = 0;
+        virtual void start() = 0;
+
+        virtual void process() = 0;
+
+        virtual void preRender() = 0;
+        virtual void render() = 0;
+        virtual void postsRender() = 0;
+
+        virtual void update(float deltaTime) = 0;
 
         virtual void destroy() = 0;
     };

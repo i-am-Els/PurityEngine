@@ -50,6 +50,8 @@
 #include "layer.h"
 #include <window_events.h>
 
+#include "assetdb_service_conc.h"
+
 using namespace isle_engine::math;
 using namespace purity::ecs;
 
@@ -75,11 +77,11 @@ namespace purity{
         serviceLocator->getConcreteService<IECSService, PECSService>()->render();
     }
 
-    void PApplication::init() {
+    void PApplication::preInit()
+    {
         purity::PSystemFinder::application = this;
-
         // Set up window
-        PWindow::bindWindowBackendAPI(); 
+        PWindow::bindWindowBackendAPI();
         window->createWindow(m_applicationInfo.width, m_applicationInfo.height, m_applicationInfo.title.c_str());
         PWindow::EventCallbackFunction boundCallback = [this](auto&& placeholder1) { onEvent(std::forward<decltype(placeholder1)>(placeholder1)); };
         window->setWindowsEventCallbacks(boundCallback);
@@ -87,15 +89,25 @@ namespace purity{
         // Create all Services
         auto ecsService = std::make_shared<PECSService>(window.get());
         auto layerService = std::make_shared<PLayerService>();
+        auto assetService = std::make_shared<assetDB::PAssetDatabase>();
+
+        assetService->preInit(assetdbData);
 
         // Register Services
         serviceLocator->registerService<IECSService>(ecsService);
         serviceLocator->registerService<ILayerService>(layerService);
+        serviceLocator->registerService<IAssetDBService>(assetService);
+    }
 
+    void PApplication::init() {
         // Call the init method on all the services
         serviceLocator->getService<IECSService>()->init();
+        serviceLocator->getService<ILayerService>()->init();
+        serviceLocator->getService<IAssetDBService>()->init();
+    }
 
-        // Set windows call event update function
+    void PApplication::postInit()
+    {
     }
 
     void PApplication::destroy() {
@@ -103,6 +115,7 @@ namespace purity{
         window->deleteWindow();
         serviceLocator->getService<ILayerService>()->destroy();
         serviceLocator->getService<IECSService>()->destroy();
+        serviceLocator->getService<IAssetDBService>()->destroy();
     }
 
     void PApplication::exit() {

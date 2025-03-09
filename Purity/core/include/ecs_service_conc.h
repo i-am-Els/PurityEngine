@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include <utility>
 #include <map>
+#include <utility>
 
 #include "ecs_service.h"
-#include "service_base.h"
-#include "window_purity.h"
-#include "mesh_system_conc.h"
-#include "transform_system_conc.h"
-#include "render_system_conc.h"
 #include "id_comp.h"
-#include "tag_comp.h"
+#include "mesh_system_conc.h"
 #include "reg_system_conc.h"
+#include "render_system_conc.h"
+#include "service_base.h"
+#include "tag_comp.h"
+#include "transform_system_conc.h"
+#include "window_purity.h"
 
 namespace purity{
     class PURITY_API PECSService final : public PServiceBase<IECSService>{
@@ -44,7 +44,7 @@ namespace purity{
             getSystem<PRenderComponent>()->init();
         }
 
-        void start() {
+        void start() override {
             getSystem<PIDComponent>()->start();
             getSystem<PTagComponent>()->start();
             getSystem<PTransformComponent>()->start();
@@ -52,7 +52,7 @@ namespace purity{
             getSystem<PRenderComponent>()->start();
         }
 
-        void process() {
+        void process() override {
             getSystem<PIDComponent>()->process();
             getSystem<PTagComponent>()->process();
             getSystem<PTransformComponent>()->process();
@@ -60,7 +60,7 @@ namespace purity{
             getSystem<PRenderComponent>()->process();
         }
 
-        void render() {
+        void render() override {
             getSystem<PIDComponent>()->render();
             getSystem<PTagComponent>()->render();
             getSystem<PTransformComponent>()->render();
@@ -68,7 +68,7 @@ namespace purity{
             getSystem<PRenderComponent>()->render();
         }
 
-        void update(float deltaTime) {
+        void update(float deltaTime) override {
             getSystem<PIDComponent>()->update(deltaTime);
             getSystem<PTagComponent>()->update(deltaTime);
             getSystem<PTransformComponent>()->update(deltaTime);
@@ -142,5 +142,10 @@ namespace purity{
         const std::map<std::type_index, std::unique_ptr<ISystemBase>> &getSystemMap() {
             return system_map;
         }
+
+        void preInit(std::any data) override;
+        void postInit() override;
+        void preRender() override;
+        void postsRender() override;
     };
 }

@@ -130,7 +130,17 @@ namespace purity {
         // Do not use outside the LayerManager class
         void MakeLayer(ELayerType layerType, unsigned int id, const std::string& name);
 
+    public:
+        void preInit(std::any data) override;
+        void postInit() override;
+        void start() override;
+        void process() override;
+        void preRender() override;
+        void render() override;
+        void postsRender() override;
+        void update(float deltaTime) override;
 
+    private:
         static const unsigned int MAX_LAYER = ARRAY_SIZE;
         static const unsigned int BASE_LAYER_COUNT;
         std::array<PLayer*, MAX_LAYER> layerStack{};

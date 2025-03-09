@@ -24,7 +24,7 @@ namespace gui {
         std::vector<std::map<std::string, std::string>> assets;
     };
 
-    class PEditorApplication : public PApplication{
+    class PEditorApplication final : public PApplication{
     public:
         PEditorApplication();
 
@@ -47,13 +47,18 @@ namespace gui {
         bool verify() override;
 
     private:
-        std::map<PUUID, std::string> assetdbData;
 
-        std::optional<DatabaseData> validateDBFile();
-        bool validateSceneFile();
-        bool validateAssetFiles(PUUID id, const std::string& assetPath);
-        void reportInvalidAssets(PUUID file_id, const std::string& assetPath);
-        void storeValidAssets(PUUID file_id, const std::string& assetPath);
+        [[nodiscard]] std::optional<DatabaseData> validateDBFile() const;
+        [[nodiscard]] bool validateSceneFile() const;
+        [[nodiscard]] bool validateAssetFiles(const PUUID& id, const std::string& assetPath) const;
+        static void reportInvalidAssets(const PUUID& file_id, const std::string& assetPath);
+        void storeValidAssets(const PUUID& file_id, const std::string& assetPath);
+
+    public:
+        void preInit() override;
+        void postInit() override;
+        bool shouldClose(const WindowCloseEvent& event) override;
+        void onEvent(Event& placeholder1) override;
     };
 
 } // gui

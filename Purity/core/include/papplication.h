@@ -17,6 +17,7 @@ namespace purity{
     class PURITY_API PApplication {
     protected:
         PApplication();
+        std::map<PUUID, std::string> assetdbData;
 
     public:
         bool m_runningApp = true;
@@ -25,7 +26,9 @@ namespace purity{
         virtual ~PApplication() {
             PLog::echoMessage("Destroying PApplication.");
         }
+        virtual void preInit();
         virtual void init();
+        virtual void postInit();
         virtual void start();
         virtual void process();
         virtual void update(float deltaTime);
@@ -47,7 +50,7 @@ namespace purity{
 
             ApplicationInfo(){}
 
-            ApplicationInfo(std::string t, int w, int h){
+            ApplicationInfo(const std::string& t, const int w, const int h){
                 title = t;
                 width = w;
                 height = h;
@@ -59,15 +62,15 @@ namespace purity{
             std::string projectDir;
             std::string startUpSceneRelPath;
 
-            ProjectEditorInfo(){}
+            ProjectEditorInfo()= default;
 
-            ProjectEditorInfo(std::string _projectFilePath, std::string _startUpScene) {
-                projectFilePath = _projectFilePath;
+            ProjectEditorInfo(std::string _projectFilePath, const std::string& _startUpScene) {
+                projectFilePath = std::move(_projectFilePath);
                 projectDir = std::filesystem::path(projectFilePath).parent_path().string();
                 startUpSceneRelPath = _startUpScene;
             }
 
-            std::string getProjectName() {
+            [[nodiscard]] std::string getProjectName() const {
                 return std::filesystem::path(projectFilePath).stem().string();
             }
         };

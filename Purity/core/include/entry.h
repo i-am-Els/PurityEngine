@@ -6,7 +6,7 @@
 
 #include "papplication.h"
 
-//#define PURITY_MODE_DEBUG
+#define PURITY_MODE_DEBUG
 //extern purity::PApplication * purity::CreateApplication();
 
 #ifdef PURITY_PLATFORM_WINDOWS
@@ -63,7 +63,9 @@ PURITY_API int main(int argc, const char* argv[]){
         return 1;
     }
 
+    application->preInit();
     application->init();
+    application->postInit();
     application->start();
     while(application->m_runningApp)
     {
