@@ -63,18 +63,26 @@ namespace purity{
 
     void PApplication::process() {
         // Call the process method on all the services
-        serviceLocator->getConcreteService<IECSService, PECSService>()->process();
+        for (const auto runnable : serviceLocator->getRunnables())
+        {
+            runnable->process();
+        }
         PInput::PollEvents();
     }
 
     void PApplication::update(float deltaTime) {
         // Call the update method on all the services
-        serviceLocator->getConcreteService<IECSService, PECSService>()->update(1.0f);
+        for (const auto updatable : serviceLocator->getUpdatables())
+        {
+            updatable->update(1.0f);
+        }
     }
 
     void PApplication::render() {
-        // Call the render method on all the services
-        serviceLocator->getConcreteService<IECSService, PECSService>()->render();
+        for (const auto renderable : serviceLocator->getRenderables())
+        {
+            renderable->render();
+        }
     }
 
     void PApplication::preInit()
@@ -87,23 +95,24 @@ namespace purity{
         window->setWindowsEventCallbacks(boundCallback);
 
         // Create all Services
-        auto ecsService = std::make_shared<PECSService>(window.get());
-        auto layerService = std::make_shared<PLayerService>();
-        auto assetService = std::make_shared<assetDB::PAssetDatabase>();
+        const auto ecsService = std::make_shared<PECSService>(window.get());
+        const auto layerService = std::make_shared<PLayerService>();
+        const auto assetService = std::make_shared<assetDB::PAssetDatabase>();
 
         assetService->preInit(assetdbData);
 
         // Register Services
-        serviceLocator->registerService<IECSService>(ecsService);
-        serviceLocator->registerService<ILayerService>(layerService);
-        serviceLocator->registerService<IAssetDBService>(assetService);
+        serviceLocator->registerService<PECSService>(ecsService);
+        serviceLocator->registerService<PLayerService>(layerService);
+        serviceLocator->registerService<assetDB::PAssetDatabase>(assetService);
     }
 
     void PApplication::init() {
         // Call the init method on all the services
-        serviceLocator->getService<IECSService>()->init();
-        serviceLocator->getService<ILayerService>()->init();
-        serviceLocator->getService<IAssetDBService>()->init();
+        for (const auto initializable : serviceLocator->getInitializables())
+        {
+            initializable->init();
+        }
     }
 
     void PApplication::postInit()
@@ -113,18 +122,25 @@ namespace purity{
     void PApplication::destroy() {
         // Call the destroy method on all the services
         window->deleteWindow();
-        serviceLocator->getService<ILayerService>()->destroy();
-        serviceLocator->getService<IECSService>()->destroy();
-        serviceLocator->getService<IAssetDBService>()->destroy();
+        for (const auto terminable : serviceLocator->getTerminables())
+        {
+            terminable->destroy();
+        }
     }
 
     void PApplication::exit() {
         // nothing for now
         PWindow::unbind();
+        serviceLocator->unregisterService<assetDB::PAssetDatabase>();
+        serviceLocator->unregisterService<PLayerService>();
+        serviceLocator->unregisterService<PECSService>();
     }
 
     void PApplication::start() {
-        serviceLocator->getConcreteService<IECSService, PECSService>()->start();
+        for (const auto runnable : serviceLocator->getRunnables())
+        {
+            runnable->start();
+        }
     }
 
     PApplication::PApplication()
@@ -141,7 +157,7 @@ namespace purity{
         /*dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
             return shouldClose(std::forward<decltype(placeholder1)>(placeholder1));
         });*/
-        auto layerService = serviceLocator->getConcreteService<ILayerService, PLayerService>();
+        const auto layerService = serviceLocator->getService<PLayerService>();
         for (auto it = layerService->layerStack.end(); it != layerService->layerStack.begin();) {
             auto _tmp = (*--it);
             if (_tmp == nullptr) continue;

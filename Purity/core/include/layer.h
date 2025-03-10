@@ -6,9 +6,8 @@
 
 #include "purity_core_pch.h"
 
-#include "service_base.h"
 #include "layer_service.h"
-
+#include "service_base.h"
 
 
 namespace purity {
@@ -22,7 +21,7 @@ namespace purity {
         OverlayLayer
     };
 
-    class PURITY_API PLayerService : public PServiceBase<ILayerService>{
+    class PURITY_API PLayerService final : public PServiceBase<ILayerService>{
         friend class PApplication;
 
     private:
@@ -100,7 +99,7 @@ namespace purity {
         PLayerService& operator=(const PLayerService&) = delete;
         PLayerService& operator=(PLayerService&&) = delete;
 
-        void terminate();
+        void exit() override;
 
 
         [[maybe_unused]] PLayer* fetchLayerByID(unsigned int id);
@@ -133,11 +132,6 @@ namespace purity {
     public:
         void preInit(std::any data) override;
         void postInit() override;
-        void start() override;
-        void process() override;
-        void preRender() override;
-        void render() override;
-        void postsRender() override;
         void update(float deltaTime) override;
 
     private:

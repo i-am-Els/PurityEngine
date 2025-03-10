@@ -33,32 +33,8 @@ namespace purity::assetDB{
     {
     }
 
-    void PAssetDatabase::preRender()
-    {
-    }
-
-    void PAssetDatabase::postsRender()
-    {
-    }
-
     void PAssetDatabase::init() {
         // queryDBForAsset({QueryStaticMeshAssetSpec("gun", "gun.fbx", "material.ml"), QueryOperation::Read});
-
-    }
-
-    void PAssetDatabase::start() {
-
-    }
-
-    void PAssetDatabase::process() {
-
-    }
-
-    void PAssetDatabase::render() {
-
-    }
-
-    void PAssetDatabase::update(float deltaTime) {
 
     }
 
@@ -66,4 +42,7 @@ namespace purity::assetDB{
 
     }
 
+    void PAssetDatabase::exit()
+    {
+    }
 }

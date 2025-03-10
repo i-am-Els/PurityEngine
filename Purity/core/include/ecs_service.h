@@ -8,7 +8,7 @@
 
 namespace purity{
 
-    class PURITY_API IECSService : public IService{
+    class PURITY_API IECSService : public IInitializable, IRunnable, IUpdatable, IRenderable, ITerminable{
     public:
 
 

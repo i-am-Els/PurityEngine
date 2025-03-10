@@ -8,7 +8,7 @@
 
 namespace purity{
 
-    class PURITY_API IAssetDBService : public IService{
+    class PURITY_API IAssetDBService : public IInitializable, ITerminable{
     public:
 
 

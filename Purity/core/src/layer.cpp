@@ -76,7 +76,7 @@ namespace purity {
     // =============================================================================================================
     // =============================================================================================================
 
-    void PLayerService::terminate() {
+    void PLayerService::exit() {
         for (auto& layer : layerStack){
             if (layer == nullptr) continue;
             delete layer;
@@ -107,7 +107,7 @@ namespace purity {
 
     PLayerService::~PLayerService() noexcept {
         PLog::echoMessage("Destroying Layer Manager.");
-        PLayerService::terminate();
+        PLayerService::exit();
     }
 
     /// @brief Creates a Layer and adds it to the Layer Holding Container.
@@ -154,26 +154,6 @@ namespace purity {
     }
 
     void PLayerService::postInit()
-    {
-    }
-
-    void PLayerService::start()
-    {
-    }
-
-    void PLayerService::process()
-    {
-    }
-
-    void PLayerService::preRender()
-    {
-    }
-
-    void PLayerService::render()
-    {
-    }
-
-    void PLayerService::postsRender()
     {
     }
 

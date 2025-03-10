@@ -18,7 +18,11 @@ void PECSService::preRender()
 {
 }
 
-void PECSService::postsRender()
+void PECSService::postRender()
+{
+}
+
+void PECSService::exit()
 {
 }
 }

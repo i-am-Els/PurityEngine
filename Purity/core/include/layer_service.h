@@ -8,7 +8,7 @@
 
 namespace purity{
 
-    class PURITY_API ILayerService : public IService{
+    class PURITY_API ILayerService : public IInitializable, IUpdatable, ITerminable{
     public:
 
 

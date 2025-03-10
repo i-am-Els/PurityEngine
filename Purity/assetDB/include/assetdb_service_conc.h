@@ -5,7 +5,6 @@
 #pragma once
 
 #include "service_base.h"
-#include "handle_base.h"
 #include "assetdb_enums.h"
 #include "assetdb_service.h"
 #include "assetdb_query_specs.h"
@@ -27,16 +26,6 @@ namespace purity::assetDB{
         void init() override;
         void postInit() override;
 
-        void start() override;
-
-        void process() override;
-
-        void preRender() override;
-        void render() override;
-        void postsRender() override;
-
-        void update(float deltaTime) override;
-
         void destroy() override;
 
         template<typename T>
@@ -54,7 +43,10 @@ namespace purity::assetDB{
         [[nodiscard]]static Ref<T> performUpdateOperation(const QuerySpec<T>& spec);
         template<typename T>
         [[nodiscard]]static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
+    public:
+        void exit() override;
 
+    private:
         // Switch on QueryType...
         std::map<PUUID, AssetMetadata> m_AssetContainer;
         std::map<PUUID, Ref<PAsset>> m_LoadedAssetContainer;

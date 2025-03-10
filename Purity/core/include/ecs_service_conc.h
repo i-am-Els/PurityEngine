@@ -146,6 +146,7 @@ namespace purity{
         void preInit(std::any data) override;
         void postInit() override;
         void preRender() override;
-        void postsRender() override;
+        void postRender() override;
+        void exit() override;
     };
 }
