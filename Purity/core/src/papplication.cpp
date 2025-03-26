@@ -102,9 +102,9 @@ namespace purity{
         assetService->preInit(assetdbData);
 
         // Register Services
-        serviceLocator->registerService<PECSService>(ecsService);
-        serviceLocator->registerService<PLayerService>(layerService);
-        serviceLocator->registerService<assetDB::PAssetDatabase>(assetService);
+        serviceLocator->registerService<AECSService, PECSService>(ecsService);
+        serviceLocator->registerService<ALayerService, PLayerService>(layerService);
+        serviceLocator->registerService<AAssetDBService, assetDB::PAssetDatabase>(assetService);
     }
 
     void PApplication::init() {
@@ -131,9 +131,9 @@ namespace purity{
     void PApplication::exit() {
         // nothing for now
         PWindow::unbind();
-        serviceLocator->unregisterService<assetDB::PAssetDatabase>();
-        serviceLocator->unregisterService<PLayerService>();
-        serviceLocator->unregisterService<PECSService>();
+        serviceLocator->unregisterService<AAssetDBService>();
+        serviceLocator->unregisterService<ALayerService>();
+        serviceLocator->unregisterService<AECSService>();
     }
 
     void PApplication::start() {
@@ -157,9 +157,9 @@ namespace purity{
         /*dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
             return shouldClose(std::forward<decltype(placeholder1)>(placeholder1));
         });*/
-        const auto layerService = serviceLocator->getService<PLayerService>();
+        const auto layerService = serviceLocator->getService<ALayerService, PLayerService>();
         for (auto it = layerService->layerStack.end(); it != layerService->layerStack.begin();) {
-            auto _tmp = (*--it);
+            const auto _tmp = (*--it);
             if (_tmp == nullptr) continue;
             (_tmp)->eventFired(event);
             if (event.getHandled()) break;

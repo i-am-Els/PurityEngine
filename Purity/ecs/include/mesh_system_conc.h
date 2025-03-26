@@ -4,10 +4,7 @@
 
 #pragma once
 
-#include "islemath.h"
 #include "mesh_system.h"
-#include "service_base.h"
-#include "isystems.h"
 #include "mesh.h"
 
 using namespace purity::ecs;

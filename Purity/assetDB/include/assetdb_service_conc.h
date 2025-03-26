@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "service_base.h"
 #include "assetdb_enums.h"
 #include "assetdb_service.h"
 #include "assetdb_query_specs.h"
@@ -16,7 +15,7 @@ namespace purity::assetDB{
     // TODO - Implement the Specs GetAssetHandle methods...
 
 
-    class PURITY_API PAssetDatabase final : public PServiceBase<IAssetDBService>{
+    class PURITY_API PAssetDatabase final : public AAssetDBService{
     public:
         ~PAssetDatabase() override{
             PLog::echoMessage("Destroying AssetDB.");
@@ -45,6 +44,8 @@ namespace purity::assetDB{
         [[nodiscard]]static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
     public:
         void exit() override;
+
+        PNT_TYPE_INDEX_DEF()
 
     private:
         // Switch on QueryType...

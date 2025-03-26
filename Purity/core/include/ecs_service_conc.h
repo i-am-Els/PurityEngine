@@ -12,13 +12,12 @@
 #include "mesh_system_conc.h"
 #include "reg_system_conc.h"
 #include "render_system_conc.h"
-#include "service_base.h"
 #include "tag_comp.h"
 #include "transform_system_conc.h"
 #include "window_purity.h"
 
 namespace purity{
-    class PURITY_API PECSService final : public PServiceBase<IECSService>{
+    class PURITY_API PECSService final : public AECSService{
     public:
         PECSService() = default;
         PECSService(const PECSService& service) = delete;
@@ -121,8 +120,8 @@ namespace purity{
 
         template<typename T>
         void setSystem(std::unique_ptr<ISystem<T>> system){
-            static_assert(std::is_base_of<PComponent, T>::value, "T must be a subclass of PComponent");
-            std::type_index index = s_getTypeIndex<T>();
+            static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
+            const std::type_index index = s_getTypeIndex<T>();
             if(system_map.find(index) != system_map.end()){
                 throw std::runtime_error("System already registered!");
             }
@@ -131,8 +130,8 @@ namespace purity{
 
         template<typename T>
         void unsetSystem(){
-            static_assert(std::is_base_of<PComponent, T>::value, "T must be a subclass of PComponent");
-            std::type_index index = s_getTypeIndex<T>();
+            static_assert(std::is_base_of_v<PComponent, T>, "T must be a subclass of PComponent");
+            const std::type_index index = s_getTypeIndex<T>();
             if(system_map.find(index) == system_map.end()){
                 throw std::runtime_error("System not registered!");
             }

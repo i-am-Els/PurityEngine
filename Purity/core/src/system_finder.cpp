@@ -15,7 +15,7 @@ namespace purity{
     }
 
     PECSService *PSystemFinder::GetECSService() {
-        return dynamic_cast<PECSService *>(GetApplication()->serviceLocator->getService<IECSService>().get());
+        return GetApplication()->serviceLocator->getService<AECSService, PECSService>().get();
     }
 
     std::shared_ptr<PServiceLocator> PSystemFinder::GetServiceLocator() {

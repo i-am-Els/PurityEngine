@@ -4,7 +4,6 @@
 
 #include "mesh_system_conc.h"
 #include "entity.h"
-#include "system_finder.h"
 
 namespace purity::ecs{
     void P3DGeometricMeshSS::init() {

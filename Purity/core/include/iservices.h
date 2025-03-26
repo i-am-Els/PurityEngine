@@ -23,44 +23,44 @@ namespace purity{
     };
     // For initialization phases
 
-    class PURITY_API IInitializable : public IService{
+    class PURITY_API IInitializableService {
     public:
         virtual void preInit(std::any data) = 0;
         virtual void init() = 0;
         virtual void postInit() = 0;
-        ~IInitializable() override = default;
+        virtual ~IInitializableService() = default;
     };
 
     // For runtime processing
-    class PURITY_API IRunnable : public IService{
+    class PURITY_API IRunnableService {
     public:
         virtual void start() = 0;
         virtual void process() = 0;
-        ~IRunnable() override = default;
+        virtual ~IRunnableService() = default;
     };
 
     // For updating logic (like game logic or service state updates)
-    class PURITY_API IUpdatable : public IService {
+    class PURITY_API IUpdatableService {
     public:
         virtual void update(float deltaTime) = 0;
-        ~IUpdatable() override = default;
+        virtual ~IUpdatableService() = default;
     };
 
     // For rendering phases
-    class PURITY_API IRenderable : public IService {
+    class PURITY_API IRenderableService{
     public:
         virtual void preRender() = 0;
         virtual void render() = 0;
         virtual void postRender() = 0;
-        ~IRenderable() override = default;
+        virtual ~IRenderableService() = default;
     };
 
     // For termination or cleanup phases
-    class PURITY_API ITerminable : public IService {
+    class PURITY_API ITerminableService {
     public:
         virtual void destroy() = 0;
         virtual void exit() = 0;
-        ~ITerminable() override = default;
+        virtual ~ITerminableService() = default;
     };
 
 }

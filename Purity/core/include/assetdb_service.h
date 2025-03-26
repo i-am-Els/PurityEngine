@@ -8,9 +8,13 @@
 
 namespace purity{
 
-    class PURITY_API IAssetDBService : public IInitializable, ITerminable{
+    class PURITY_API AAssetDBService : public IService, public IInitializableService, public ITerminableService{
     public:
 
+        [[nodiscard]] std::type_index getTypeIndex() const override {
+            return {typeid(AAssetDBService)};
+        }
+        ~AAssetDBService() override = default;
 
     };
 }

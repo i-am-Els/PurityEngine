@@ -87,7 +87,6 @@ add_library(Purity
         core/include/purity_core_pch.h
         core/include/purity_exceptions.h
         core/include/pobject.h
-        core/include/service_base.h
         core/include/service_locator.h
         core/include/system_finder.h
         core/include/window_purity.h
