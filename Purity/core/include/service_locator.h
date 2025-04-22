@@ -49,7 +49,7 @@ namespace purity{
                 list.erase(
                     std::remove_if(
                         list.begin(), list.end(),
-                        [service](auto* ptr) {
+                        [service](const auto* ptr) {
                             // Compare the raw pointer addresses by converting to void*
                             return reinterpret_cast<const void*>(ptr) == reinterpret_cast<const void*>(service);
                         }

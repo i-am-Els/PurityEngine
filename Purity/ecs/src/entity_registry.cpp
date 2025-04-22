@@ -51,7 +51,8 @@ namespace purity::ecs{
     }
 
     PEntityRegistry::~PEntityRegistry() {
-        m_entityMap.clear();
+        if (!m_entityMap.empty())
+            m_entityMap.clear();
         PLog::echoMessage("Destroying Entity Registry.");
     }
 

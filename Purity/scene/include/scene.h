@@ -10,7 +10,7 @@
 namespace purity::scene{
     class PURITY_API PScene{
     public:
-        PScene() = default;
+        PScene();
         ~PScene();
         //explicit PScene(const ecs::PEntityRegistry& registry );
         ecs::PEntityHandle CreateEntity(const std::string& name);
@@ -19,10 +19,12 @@ namespace purity::scene{
         void DestroyEntityWithUUID(PUUID uuid);
 
         static bool HasAnythingToRender();
-        static bool LoadScene(PUUID scene_id);
-        static bool UnloadScene();
+        static PScene* LoadScene(const PUUID& scene_id);
+        static PScene* UnloadScene();
+        auto getID() -> PUUID { return m_scene_id; }
 
     private:
+        PUUID m_scene_id;
         ecs::PEntityRegistry m_registry;
     };
 } // purity::scene

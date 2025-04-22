@@ -44,7 +44,7 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::extractProjectInformation(std::string filePath)
+	bool ProjectManager::extractProjectInformation(std::string filePath) const
 	{
 		fs_path _filepath = { filePath };
 		if (!std::filesystem::exists(_filepath)) 

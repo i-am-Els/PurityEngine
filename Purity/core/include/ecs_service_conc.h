@@ -28,7 +28,7 @@ namespace purity{
             setSystem<PTagComponent>(std::make_unique<ecs::PTagManager>());
             setSystem<PTransformComponent>(std::make_unique<ecs::PTransformSS>());
             setSystem<PMeshComponent>(std::make_unique<ecs::P3DGeometricMeshSS>());
-            setSystem<PRenderComponent>(std::make_unique<ecs::POpenGLRenderSS>(_window->getWindow()));
+            setSystem<PRenderComponent>(std::make_unique<ecs::POpenGLRenderSS>(_window->getGlfWwindow()));
         }
 
         ~PECSService() override {
@@ -60,10 +60,6 @@ namespace purity{
         }
 
         void render() override {
-            getSystem<PIDComponent>()->render();
-            getSystem<PTagComponent>()->render();
-            getSystem<PTransformComponent>()->render();
-            getSystem<PMeshComponent>()->render();
             getSystem<PRenderComponent>()->render();
         }
 

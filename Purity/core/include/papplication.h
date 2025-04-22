@@ -21,7 +21,7 @@ namespace purity{
 
     public:
         bool m_runningApp = true;
-        std::unique_ptr<PWindow> window;
+        std::shared_ptr<PWindow> window;
 
         virtual ~PApplication() {
             PLog::echoMessage("Destroying PApplication.");
@@ -41,7 +41,9 @@ namespace purity{
         virtual void onEvent(Event& placeholder1);
 
         std::shared_ptr<PServiceLocator> serviceLocator;
-        scene::PScene Scene{};
+        scene::PScene* Scene;
+
+        void switchScene(scene::PScene* scene);
 
         struct PURITY_API ApplicationInfo{
             std::string title;

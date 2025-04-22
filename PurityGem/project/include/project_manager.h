@@ -69,7 +69,7 @@ namespace project {
 		ProjectManager();
 		~ProjectManager();
 		bool extractProjectInformation(std::string projectDir, std::string fileName);
-		bool extractProjectInformation(std::string filePath);
+		bool extractProjectInformation(std::string filePath) const;
 		bool createProject(std::string projectDir, std::string fileName);
 		bool launchProject(std::string filePath);
 		GLFWwindow* m_window;

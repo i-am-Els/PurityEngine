@@ -3,6 +3,8 @@
 //
 
 #include "scene.h"
+
+#include "assetdb_service_conc.h"
 #include "tag_comp.h"
 #include "id_comp.h"
 
@@ -12,7 +14,6 @@ namespace purity::scene{
         return CreateEntityWithUUID(PUUID(), name);
     }
 
-    // TODO  Replace Entity return with Entity Handle
     PEntityHandle PScene::CreateEntityWithUUID(commons::PUUID uuid, const std::string& name) {
         // Add entity to Entity Registry
         auto entity = m_registry.Create(uuid, name);
@@ -37,7 +38,10 @@ namespace purity::scene{
         m_registry.Destroy(uuid);
     }
 
+    PScene::PScene() = default;
+
     PScene::~PScene() {
+        // TODO - clear out all systems and there components during scene switch
         PLog::echoMessage("Destroying Scene.");
     }
 
@@ -45,4 +49,30 @@ namespace purity::scene{
         return !PSystemFinder::GetScene()->m_registry.entityMapIsEmpty();
     }
 
+    PScene* PScene::LoadScene(const PUUID& scene_id)
+    {
+        PScene* scene;
+        if (static_cast<int>(scene_id) != 0)
+        {
+            // TODO - Start Serializing from json using Cereal.
+            // auto scene_asset = PSystemFinder::GetServiceLocator()->getService<AAssetDBService, assetDB::PAssetDatabase>()->
+            //                                             queryDBForAsset<assetDB::PLevelAsset>(assetDB::QueryLevelAssetSpec(scene_id), assetDB::QueryOperation::Read);
+            // scene = scene_asset.serialize();
+        }
+        // TODO - create a new asset file repressenting this asset in asset DB
+        scene = new PScene();
+        auto bunny = scene->CreateEntity("Bunny");
+
+        auto mesh = bunny.AddComponent<PMeshComponent>();
+        auto render = bunny.AddComponent<PRenderComponent>();
+
+        PLog::echoValue(bunny.GetComponent<PTransformComponent>()->m_position);
+
+        return scene;
+    }
+
+    PScene* PScene::UnloadScene()
+    {
+        return nullptr;
+    }
 }

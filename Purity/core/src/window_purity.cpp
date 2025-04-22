@@ -33,6 +33,10 @@ namespace purity {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         setVersion(gl_major_v, gl_minor_v);
 
+        m_data.width = width;
+        m_data.height = height;
+        m_data.title = title;
+
         m_glfwWindow = glfwCreateWindow(
                 width,
                 height,
@@ -162,9 +166,5 @@ namespace purity {
     void PWindow::update() {
 
     }
-
-
-    // Modern opengl things
-    // Using shaders and the likes to render instead of the legacy mode
 
 }

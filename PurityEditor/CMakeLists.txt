@@ -23,20 +23,25 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 
 add_executable(PurityEditor
-        gui/src/editor.cpp
-        gui/include/editor.h
-        gui/src/p_editor_application.cpp
-        gui/include/p_editor_application.h
+        editor/include/editor.h
+        editor/include/p_editor_application.h
+        editor/include/imgui_layer.h
+        editor/src/editor.cpp
+        editor/src/p_editor_application.cpp
+        editor/src/imgui_layer.cpp
+        editor/include/editor_pch.h
 )
 
 
 # Add the core directory for the Purity library
 target_include_directories(PurityEditor PRIVATE
 #        ${CMAKE_SOURCE_DIR}/Purity/core
-        gui/include
+        editor/include
 #        $<BUILD_INTERFACE:${Purity_INCLUDE_DIRS}>
 #        $<BUILD_INTERFACE:${Purity_INCLUDE_DIRS}/core>
 )
+
+target_precompile_headers(PurityEditor PRIVATE editor/include/editor_pch.h)
 
 add_dependencies(PurityEditor IsleMath Purity Commons)
 
@@ -53,4 +58,7 @@ add_custom_command(TARGET PurityEditor POST_BUILD
         COMMAND_EXPAND_LISTS
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
+
+target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
+
 

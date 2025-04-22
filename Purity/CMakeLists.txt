@@ -81,6 +81,7 @@ add_library(Purity
         core/include/iservices.h
         core/include/layer.h
         core/include/layer_service.h
+        core/include/layer_service_conc.h
         core/include/layerMask.h
         core/include/log.h
         core/include/papplication.h
@@ -119,6 +120,7 @@ add_library(Purity
         #--------------------------------
         fileIO/include/fileio.h
         fileIO/include/handle_base.h
+        fileIO/include/importer.h
         fileIO/include/mesh_importer.h
         #--------------------------------
         # geometry/include
@@ -140,6 +142,7 @@ add_library(Purity
         core/src/ecs_service_conc.cpp
         core/src/input.cpp
         core/src/layer.cpp
+        core/src/layer_service_conc.cpp
         core/src/layerMask.cpp
         core/src/log.cpp
         core/src/papplication.cpp
@@ -165,6 +168,7 @@ add_library(Purity
         ecs/src/transform_system_conc.cpp
         #--------------------------------
         fileIO/src/fileio.cpp
+        fileIO/src/importer.cpp
         fileIO/src/mesh_importer.cpp
         #--------------------------------
         # geometry/src
@@ -175,7 +179,7 @@ add_library(Purity
         graphics/src/vertex_array.cpp
         #--------------------------------
         scene/src/scene.cpp
-         )
+)
 
 target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS PURITY_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE GLAD_DLL)
 

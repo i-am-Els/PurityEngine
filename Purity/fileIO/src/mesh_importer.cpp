@@ -7,14 +7,11 @@
 
 namespace purity::fileIO{
 
-    MeshImporter::MeshImporter() {
 
-    }
-
-    bool MeshImporter::ImportFile(const std::string &file) {
+    bool MeshImporter::importFile(const std::string &filePath) {
         Assimp::Importer importer;
 
-        const aiScene* aiScene = importer.ReadFile(file,
+        const aiScene* aiScene = importer.ReadFile(filePath,
                                                    aiProcess_CalcTangentSpace
                                                    | aiProcess_GenNormals
                                                    | aiProcess_Triangulate
@@ -33,6 +30,11 @@ namespace purity::fileIO{
 
     void MeshImporter::SceneProcessing(const aiScene* aiScene)
     {
+    }
+
+    MeshImporter::~MeshImporter()
+    {
+        PLog::echoMessage("Destroying Mesh Importer");
     }
 
 }

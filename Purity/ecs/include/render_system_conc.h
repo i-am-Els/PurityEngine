@@ -23,7 +23,7 @@ namespace purity::ecs{
 
     class PURITY_API POpenGLRenderSS final : public IRenderSystem{
     public:
-        explicit POpenGLRenderSS(GLFWwindow*& window);
+        explicit POpenGLRenderSS(GLFWwindow* window);
         ~POpenGLRenderSS() override;
         POpenGLRenderSS(POpenGLRenderSS&& renderer) = default;
 

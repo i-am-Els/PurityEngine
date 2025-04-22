@@ -6,6 +6,9 @@
 
 #include "papplication.h"
 
+constexpr int WIN_WIDTH = 1024;
+constexpr int WIN_HEIGHT = 512;
+
 #define PURITY_MODE_DEBUG
 //extern purity::PApplication * purity::CreateApplication();
 
@@ -38,7 +41,7 @@ PURITY_API int main(int argc, const char* argv[]){
         auto projectFilePath = std::string(argv[2]);
         auto startUpScene = std::string(argv[4]);
         purity::PApplication::ProjectEditorInfo peInfo(projectFilePath, startUpScene);
-        purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), 1280, 720);
+        purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), WIN_WIDTH, WIN_HEIGHT);
         std::cout << "Project Name: " << appInfo.title << std::endl;
         application = purity::CreateApplication();
         application->m_applicationInfo = appInfo;
@@ -51,7 +54,7 @@ PURITY_API int main(int argc, const char* argv[]){
     }
 #else
     purity::PApplication::ProjectEditorInfo peInfo("C:\\Dev\\PurityEngine\\TestGame\\TestGame.pproject", "Assets/Scenes/DefaultScene.pscene");
-    purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), 1280, 720);
+    purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), WIN_WIDTH, WIN_HEIGHT);
     std::cout << "Project Name: " << appInfo.title << std::endl;
     application = purity::CreateApplication();
     application->m_applicationInfo = appInfo;

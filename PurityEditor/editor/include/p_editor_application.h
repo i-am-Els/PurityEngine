@@ -4,6 +4,7 @@
 
 #pragma once
 #define PURITY_ENTRY_POINT
+#include "editor_pch.h"
 #include "purity.h"
 #include <nlohmann/json.hpp>
 #include <nlohmann/json-schema.hpp>
@@ -18,7 +19,7 @@ using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
 using namespace purity;
 
-namespace gui {
+namespace editor {
     struct DatabaseData {
         PUUID id;
         std::vector<std::map<std::string, std::string>> assets;

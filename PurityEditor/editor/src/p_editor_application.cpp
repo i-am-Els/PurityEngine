@@ -3,10 +3,14 @@
 //
 
 #include "p_editor_application.h"
+
+#include "editor.h"
 #include "fstream"
+#include "layer_service.h"
+#include "layer_service_conc.h"
 using namespace commons; 
 
-namespace gui {
+namespace editor {
 
     bool PEditorApplication::verify() {
         std::optional<DatabaseData> dbData = validateDBFile();
@@ -109,7 +113,9 @@ namespace gui {
 
     void PEditorApplication::init() {
         PApplication::init();
-        
+        const auto layer_service = serviceLocator->getService<ALayerService, PLayerService>();
+        layer_service->PushLayer(new gui::ExampleLayer());
+        layer_service->PushOverlay(new gui::ImGuiLayer("UI"));
     }
 
     void PEditorApplication::start() {
@@ -143,5 +149,5 @@ namespace gui {
 
 
 purity::PApplication* purity::CreateApplication(){
-    return new gui::PEditorApplication();
+    return new editor::PEditorApplication();
 }

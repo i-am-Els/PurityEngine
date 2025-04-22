@@ -27,7 +27,7 @@ namespace purity{
 
         static PApplication *GetApplication();
 
-        static PWindow *GetWindow();
+        static std::shared_ptr<PWindow>& GetWindow();
 
         static scene::PScene *GetScene();
 

@@ -12,19 +12,20 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "importer.h"
+
 using namespace isle_engine::math;
 using namespace purity::graphics;
 
 namespace purity::fileIO{
 
-    class PURITY_API MeshImporter {
+    class PURITY_API MeshImporter final : public PImporter {
     public:
-        MeshImporter();
-
-        bool ImportFile(const std::string& file);
+        MeshImporter() = default;
+        bool importFile(const std::string& filePath) override;
 
         void SceneProcessing(const aiScene* aiScene);
-
+        ~MeshImporter() override;
     };
 
 }

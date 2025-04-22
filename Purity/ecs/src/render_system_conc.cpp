@@ -77,9 +77,9 @@ namespace purity::ecs {
         else {
             if (hasSomethingToRender()) {
                 PLog::echoMessage("Has Something to Render.");
-                vertexArray->bindVAO();
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-                VertexArray::unbindVAO();
+                // vertexArray->bindVAO();
+                // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+                // VertexArray::unbindVAO();
             }
         }
 
@@ -91,12 +91,12 @@ namespace purity::ecs {
 
     }
 
-    void POpenGLRenderSS::clearWindow(GLbitfield masks, graphics::Color color) {
+    void POpenGLRenderSS::clearWindow(GLbitfield masks, const graphics::Color color) {
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(masks);
     }
 
-    POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* &window) : _window(window) {
+    POpenGLRenderSS::POpenGLRenderSS(GLFWwindow* window) : _window(window) {
         vertexArray = new VertexArray();
         renderComponents.reserve(128);
         _vbo = nullptr;
@@ -138,7 +138,7 @@ namespace purity::ecs {
     }
 
     bool POpenGLRenderSS::hasSomethingToRender() const noexcept {
-        return scene::PScene::HasAnythingToRender();
+        return scene::PScene::HasAnythingToRender(); // TODO - Change this method to check if any object with an `enabled` render component is present in the scene
     }
 
 }

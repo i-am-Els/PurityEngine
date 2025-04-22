@@ -242,7 +242,12 @@ namespace purity::assetDB
     {
         friend class PAssetDatabase;
     public:
-        QueryLevelAssetSpec()
+        explicit QueryLevelAssetSpec(const PUUID& id)
+            : QuerySpec<PLevelAsset>(new LevelAssetOperationStrategy())
+        {
+        }
+
+        explicit QueryLevelAssetSpec(const std::string& path)
             : QuerySpec<PLevelAsset>(new LevelAssetOperationStrategy())
         {
         }

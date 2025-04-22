@@ -75,4 +75,15 @@ namespace purity::exceptions
             return _message.c_str();
         }
     };
+
+    class PURITY_API MaxArraySizeExceededError final : public std::exception
+    {
+    private:
+        std::string _message;
+    public:
+        operator int() { return -1; }
+        [[nodiscard]] const char* what() const noexcept override {
+            return "The maximum array size is reached, the array/vector is not allowed to take in more values, this can be a cap placed on the container for masking reasons.";
+        }
+    };
 }

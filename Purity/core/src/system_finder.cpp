@@ -22,11 +22,11 @@ namespace purity{
         return GetApplication()->serviceLocator;
     }
 
-    PWindow *PSystemFinder::GetWindow() {
-        return GetApplication()->window.get();
+    std::shared_ptr<PWindow>& PSystemFinder::GetWindow() {
+        return GetApplication()->window;
     }
 
     scene::PScene *PSystemFinder::GetScene() {
-        return &GetApplication()->Scene;
+        return GetApplication()->Scene;
     }
 }

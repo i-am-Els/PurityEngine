@@ -47,7 +47,7 @@
 #include "papplication.h"
 #include "input.h"
 #include "ecs_service_conc.h"
-#include "layer.h"
+#include "layer_service_conc.h"
 #include <window_events.h>
 
 #include "assetdb_service_conc.h"
@@ -117,6 +117,11 @@ namespace purity{
 
     void PApplication::postInit()
     {
+        for (const auto initializable : serviceLocator->getInitializables())
+        {
+            initializable->postInit();
+        }
+        switchScene(scene::PScene::LoadScene(PUUID(0))); // TODO - This should switch to the default scene no the arbitrary 0 id-ed scene
     }
 
     void PApplication::destroy() {
@@ -146,7 +151,8 @@ namespace purity{
     PApplication::PApplication()
     : serviceLocator(std::make_shared<PServiceLocator>())
     {
-        window = std::make_unique<PWindow>();
+        window = std::make_shared<PWindow>();
+        Scene = new scene::PScene();
     }
 
     void PApplication::onEvent(Event& event)
@@ -158,13 +164,24 @@ namespace purity{
             return shouldClose(std::forward<decltype(placeholder1)>(placeholder1));
         });*/
         const auto layerService = serviceLocator->getService<ALayerService, PLayerService>();
-        for (auto it = layerService->layerStack.end(); it != layerService->layerStack.begin();) {
+        for (auto it = layerService->m_layers.end(); it != layerService->m_layers.begin();) {
             const auto _tmp = (*--it);
             if (_tmp == nullptr) continue;
             (_tmp)->eventFired(event);
             if (event.getHandled()) break;
         }
         std::cout << event;
+    }
+
+    /// Takes in already loaded scene
+    void PApplication::switchScene(scene::PScene* scene)
+    {
+        const auto temp = Scene;
+        Scene = scene;
+        if (temp != Scene && temp != nullptr)
+        {
+            delete temp;
+        }
     }
 
     bool PApplication::shouldClose(const WindowCloseEvent& event)
