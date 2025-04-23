@@ -31,3 +31,5 @@
 #else
 #define PURITY_DEBUG_MT_LOG(msg) PLog::echoMessage(msg)
 #endif
+
+#define PURITY_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

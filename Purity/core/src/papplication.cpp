@@ -159,7 +159,7 @@ namespace purity{
     {
         EventDispatcher dispatcher(event);
         // To close forward the WindowCloseEvent to the
-        dispatcher.dispatch<WindowCloseEvent>(std::bind(&PApplication::shouldClose, this, std::placeholders::_1)); // OR
+        dispatcher.dispatch<WindowCloseEvent>(PURITY_BIND_EVENT_FN(PApplication::shouldClose)); // OR
         /*dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
             return shouldClose(std::forward<decltype(placeholder1)>(placeholder1));
         });*/

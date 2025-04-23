@@ -114,7 +114,7 @@ namespace purity{
             static_assert(std::is_base_of_v<IService, Abstract>, "Abstract must be a subclass of IService");
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             const auto typeIndex = std::type_index(typeid(Abstract)); //
-            PLog::echoValue(typeIndex.name());
+            // PLog::echoValue(typeIndex.name());
 
             if (services.find(typeIndex) != services.end()){
                 throw std::runtime_error("Service already registered!");
@@ -128,7 +128,7 @@ namespace purity{
         void unregisterService(){
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             const auto typeIndex = std::type_index(typeid(Abstract));
-            PLog::echoValue(typeIndex.name());
+            // PLog::echoValue(typeIndex.name());
 
             const auto it = services.find(typeIndex);
             if (it == services.end()){
@@ -144,7 +144,7 @@ namespace purity{
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             const auto typeIndex = std::type_index(typeid(Abstract));
             const auto it = services.find(typeIndex);
-            PLog::echoValue(typeIndex.name());
+            // PLog::echoValue(typeIndex.name());
 
             if (it == services.end()){
                 throw std::runtime_error("Service not found!");

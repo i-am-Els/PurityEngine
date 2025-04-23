@@ -18,7 +18,7 @@ namespace editor::gui{
 
         void update() override
         {
-            PLog::echoMessage(LogLevel::Info, "ExampleLayer::Update");
+            // PLog::echoMessage(LogLevel::Info, "ExampleLayer::Update");
         }
 
         void eventFired(Event& event) override

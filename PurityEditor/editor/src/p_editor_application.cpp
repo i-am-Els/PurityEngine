@@ -3,7 +3,6 @@
 //
 
 #include "p_editor_application.h"
-
 #include "editor.h"
 #include "fstream"
 #include "layer_service.h"

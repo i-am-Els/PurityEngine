@@ -32,6 +32,7 @@ find_package(GTest CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 find_dependency(kubazip CONFIG)
 find_dependency(unofficial-minizip CONFIG)
@@ -130,6 +131,8 @@ add_library(Purity
         graphics/include/shader.h
         graphics/include/vertex_array.h
         #--------------------------------
+        platform/include/imgui_opengl3_renderer.h
+        #--------------------------------
         scene/include/scene.h
         #--------------------------------
         # -----------SOURCE-------------
@@ -178,6 +181,8 @@ add_library(Purity
         graphics/src/shader.cpp
         graphics/src/vertex_array.cpp
         #--------------------------------
+        platform/src/imgui_opengl3_renderer.cpp
+        #--------------------------------
         scene/src/scene.cpp
 )
 
@@ -199,6 +204,8 @@ target_include_directories(Purity PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/fileIO>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/graphics/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/graphics>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/platform/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/platform>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scene/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/scene>
         # -----------------------------------------------------------------
@@ -220,7 +227,7 @@ target_include_directories(Purity PUBLIC
 target_precompile_headers(Purity PRIVATE core/include/purity_core_pch.h)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp Commons)
+target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp Commons imgui::imgui)
 
 
 if(PURITY_INSTALL)
@@ -233,6 +240,7 @@ if(PURITY_INSTALL)
     install(DIRECTORY ecs/include/          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/ecs)
     install(DIRECTORY fileIO/include/       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/fileIO)
     install(DIRECTORY graphics/include/     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/graphics)
+    install(DIRECTORY platform/include/     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/platform)
     install(DIRECTORY scene/include/        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/scene)
 
 

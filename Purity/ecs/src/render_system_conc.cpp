@@ -76,7 +76,7 @@ namespace purity::ecs {
         }
         else {
             if (hasSomethingToRender()) {
-                PLog::echoMessage("Has Something to Render.");
+                // PLog::echoMessage("Has Something to Render.");
                 // vertexArray->bindVAO();
                 // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
                 // VertexArray::unbindVAO();

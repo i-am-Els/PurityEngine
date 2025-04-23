@@ -24,12 +24,12 @@ find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 
 add_executable(PurityEditor
         editor/include/editor.h
-        editor/include/p_editor_application.h
-        editor/include/imgui_layer.h
-        editor/src/editor.cpp
-        editor/src/p_editor_application.cpp
-        editor/src/imgui_layer.cpp
         editor/include/editor_pch.h
+        editor/include/imgui_layer.h
+        editor/include/p_editor_application.h
+        editor/src/editor.cpp
+        editor/src/imgui_layer.cpp
+        editor/src/p_editor_application.cpp
 )
 
 
