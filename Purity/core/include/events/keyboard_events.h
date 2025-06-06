@@ -62,6 +62,27 @@ namespace purity{
         }
     };
 
+    class PURITY_API KeyTypedEvent : public Event  // Note: NOT inheriting from KeyEvent
+{
+    private:
+        unsigned int m_Character;
+
+    public:
+        explicit KeyTypedEvent(unsigned int character) : m_Character(character) {}
+
+        [[nodiscard]] inline unsigned int getCharacter() const { return m_Character; }
+
+        [[nodiscard]] std::string ToString() const override {
+            std::stringstream ss;
+            ss << "KeyTypedEvent: '" << static_cast<char>(m_Character)
+               << "' (codepoint: " << m_Character << ")";
+            return ss.str();
+        }
+
+        EVENT_TYPE(E_EventType::KeyTyped)
+        EVENT_CATEGORY(E_EventCategory::KeyBoardEvent | E_EventCategory::InputEvent)
+    };
+
 }
 
 

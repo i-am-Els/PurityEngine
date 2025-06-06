@@ -59,6 +59,13 @@ namespace purity {
         glfwSetWindowUserPointer(m_glfwWindow, &m_data);
         setVSync(true);
 
+        glfwSetCharCallback(m_glfwWindow, [](GLFWwindow* window, unsigned int codepoint)
+        {
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+            KeyTypedEvent event(codepoint);
+            info.eventCallbackFunction(event);
+        });
+
         glfwSetWindowSizeCallback(m_glfwWindow, [](GLFWwindow* window, int width, int height){
             WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
             info.width = width;
@@ -72,6 +79,29 @@ namespace purity {
             WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
 
             WindowCloseEvent event;
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetCursorEnterCallback(m_glfwWindow, [](GLFWwindow* window, int entered)
+        {
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowCursorEnterEvent event(entered);
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetWindowFocusCallback(m_glfwWindow, [](GLFWwindow* window, int focused){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowFocusEvent event(focused);
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetWindowPosCallback(m_glfwWindow, [](GLFWwindow* window, int xpos, int ypos)
+        {
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowMovedEvent event(xpos, ypos);
             info.eventCallbackFunction(event);
         });
 

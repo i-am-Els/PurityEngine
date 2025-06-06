@@ -45,11 +45,71 @@ namespace purity{
     };
 
     class PURITY_API WindowMovedEvent : public Event{
+    public:
+        WindowMovedEvent(int x, int y) : xPos(x), yPos(y) {}
 
+        [[nodiscard]] inline int getWidth() const { return xPos; }
+        [[nodiscard]] inline int getHeight() const { return yPos; }
+
+        [[nodiscard]] std::string ToString() const override{
+            std::stringstream ss;
+            ss << "WindowMovedEvent: Window moved to {" << xPos << ", "<< yPos << "}";
+            return ss.str();
+        }
+        EVENT_TYPE(E_EventType::WindowMoved)
+
+        EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~WindowMovedEvent() override {
+            PLog::echoMessage("Destroying Window Move Event.");
+        }
+
+    private:
+        int xPos, yPos;
     };
 
     class PURITY_API WindowFocusEvent : public Event{
+    public:
+        explicit WindowFocusEvent(int focused) : m_focused(focused){}
 
+        [[nodiscard]] inline int getFocused() const { return m_focused; }
+
+        [[nodiscard]] std::string ToString() const override{
+            std::stringstream ss;
+            ss << "WindowFocusEvent: Focus is {" << m_focused << "}";
+            return ss.str();
+        }
+        EVENT_TYPE(E_EventType::WindowFocused)
+
+        EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~WindowFocusEvent() override {
+            PLog::echoMessage("Destroying Window Focus Event.");
+        }
+    private:
+        int m_focused;
+    };
+
+    class PURITY_API WindowCursorEnterEvent : public Event{
+    public:
+        explicit WindowCursorEnterEvent(int entered) : m_entered(entered){}
+
+        [[nodiscard]] inline int getEntered() const { return m_entered; }
+
+        [[nodiscard]] std::string ToString() const override{
+            std::stringstream ss;
+            ss << "WindowCursorEnterEvent: Cursor Entered is {" << m_entered << "}";
+            return ss.str();
+        }
+        EVENT_TYPE(E_EventType::WindowCursorEnter)
+
+        EVENT_CATEGORY(E_EventCategory::ApplicationEvent)
+
+        ~WindowCursorEnterEvent() override {
+            PLog::echoMessage("Destroying Window Cursor Enter Event.");
+        }
+    private:
+        int m_entered;
     };
 
     class PURITY_API WindowLostFocusEvent : public Event{

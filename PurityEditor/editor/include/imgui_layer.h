@@ -36,8 +36,10 @@ namespace editor{
             bool OnMouseScrolledEventCB(const MouseScrolledEvent& e);
             bool OnKeyPressedEventCB(const KeyPressedEvent& e);
             bool OnKeyReleasedEventCB(const KeyReleasedEvent& e);
-            // bool OnKeyTypedEventCB(const KeyTypedEvent& e);
-            bool OnWindowResizedEventCB(const WindowResizeEvent& e);
+            bool OnKeyTypedEventCB(const KeyTypedEvent& e);
+            // bool OnWindowResizedEventCB(const WindowResizeEvent& e);
+            bool OnWindowFocusedEventCB(const WindowFocusEvent& e);
+            bool OnWindowCursorEnterEventCB(const WindowCursorEnterEvent& e);
         protected:
             explicit ImGuiLayer(const std::string& name);
         public:

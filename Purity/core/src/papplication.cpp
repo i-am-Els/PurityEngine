@@ -63,11 +63,11 @@ namespace purity{
 
     void PApplication::process() {
         // Call the process method on all the services
+        PInput::PollEvents();
         for (const auto runnable : serviceLocator->getRunnables())
         {
             runnable->process();
         }
-        PInput::PollEvents();
     }
 
     void PApplication::update(float deltaTime) {

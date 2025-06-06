@@ -15,8 +15,8 @@ namespace purity{
     enum class E_EventType{
         None=0,
         AppUpdate, AppRender, AppTick,
-        WindowClose, WindowMoved, WindowResize, WindowFocused, WindowLostFocus,
-        KeyPressed, KeyReleased,
+        WindowClose, WindowMoved, WindowResize, WindowFocused, WindowLostFocus, WindowCursorEnter,
+        KeyPressed, KeyReleased, KeyTyped,
         MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 
