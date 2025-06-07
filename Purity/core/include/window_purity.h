@@ -33,7 +33,7 @@ namespace purity{
 
         void update();
 
-        inline GLFWwindow* getGlfWwindow()
+        inline GLFWwindow* getGLFWwindow()
         {
             return m_glfwWindow;
         }

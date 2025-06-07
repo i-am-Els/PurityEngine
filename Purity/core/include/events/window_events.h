@@ -7,7 +7,7 @@
 
 namespace purity{
 
-    class PURITY_API WindowCloseEvent : public Event{
+    class PURITY_API WindowCloseEvent final : public Event{
     public:
         WindowCloseEvent() = default;
 
@@ -20,9 +20,9 @@ namespace purity{
         }
     };
 
-    class PURITY_API WindowResizeEvent : public Event{
+    class PURITY_API WindowResizeEvent final : public Event{
     public:
-        WindowResizeEvent(uint32_t width, uint32_t height) : m_width(width), m_height(height) {}
+        WindowResizeEvent(const uint32_t width, const uint32_t height) : m_width(width), m_height(height) {}
 
         [[nodiscard]] inline uint32_t getWidth() const { return m_width; }
         [[nodiscard]] inline uint32_t getHeight() const { return m_height; }
@@ -44,9 +44,9 @@ namespace purity{
         uint32_t m_width, m_height;
     };
 
-    class PURITY_API WindowMovedEvent : public Event{
+    class PURITY_API WindowMovedEvent final : public Event{
     public:
-        WindowMovedEvent(int x, int y) : xPos(x), yPos(y) {}
+        WindowMovedEvent(const int x, const int y) : xPos(x), yPos(y) {}
 
         [[nodiscard]] inline int getWidth() const { return xPos; }
         [[nodiscard]] inline int getHeight() const { return yPos; }
@@ -68,9 +68,9 @@ namespace purity{
         int xPos, yPos;
     };
 
-    class PURITY_API WindowFocusEvent : public Event{
+    class PURITY_API WindowFocusEvent final : public Event{
     public:
-        explicit WindowFocusEvent(int focused) : m_focused(focused){}
+        explicit WindowFocusEvent(const int focused) : m_focused(focused){}
 
         [[nodiscard]] inline int getFocused() const { return m_focused; }
 
@@ -90,9 +90,9 @@ namespace purity{
         int m_focused;
     };
 
-    class PURITY_API WindowCursorEnterEvent : public Event{
+    class PURITY_API WindowCursorEnterEvent final : public Event{
     public:
-        explicit WindowCursorEnterEvent(int entered) : m_entered(entered){}
+        explicit WindowCursorEnterEvent(const int entered) : m_entered(entered){}
 
         [[nodiscard]] inline int getEntered() const { return m_entered; }
 
@@ -123,7 +123,7 @@ namespace purity{
     // It could be an option to implement it or not, but it's always there.
     // They might not have to take the route of first being received as an event and the dispatched to a function,
     // ... they are already called.
-    class PURITY_API AppTickEvent : public Event{
+    class PURITY_API AppTickEvent final : public Event{
     public:
         AppTickEvent() = default;
 
@@ -136,7 +136,7 @@ namespace purity{
         }
     };
 
-    class PURITY_API AppUpdateEvent : public Event{
+    class PURITY_API AppUpdateEvent final : public Event{
     public:
         AppUpdateEvent() = default;
 
@@ -149,7 +149,7 @@ namespace purity{
         }
     };
 
-    class PURITY_API AppRenderEvent : public Event{
+    class PURITY_API AppRenderEvent final : public Event{
     public:
         AppRenderEvent() = default;
 

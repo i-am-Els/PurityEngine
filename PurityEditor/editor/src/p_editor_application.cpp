@@ -3,7 +3,9 @@
 //
 
 #include "p_editor_application.h"
-#include "editor.h"
+
+#include "editors.h"
+#include "editor_layer.h"
 #include "fstream"
 #include "layer_service.h"
 #include "layer_service_conc.h"
@@ -113,8 +115,11 @@ namespace editor {
     void PEditorApplication::init() {
         PApplication::init();
         const auto layer_service = serviceLocator->getService<ALayerService, PLayerService>();
-        layer_service->PushLayer(new gui::ExampleLayer());
-        layer_service->PushOverlay(new gui::ImGuiLayer("UI"));
+        auto editorOverlayName = "Editor_UI";
+        const auto id = layer_service->PushOverlay(new gui::EditorLayer(editorOverlayName));
+        // layer_service->PushOverlay(new gui::ImGuiLayer("UI"));
+        const auto editor = dynamic_cast<gui::EditorLayer*>(layer_service->getLayerByPUUID(id));
+        gui::EditorLayer::setupEditor(editor);
     }
 
     void PEditorApplication::start() {

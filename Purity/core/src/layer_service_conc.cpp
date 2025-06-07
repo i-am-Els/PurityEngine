@@ -19,6 +19,12 @@ namespace purity
 
     }
 
+    PLayer* PLayerService::getLayerByPUUID(const PUUID& id)
+    {
+        const auto it = m_layerMap.find(id);
+        return it != m_layerMap.end() ? it->second : nullptr;
+    }
+
     // Return type Layer* can be interpreted as an unsigned int*
     [[maybe_unused]] PLayer *PLayerService::fetchLayerByName(const std::string &name) const
     {
@@ -36,24 +42,30 @@ namespace purity
         m_layerInsert = m_layers.begin();
     }
 
-    void PLayerService::PushLayer(PLayer* layer)
+    PUUID PLayerService::PushLayer(PLayer* layer)
     {
         if (m_layers.size() == MAX_SIZE)
         {
             throw MaxArraySizeExceededError();
         }
         m_layerInsert = m_layers.emplace(m_layerInsert, layer);
+        PUUID id = layer->getID();
+        m_layerMap[id] = layer;
         layer->attached();
+        return id;
     }
 
-    void PLayerService::PushOverlay(PLayer* overlay)
+    PUUID PLayerService::PushOverlay(PLayer* overlay)
     {
         if (m_layers.size() == MAX_SIZE)
         {
             throw MaxArraySizeExceededError();
         }
         m_layers.emplace_back(overlay);
+        PUUID id = overlay->getID();
+        m_layerMap[id] = overlay;
         overlay->attached();
+        return id;
     }
 
     void PLayerService::PopLayer(PLayer* layer)
@@ -61,7 +73,9 @@ namespace purity
         auto it = std::find(m_layers.begin(), m_layers.end(), layer);
         if (it != m_layers.end())
         {
+            PUUID id = layer->getID();
             layer->detached();
+            m_layerMap.erase(id);
             m_layers.erase(it);
             --m_layerInsert;
         }
@@ -72,10 +86,13 @@ namespace purity
         auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
         if (it != m_layers.end())
         {
+            PUUID id = overlay->getID();
             overlay->detached();
+            m_layerMap.erase(id);
             m_layers.erase(it);
         }
     }
+
 
     PLayerService::~PLayerService() noexcept {
         PLog::echoMessage("Destroying Layer Manager.");

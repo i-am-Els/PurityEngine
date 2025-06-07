@@ -50,7 +50,7 @@ namespace purity{
             int width;
             int height;
 
-            ApplicationInfo(){}
+            ApplicationInfo() : title("Purity Game Engine"), width(1024), height(512) {}
 
             ApplicationInfo(const std::string& t, const int w, const int h){
                 title = t;
@@ -63,6 +63,7 @@ namespace purity{
             std::string projectFilePath;
             std::string projectDir;
             std::string startUpSceneRelPath;
+            Color clearColor = Color(.1f, .2f, .1f, .5f);
 
             ProjectEditorInfo()= default;
 

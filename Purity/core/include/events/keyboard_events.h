@@ -17,15 +17,16 @@ namespace purity{
             PLog::echoMessage("Destroying Key Event.");
         }
 
+
     protected:
-        explicit KeyEvent(int keyCode) : m_keyCode(keyCode) {}
+        explicit KeyEvent(const int keyCode) : m_keyCode(keyCode) {}
 
         int m_keyCode;
     };
 
-    class PURITY_API KeyPressedEvent : public KeyEvent{
+    class PURITY_API KeyPressedEvent final : public KeyEvent{
     public:
-        explicit KeyPressedEvent(int keyCode, int repeatCount=0) : KeyEvent(keyCode), m_repeat_count(repeatCount) {}
+        explicit KeyPressedEvent(const int keyCode, const int repeatCount=0) : KeyEvent(keyCode), m_repeat_count(repeatCount) {}
 
         [[nodiscard]] inline int getRepeatCount() const { return m_repeat_count; }
 
@@ -45,9 +46,9 @@ namespace purity{
         int m_repeat_count;
     };
 
-    class PURITY_API KeyReleasedEvent : public KeyEvent{
+    class PURITY_API KeyReleasedEvent final : public KeyEvent{
     public:
-        explicit KeyReleasedEvent(int keyCode) : KeyEvent(keyCode) {}
+        explicit KeyReleasedEvent(const int keyCode) : KeyEvent(keyCode) {}
 
         [[nodiscard]] std::string ToString() const override{
             std::stringstream ss;
@@ -62,13 +63,13 @@ namespace purity{
         }
     };
 
-    class PURITY_API KeyTypedEvent : public Event  // Note: NOT inheriting from KeyEvent
+    class PURITY_API KeyTypedEvent final : public Event  // Note: NOT inheriting from KeyEvent
 {
     private:
         unsigned int m_Character;
 
     public:
-        explicit KeyTypedEvent(unsigned int character) : m_Character(character) {}
+        explicit KeyTypedEvent(const unsigned int character) : m_Character(character) {}
 
         [[nodiscard]] inline unsigned int getCharacter() const { return m_Character; }
 

@@ -15,6 +15,8 @@ namespace purity{
             return {typeid(ALayerService)};
         }
         ~ALayerService() override = default;
+
+        virtual PLayer* getLayerByPUUID(const PUUID& id) = 0;
     };
 }
 

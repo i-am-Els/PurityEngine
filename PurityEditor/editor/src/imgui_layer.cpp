@@ -16,6 +16,7 @@
 
 #include "imgui.h"
 #include "imgui_opengl3_renderer.h"
+#include "papplication.h"
 #include "window_purity.h"
 
 namespace editor::gui {
@@ -23,47 +24,21 @@ namespace editor::gui {
 
     void ImGuiLayer::update()
     {
-        auto window = PSystemFinder::GetWindow();
+        const auto window = PSystemFinder::GetWindow();
         ImGuiIO& io = ImGui::GetIO();
         io.DisplaySize = ImVec2(static_cast<float>(window->getWidth()), static_cast<float>(window->getHeight()));
 
-        auto time = static_cast<float>(glfwGetTime());
+        const auto time = static_cast<float>(glfwGetTime());
         io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
         m_time = time;
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
-        // Debug current mouse state
-        PLog::echoMessage(LogLevel::Info, "Mouse Pos: %s, %s", std::to_string(io.MousePos.x).c_str(), std::to_string(io.MousePos.y).c_str());
-        PLog::echoMessage(LogLevel::Info, "Mouse Down: %s", std::to_string(io.MouseDown[0]).c_str());
-        static bool showDemoWindow = true;
-        ImGui::ShowDemoWindow(&showDemoWindow);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             GLFWwindow* backup_current_context = glfwGetCurrentContext();
@@ -75,11 +50,25 @@ namespace editor::gui {
 
     void ImGuiLayer::attached()
     {
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
+        const auto glfWwindow = PSystemFinder::GetWindow()->getGLFWwindow();
         // Setup Context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+        // io.KeyMaps -- TODO - Add this // io.AddKeyEvent(Im)
+
+        io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+        io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+        io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
+
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		  // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        // io.ConfigViewportsNoAutoMerge = false;
+        io.ConfigViewportsNoTaskBarIcon = true;
+
         ImGui::StyleColorsDark();
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         ImGuiStyle& style = ImGui::GetStyle();
@@ -88,20 +77,6 @@ namespace editor::gui {
             style.WindowRounding = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
-
-        // io.KeyMaps -- TODO - Add this // io.AddKeyEvent(Im)
-
-        io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-        io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
-        // io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
-
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		  // Enable Docking
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-        io.ConfigViewportsNoAutoMerge = false;
-        io.ConfigViewportsNoTaskBarIcon = true;
-
         // IMPORTANT: Configure mouse and keyboard capture
         io.WantCaptureMouse = false;      // Start with false, will be set per-frame
         io.WantCaptureKeyboard = false;   // Start with false, will be set per-frame
@@ -109,13 +84,14 @@ namespace editor::gui {
 
 
         PURITY_ASSERT_MSG(window != nullptr, "Window is a nullptr");
-        ImGui_ImplGlfw_InitForOpenGL(window, false);
+        ImGui_ImplGlfw_InitForOpenGL(glfWwindow, false);
         ImGui_ImplOpenGL3_Init("#version 430 core"); // TODO - read this sorts of values from an ini
     }
 
     void ImGuiLayer::detached()
     {
         ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
 
@@ -136,13 +112,13 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnMouseButtonPressedEventCB(const MouseButtonPressedEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward to ImGui using the backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        int button = e.getMouseButton(); // Your mouse button (0=left, 1=right, 2=middle)
-        int action = GLFW_PRESS;
-        int mods = 0; // You might need to get modifiers from your event
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const int button = e.getMouseButton(); // Your mouse button (0=left, 1=right, 2=middle)
+        constexpr int action = GLFW_PRESS;
+        constexpr int mods = 0; // You might need to get modifiers from your event
 
         ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 
@@ -156,13 +132,13 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnMouseButtonReleasedEventCB(const MouseButtonReleasedEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward to ImGui using the backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        int button = e.getMouseButton();
-        int action = GLFW_RELEASE;
-        int mods = 0;
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const int button = e.getMouseButton();
+        constexpr int action = GLFW_RELEASE;
+        constexpr int mods = 0;
 
         ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 
@@ -171,12 +147,12 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnMouseMovedEventCB(const MouseMovedEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward mouse position to ImGui using backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        double xpos = e.getX();
-        double ypos = e.getY();
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const double xpos = e.getX();
+        const double ypos = e.getY();
 
         ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
 
@@ -185,12 +161,12 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnMouseScrolledEventCB(const MouseScrolledEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward scroll to ImGui using backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        double xoffset = e.getXOffset();
-        double yoffset = e.getYOffset();
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const double xoffset = e.getXOffset();
+        const double yoffset = e.getYOffset();
 
         ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
 
@@ -199,13 +175,13 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnKeyPressedEventCB(const KeyPressedEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Use the modern ImGui GLFW backend function to forward key events
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        int key = e.getKeyCode();
-        int action = GLFW_PRESS;
-        int mods = 0; // You might need to get modifiers from your event if available
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const int key = e.getKeyCode();
+        constexpr int action = GLFW_PRESS;
+        constexpr int mods = 0; // You might need to get modifiers from your event if available
 
         // Forward to ImGui using the backend function
         ImGui_ImplGlfw_KeyCallback(window, key, 0, action, mods);
@@ -215,13 +191,13 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnKeyReleasedEventCB(const KeyReleasedEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Use the modern ImGui GLFW backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        int key = e.getKeyCode();
-        int action = GLFW_RELEASE;
-        int mods = 0; // You might need to get modifiers from your event if available
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const int key = e.getKeyCode();
+        constexpr int action = GLFW_RELEASE;
+        constexpr int mods = 0; // You might need to get modifiers from your event if available
 
         // Forward to ImGui using the backend function
         ImGui_ImplGlfw_KeyCallback(window, key, 0, action, mods);
@@ -231,11 +207,11 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnKeyTypedEventCB(const KeyTypedEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward character input to ImGui using backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        unsigned int codepoint = e.getCharacter(); // Your character code
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const unsigned int codepoint = e.getCharacter(); // Your character code
 
         ImGui_ImplGlfw_CharCallback(window, codepoint);
 
@@ -244,11 +220,11 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnWindowFocusedEventCB(const WindowFocusEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward character input to ImGui using backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        int focused = e.getFocused();
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const int focused = e.getFocused();
 
         ImGui_ImplGlfw_WindowFocusCallback(window, focused);
 
@@ -257,11 +233,11 @@ namespace editor::gui {
 
     bool ImGuiLayer::OnWindowCursorEnterEventCB(const WindowCursorEnterEvent& e)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
 
         // Forward character input to ImGui using backend function
-        auto window = PSystemFinder::GetWindow()->getGlfWwindow();
-        int entered = e.getEntered();
+        const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
+        const int entered = e.getEntered();
 
         ImGui_ImplGlfw_CursorEnterCallback(window, entered);
 

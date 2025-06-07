@@ -19,13 +19,13 @@ namespace purity{
         }
 
     protected:
-        explicit MouseButtonEvent(int button) : m_button(button) {}
+        explicit MouseButtonEvent(const int button) : m_button(button) {}
         int m_button;
     };
 
-    class PURITY_API MouseButtonPressedEvent : public MouseButtonEvent{
+    class PURITY_API MouseButtonPressedEvent final : public MouseButtonEvent{
     public:
-        explicit MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
+        explicit MouseButtonPressedEvent(const int button) : MouseButtonEvent(button) {}
 
         [[nodiscard]] std::string ToString() const override{
             std::stringstream ss;
@@ -40,9 +40,9 @@ namespace purity{
         }
     };
 
-    class PURITY_API MouseButtonReleasedEvent : public MouseButtonEvent{
+    class PURITY_API MouseButtonReleasedEvent final : public MouseButtonEvent{
     public:
-        explicit MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+        explicit MouseButtonReleasedEvent(const int button) : MouseButtonEvent(button) {}
 
         [[nodiscard]] std::string ToString() const override{
             std::stringstream ss;
@@ -57,9 +57,9 @@ namespace purity{
         }
     };
 
-    class PURITY_API MouseMovedEvent : public Event{
+    class PURITY_API MouseMovedEvent final : public Event{
     public:
-        explicit MouseMovedEvent(float x, float y) : m_xPos(x), m_yPos(y) {}
+        explicit MouseMovedEvent(const float x, const float y) : m_xPos(x), m_yPos(y) {}
 
         [[nodiscard]] inline float getX() const { return m_xPos; }
         [[nodiscard]] inline float getY() const { return m_yPos; }
@@ -81,9 +81,9 @@ namespace purity{
         float m_xPos, m_yPos;
     };
 
-    class PURITY_API MouseScrolledEvent : public Event{
+    class PURITY_API MouseScrolledEvent final : public Event{
     public:
-        MouseScrolledEvent(float xOffset, float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
+        MouseScrolledEvent(const float xOffset, const float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
 
         [[nodiscard]] inline float getXOffset() const { return m_xOffset; }
         [[nodiscard]] inline float getYOffset() const { return m_yOffset; }

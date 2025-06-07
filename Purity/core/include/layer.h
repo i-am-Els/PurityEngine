@@ -25,6 +25,7 @@ namespace purity {
         explicit operator unsigned int() const { return m_id; }
         explicit operator std::string() const { return m_name; }
         PLayer(): m_id(PUUID()), m_name(static_cast<std::string>("Layer" + m_id)) {}
+        [[nodiscard]] inline PUUID getID() const{ return static_cast<PUUID>(m_id); }
 
         virtual ~PLayer() { PLog::echoMessage("Destroying Layer.");};
         explicit PLayer(std::string name) : m_id(PUUID()), m_name(std::move(name)), m_enabled(true) {}

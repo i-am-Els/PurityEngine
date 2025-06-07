@@ -3,15 +3,15 @@
 //
 
 #pragma once
-#include "islemath.h"
-#include "shader.h"
-#include "renderer.h"
-#include "color.h"
-#include "GLFW/glfw3.h"
-#include "vertex_array.h"
-#include "render_system.h"
 #include "buffer.h"
+#include "color.h"
+#include "islemath.h"
 #include "purity_exceptions.h"
+#include "renderer.h"
+#include "render_system.h"
+#include "shader.h"
+#include "vertex_array.h"
+#include "GLFW/glfw3.h"
 
 
 using namespace isle_engine::math;
@@ -48,7 +48,14 @@ namespace purity::ecs{
 
         void RemoveComponent(PEntity* entity, PRenderComponent *component) override;
 
+        using EDITOR_Render_Callback = std::function<void()>;
+        void setEditorRenderCallback(const EDITOR_Render_Callback& callback)
+        {
+            editorRenderCallback = callback;
+        }
+
     private:
+        EDITOR_Render_Callback editorRenderCallback;
         std::vector<std::unique_ptr<PRenderComponent>> renderComponents;
 
 

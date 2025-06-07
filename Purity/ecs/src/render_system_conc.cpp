@@ -1,12 +1,14 @@
 //
 // Created by Eniola Olawale on 6/17/2024.
 //
+#include "purity_core_pch.h"
 
 #include "render_system_conc.h"
 #include "log.h"
 #include "data_hash_table.h"
 #include "fileio.h"
 #include "entity.h"
+#include "papplication.h"
 #include "scene.h"
 
 using namespace purity::fileIO;
@@ -67,7 +69,9 @@ namespace purity::ecs {
     }
 
     void POpenGLRenderSS::render() {
-        clearWindow(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, Color(.5f, .5f, .2f));
+        const auto clearColor = PSystemFinder::GetApplication()->m_projectEditorInfo.clearColor;
+
+        clearWindow(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, clearColor);
         shader->bindShader();
 
         if (glfwGetCurrentContext() != _window) {
@@ -75,6 +79,7 @@ namespace purity::ecs {
             throw OpenGlContextNotCurrentError();
         }
         else {
+            editorRenderCallback();
             if (hasSomethingToRender()) {
                 // PLog::echoMessage("Has Something to Render.");
                 // vertexArray->bindVAO();
