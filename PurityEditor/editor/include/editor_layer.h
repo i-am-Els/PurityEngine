@@ -4,28 +4,45 @@
 
 #include <utility>
 #include "purity_core_pch.h"
-#include "papplication.h"
+
+
 namespace editor::gui
 {
+    enum class DockArea
+    {
+        Left,
+        Right,
+        Bottom,
+        Top,
+        Center,
+        None  // Let ImGui decide or user manual docking
+    };
+
     class EditorWindow
     {
     public:
-        explicit EditorWindow(std::string  name, bool* open = nullptr)
-            : m_name(std::move(name)), m_open(open), m_visible(true) {}
+        explicit EditorWindow(std::string  name, bool* open = nullptr, const DockArea preferredArea = DockArea::None)
+            : m_name(std::move(name)), m_open(open), m_visible(true), m_preferredDockArea(preferredArea) {}
         virtual ~EditorWindow() = default;
 
         virtual void render() = 0;
         virtual void onAttach() {}
         virtual void onDetach() {}
 
-        [[nodiscard]] const std::string& getName() const { return m_name; }
-        [[nodiscard]] bool isVisible() const { return m_visible; }
+        // Docking preferences
+        PURE_NODISCARD DockArea getPreferredDockArea() const { return m_preferredDockArea; }
+        void setPreferredDockArea(const DockArea area) { m_preferredDockArea = area; }
+        PURE_NODISCARD virtual float getPreferredSplitRatio() const { return 0.25f; } // Override in derived classes
+
+        PURE_NODISCARD const std::string& getName() const { return m_name; }
+        PURE_NODISCARD bool isVisible() const { return m_visible; }
         void setVisible(const bool visible) { m_visible = visible; }
 
     protected:
         std::string m_name;
         bool* m_open;
         bool m_visible;
+        DockArea m_preferredDockArea;
     };
 
     class EditorLayer final : public purity::PLayer
@@ -34,6 +51,7 @@ namespace editor::gui
         void update() override;
         void attached() override;
         void detached() override;
+        void render() override;
         void eventFired(purity::Event& event) override;
 
         // Window management
@@ -45,11 +63,33 @@ namespace editor::gui
         void setWindowVisible(const std::string& name, bool visible);
 
         static void setupEditor(EditorLayer* editor);
+        bool isOverlay() override { return true; }
+
     private:
         void renderMainMenuBar();
         void renderDockSpace();
         void renderWindows();
         void setupDockLayout();
+        void setupDefaultLayout();
+        void setupConfigurableLayout();
+        void loadLayoutFromConfig();
+        void saveLayoutToConfig();
+        void resetToDefaultLayout();
+
+        // Layout configuration
+        struct DockingConfig
+        {
+            struct DockArea
+            {
+                std::string name;
+                float splitRatio;
+                ImGuiDir direction;
+                std::vector<std::string> windows;
+            };
+
+            std::vector<DockArea> areas;
+            bool useDefaultLayout = true;
+        } m_dockingConfig;
 
         std::unordered_map<std::string, std::unique_ptr<EditorWindow>> m_windows;
         bool m_dockspaceOpen = true;
@@ -75,7 +115,6 @@ namespace editor::gui
     public:
         EditorLayer() = delete;
         ~EditorLayer() override;
-        static void renderImGuiEditorData();
     };
 
     template<typename T, typename... Args>

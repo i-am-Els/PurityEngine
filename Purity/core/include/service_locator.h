@@ -68,27 +68,27 @@ namespace purity{
 
     public:
         // Interface accessors
-        [[nodiscard]] const std::vector<IInitializableService*>& getInitializables() const
+        PURE_NODISCARD const std::vector<IInitializableService*>& getInitializables() const
         {
             std::lock_guard<std::mutex> lock(mutex);
             return m_initializables;
         }
-        [[nodiscard]] const std::vector<IUpdatableService*>& getUpdatables() const
+        PURE_NODISCARD const std::vector<IUpdatableService*>& getUpdatables() const
         {
             std::lock_guard<std::mutex> lock(mutex);
             return m_updatables;
         }
-        [[nodiscard]] const std::vector<IRenderableService*>& getRenderables() const
+        PURE_NODISCARD const std::vector<IRenderableService*>& getRenderables() const
         {
             std::lock_guard<std::mutex> lock(mutex);
             return m_renderables;
         }
-        [[nodiscard]] const std::vector<IRunnableService*>& getRunnables() const
+        PURE_NODISCARD const std::vector<IRunnableService*>& getRunnables() const
         {
             std::lock_guard<std::mutex> lock(mutex);
             return m_runnables;
         }
-        [[nodiscard]] const std::vector<ITerminableService*>& getTerminables() const
+        PURE_NODISCARD const std::vector<ITerminableService*>& getTerminables() const
         {
             std::lock_guard<std::mutex> lock(mutex);
             return m_terminables;

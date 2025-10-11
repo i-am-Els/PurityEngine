@@ -10,19 +10,11 @@
 #include "editors.h"
 #include "imgui_opengl3_renderer.h"
 #include "papplication.h"
+#include "renderer_service_conc.h"
 #include "window_purity.h"
 
 namespace editor::gui
 {
-    enum class DockArea
-    {
-        Left,
-        Right,
-        Bottom,
-        Top,
-        Center,
-        None  // Let ImGui decide or user manual docking
-    };
 
     EditorLayer::EditorLayer(const std::string &name) : PLayer(name){
     }
@@ -30,20 +22,6 @@ namespace editor::gui
     EditorLayer::~EditorLayer()
     {
         PLog::echoMessage("Destroying Editor Layer");
-    }
-
-    void EditorLayer::renderImGuiEditorData()
-    {
-        ImGuiIO& io = ImGui::GetIO();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-        }
     }
 
     void EditorLayer::update()
@@ -66,28 +44,17 @@ namespace editor::gui
         renderWindows();
 
         ImGui::Render();
-        // int display_w, display_h;
-        // Get the real-time size of the window
-        // const auto glfwWindow = window->getGLFWwindow();
-        // const auto clear_color = PSystemFinder::GetApplication()->m_projectEditorInfo.clearColor;
-        // glfwGetFramebufferSize(glfwWindow, &display_w, &display_h);
-        // Use that size to set the viewport
-        // glViewport(0, 0, display_w, display_h);
-        // glClearColor(clear_color.r, clear_color.g, clear_color.b, clear_color.a);
-        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // renderImGuiEditorData(io);
     }
 
     void EditorLayer::attached()
     {
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow(); // Fixed typo
 
-        auto* renderSystem = dynamic_cast<POpenGLRenderSS*>(PSystemFinder::GetECSService()->getSystem<PRenderComponent>());
+        auto* renderSystem = PSystemFinder::GetRendererService();
 
         if (!renderSystem) {
             std::cerr << "[Error] Could not cast PRenderComponent to POpenGLRenderSS!\n";
-        } else {
-            renderSystem->setEditorRenderCallback(std::function<void()>(EditorLayer::renderImGuiEditorData));
+            throw exceptions::NullPointerError();
         }
 
         IMGUI_CHECKVERSION();
@@ -147,6 +114,20 @@ namespace editor::gui
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown(); // Fixed: Added missing shutdown
         ImGui::DestroyContext();
+    }
+
+    void EditorLayer::render()
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup_current_context);
+        }
     }
 
     void EditorLayer::renderDockSpace()
@@ -226,6 +207,23 @@ namespace editor::gui
                 ImGui::EndMenu();
             }
 
+            if (ImGui::BeginMenu("Layout"))
+            {
+                if (ImGui::MenuItem("Save Layout"))
+                {
+                    saveLayoutToConfig();
+                }
+                if (ImGui::MenuItem("Load Layout"))
+                {
+                    loadLayoutFromConfig();
+                    m_firstTime = true; // Trigger layout rebuild
+                }
+                if (ImGui::MenuItem("Reset to Default"))
+                {
+                    resetToDefaultLayout();
+                }
+                ImGui::EndMenu();
+            }
             ImGui::EndMainMenuBar();
         }
     }
@@ -243,6 +241,21 @@ namespace editor::gui
 
     void EditorLayer::setupDockLayout()
     {
+        // Check if we should use a saved layout or default
+        if (!m_dockingConfig.useDefaultLayout && !m_dockingConfig.areas.empty())
+        {
+            // Use configuration-based layout
+            setupConfigurableLayout();
+        }
+        else
+        {
+            // Use default hardcoded layout as fallback
+            setupDefaultLayout();
+        }
+    }
+
+    void EditorLayer::setupDefaultLayout()
+    {
         // Clear any existing layout
         ImGui::DockBuilderRemoveNode(m_dockspaceID);
         ImGui::DockBuilderAddNode(m_dockspaceID, ImGuiDockNodeFlags_DockSpace);
@@ -253,14 +266,131 @@ namespace editor::gui
         ImGui::DockBuilderSplitNode(m_dockspaceID, ImGuiDir_Left, 0.25f, &dock_left, &dock_right);
         ImGui::DockBuilderSplitNode(dock_right, ImGuiDir_Down, 0.3f, &dock_down, &dock_right);
 
-        // Dock windows to specific areas (these will be created by example windows)
-        ImGui::DockBuilderDockWindow("Scene Hierarchy", dock_left);
-        ImGui::DockBuilderDockWindow("Properties", dock_left);
-        ImGui::DockBuilderDockWindow("Viewport", dock_right);
-        ImGui::DockBuilderDockWindow("Console", dock_down);
-        ImGui::DockBuilderDockWindow("Assets", dock_down);
+        // Dock existing windows dynamically
+        for (const auto& [name, window] : m_windows)
+        {
+            // Default placement logic based on window type/name
+            if (name.find("Hierarchy") != std::string::npos ||
+                name.find("Properties") != std::string::npos)
+            {
+                ImGui::DockBuilderDockWindow(name.c_str(), dock_left);
+            }
+            else if (name.find("Viewport") != std::string::npos ||
+                     name.find("Scene") != std::string::npos)
+            {
+                ImGui::DockBuilderDockWindow(name.c_str(), dock_right);
+            }
+            else if (name.find("Console") != std::string::npos ||
+                     name.find("Assets") != std::string::npos ||
+                     name.find("Log") != std::string::npos)
+            {
+                ImGui::DockBuilderDockWindow(name.c_str(), dock_down);
+            }
+            else
+            {
+                // Unknown window type, dock to center
+                ImGui::DockBuilderDockWindow(name.c_str(), dock_right);
+            }
+        }
 
         ImGui::DockBuilderFinish(m_dockspaceID);
+    }
+
+    void EditorLayer::setupConfigurableLayout()
+    {
+        // Clear any existing layout
+        ImGui::DockBuilderRemoveNode(m_dockspaceID);
+        ImGui::DockBuilderAddNode(m_dockspaceID, ImGuiDockNodeFlags_DockSpace);
+        ImGui::DockBuilderSetNodeSize(m_dockspaceID, ImGui::GetMainViewport()->Size);
+
+        std::vector<ImGuiID> dockIds = { m_dockspaceID };
+
+        // Create dock areas based on configuration
+        for (const auto& area : m_dockingConfig.areas)
+        {
+            if (dockIds.empty()) break;
+
+            ImGuiID current = dockIds.back();
+            ImGuiID newDock, remainingDock;
+
+            ImGui::DockBuilderSplitNode(current, area.direction, area.splitRatio,
+                                       &newDock, &remainingDock);
+
+            // Dock windows to this area
+            for (const std::string& windowName : area.windows)
+            {
+                if (m_windows.find(windowName) != m_windows.end())
+                {
+                    ImGui::DockBuilderDockWindow(windowName.c_str(), newDock);
+                }
+            }
+
+            // Replace current with remaining for next iteration
+            dockIds.back() = remainingDock;
+            if (area.direction != ImGuiDir_None)
+            {
+                dockIds.push_back(newDock);
+            }
+        }
+
+        ImGui::DockBuilderFinish(m_dockspaceID);
+    }
+
+    void EditorLayer::loadLayoutFromConfig()
+    {
+        // Example: Load from JSON, INI, or your preferred config format
+        // This is a simplified example - you'd implement your actual config loading
+
+        m_dockingConfig.useDefaultLayout = false;
+        m_dockingConfig.areas.clear();
+
+        // Example configuration
+        // DockingConfig::DockArea leftArea;
+        // leftArea.name = "Left Panel";
+        // leftArea.direction = ImGuiDir_Left;
+        // leftArea.splitRatio = 0.25f;
+        // leftArea.windows = {"Scene Hierarchy", "Properties"};
+        //
+        // DockingConfig::DockArea bottomArea;
+        // bottomArea.name = "Bottom Panel";
+        // bottomArea.direction = ImGuiDir_Down;
+        // bottomArea.splitRatio = 0.3f;
+        // bottomArea.windows = {"Console", "Assets"};
+        //
+        // m_dockingConfig.areas = {leftArea, bottomArea};
+
+        // Alternative: Load from actual config file
+
+        std::ifstream file("editor_layout.json");
+        if (file.is_open())
+        {
+            // Parse JSON and populate m_dockingConfig
+            // nlohmann::json config;
+            // file >> config;
+            // ... parse and set m_dockingConfig
+        }
+    }
+
+    void EditorLayer::saveLayoutToConfig()
+    {
+        // Save current docking configuration
+        // You could save ImGui's internal layout state or your custom config
+
+        std::ofstream file("editor_layout.json");
+        if (file.is_open())
+        {
+            nlohmann::json config;
+            // Serialize m_dockingConfig to JSON
+            // config["areas"] = ...;
+            file << config.dump(4);
+        }
+
+    }
+
+    void EditorLayer::resetToDefaultLayout()
+    {
+        m_dockingConfig.useDefaultLayout = true;
+        m_firstTime = true; // Force layout reset on next frame
     }
 
     void EditorLayer::removeWindow(const std::string& name)

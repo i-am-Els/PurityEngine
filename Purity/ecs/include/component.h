@@ -40,7 +40,7 @@ namespace purity::ecs {
         virtual void start(){}
         virtual void destroy(){}
 
-        [[nodiscard]] inline PUUID getID() const{ return m_id; }
+        PURE_NODISCARD inline PUUID getID() const{ return m_id; }
 
         virtual PComponentType getComponentType() const = 0;
 

@@ -9,7 +9,7 @@ namespace purity{
 
     class PURITY_API KeyEvent : public Event {
     public:
-        [[nodiscard]] inline int getKeyCode() const { return m_keyCode; }
+        PURE_NODISCARD inline int getKeyCode() const { return m_keyCode; }
 
         EVENT_CATEGORY(E_EventCategory::KeyBoardEvent | E_EventCategory::InputEvent)
 
@@ -28,9 +28,9 @@ namespace purity{
     public:
         explicit KeyPressedEvent(const int keyCode, const int repeatCount=0) : KeyEvent(keyCode), m_repeat_count(repeatCount) {}
 
-        [[nodiscard]] inline int getRepeatCount() const { return m_repeat_count; }
+        PURE_NODISCARD inline int getRepeatCount() const { return m_repeat_count; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "KeyPressedEvent: " << m_keyCode << " (" << m_repeat_count << " repeats)";
             return ss.str();
@@ -50,7 +50,7 @@ namespace purity{
     public:
         explicit KeyReleasedEvent(const int keyCode) : KeyEvent(keyCode) {}
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "KeyReleasedEvent: " << m_keyCode << " released";
             return ss.str();
@@ -71,9 +71,9 @@ namespace purity{
     public:
         explicit KeyTypedEvent(const unsigned int character) : m_Character(character) {}
 
-        [[nodiscard]] inline unsigned int getCharacter() const { return m_Character; }
+        PURE_NODISCARD inline unsigned int getCharacter() const { return m_Character; }
 
-        [[nodiscard]] std::string ToString() const override {
+        PURE_NODISCARD std::string ToString() const override {
             std::stringstream ss;
             ss << "KeyTypedEvent: '" << static_cast<char>(m_Character)
                << "' (codepoint: " << m_Character << ")";

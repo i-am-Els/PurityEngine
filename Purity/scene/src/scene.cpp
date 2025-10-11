@@ -7,9 +7,12 @@
 #include "assetdb_service_conc.h"
 #include "tag_comp.h"
 #include "id_comp.h"
+#include "system_finder.h"
+#include "service_locator.h"
 
 
 namespace purity::scene{
+
     PEntityHandle PScene::CreateEntity(const std::string &name) {
         return CreateEntityWithUUID(PUUID(), name);
     }
@@ -56,8 +59,9 @@ namespace purity::scene{
         {
             // TODO - Start Serializing from json using Cereal.
             // auto scene_asset = PSystemFinder::GetServiceLocator()->getService<AAssetDBService, assetDB::PAssetDatabase>()->
-            //                                             queryDBForAsset<assetDB::PLevelAsset>(assetDB::QueryLevelAssetSpec(scene_id), assetDB::QueryOperation::Read);
-            // scene = scene_asset.serialize();
+            // queryDBForAsset<assetDB::PLevelAsset>(assetDB::QueryLevelAssetSpec(scene_id), assetDB::QueryOperation::Read);
+            // scene = scene_asset.get();
+            // return scene;
         }
         // TODO - create a new asset file repressenting this asset in asset DB
         scene = new PScene();

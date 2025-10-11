@@ -14,7 +14,7 @@ namespace purity {
     public:
         ~PInput();
 
-        [[nodiscard]] static PInput& getInstance();
+        PURE_NODISCARD static PInput& getInstance();
         static void terminate();
         static void PollEvents();
         static bool isKeyPressed(int keyCode);

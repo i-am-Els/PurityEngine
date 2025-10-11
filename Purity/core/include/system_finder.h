@@ -17,6 +17,11 @@ namespace purity{
     class PServiceLocator;
     class PECSService;
 
+    namespace graphics
+    {
+        class PRendererService;
+    }
+
     class PURITY_API PSystemFinder {
         friend PApplication;
     public:
@@ -32,6 +37,8 @@ namespace purity{
         static scene::PScene *GetScene();
 
         static PECSService * GetECSService();
+
+        static graphics::PRendererService * GetRendererService();
 
         static std::shared_ptr<PServiceLocator> GetServiceLocator();
 

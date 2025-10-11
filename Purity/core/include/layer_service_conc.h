@@ -22,7 +22,7 @@ namespace purity
 
         // ================================== LAYER MANAGER CLASS DETAILS ================================
 
-        [[maybe_unused]] [[nodiscard]] PLayer* fetchLayerByName(const std::string &name) const;
+        [[maybe_unused]] PURE_NODISCARD PLayer* fetchLayerByName(const std::string &name) const;
 
         PUUID PushLayer(PLayer* layer);
         PUUID PushOverlay(PLayer* overlay);
@@ -33,6 +33,9 @@ namespace purity
         void init() override;
         void postInit() override;
         void update(float deltaTime) override;
+        void preRender() override;
+        void render() override;
+        void postRender() override;
         void destroy() override;
         void exit() override;
 
@@ -45,9 +48,8 @@ namespace purity
         /// Use this as interface
         std::vector<PLayer*> m_layers;
         std::unordered_map<PUUID, PLayer*> m_layerMap;
-        std::vector<PLayer*>::iterator m_layerInsert;
 
-        static int MAX_SIZE;
+        static int START_SIZE;
     };
 }
 

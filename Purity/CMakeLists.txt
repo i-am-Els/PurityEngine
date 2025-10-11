@@ -128,6 +128,8 @@ add_library(Purity
         #--------------------------------
         graphics/include/buffer.h
         graphics/include/color.h
+        graphics/include/renderer_service.h
+        graphics/include/renderer_service_conc.h
         graphics/include/shader.h
         graphics/include/vertex_array.h
         #--------------------------------
@@ -178,6 +180,7 @@ add_library(Purity
         #--------------------------------
         graphics/src/buffer.cpp
         graphics/src/color.cpp
+        graphics/src/renderer_service_conc.cpp
         graphics/src/shader.cpp
         graphics/src/vertex_array.cpp
         #--------------------------------

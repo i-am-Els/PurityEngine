@@ -49,9 +49,9 @@ namespace editor {
 
     private:
 
-        [[nodiscard]] std::optional<DatabaseData> validateDBFile() const;
-        [[nodiscard]] bool validateSceneFile() const;
-        [[nodiscard]] bool validateAssetFiles(const PUUID& id, const std::string& assetPath) const;
+        PURE_NODISCARD std::optional<DatabaseData> validateDBFile() const;
+        PURE_NODISCARD bool validateSceneFile() const;
+        PURE_NODISCARD bool validateAssetFiles(const PUUID& id, const std::string& assetPath) const;
         static void reportInvalidAssets(const PUUID& file_id, const std::string& assetPath);
         void storeValidAssets(const PUUID& file_id, const std::string& assetPath);
 

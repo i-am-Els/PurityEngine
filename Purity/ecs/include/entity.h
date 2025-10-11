@@ -30,7 +30,7 @@ namespace purity::ecs {
             PLog::echoMessage("Destroying Entity...");
         } // Destructor destroys all components
 
-        [[nodiscard]] inline PUUID getInstanceID(){
+        PURE_NODISCARD inline PUUID getInstanceID(){
             return m_instanceID;
         }
 

@@ -118,7 +118,7 @@ namespace commons{
 	  }
 	})"_json;
 
-	bool COMMON_API _validateFileExistence(std::string path);
-	bool COMMON_API _validateFileExistence(std::filesystem::path path);
-	bool COMMON_API _validateSchemaAdherence(std::string path, json schema);
+	bool COMMON_API _validateFileExistence(const std::string& path);
+	bool COMMON_API _validateFileExistence(const std::filesystem::path& path);
+	bool COMMON_API _validateSchemaAdherence(const std::string& path, const json& schema);
 }

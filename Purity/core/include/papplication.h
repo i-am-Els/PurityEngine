@@ -10,6 +10,8 @@
 #include "scene.h"
 #include "window_events.h"
 
+using namespace purity::graphics;
+
 #include <filesystem>
 
 namespace purity{
@@ -63,7 +65,7 @@ namespace purity{
             std::string projectFilePath;
             std::string projectDir;
             std::string startUpSceneRelPath;
-            Color clearColor = Color(.1f, .2f, .1f, .5f);
+            Color clearColor = Color(.7f, .2f, .1f, .5f);
 
             ProjectEditorInfo()= default;
 
@@ -73,7 +75,7 @@ namespace purity{
                 startUpSceneRelPath = _startUpScene;
             }
 
-            [[nodiscard]] std::string getProjectName() const {
+            PURE_NODISCARD std::string getProjectName() const {
                 return std::filesystem::path(projectFilePath).stem().string();
             }
         };

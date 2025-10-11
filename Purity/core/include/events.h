@@ -47,16 +47,16 @@ namespace purity{
     public:
         virtual ~Event() = default;
 
-        [[nodiscard]] virtual E_EventType getEventType() const = 0;
-        [[nodiscard]] virtual const char* getName() const = 0;
-        [[nodiscard]] virtual int getCategories() const = 0;
-        [[nodiscard]] virtual std::string ToString() const { return getName(); }
+        PURE_NODISCARD virtual E_EventType getEventType() const = 0;
+        PURE_NODISCARD virtual const char* getName() const = 0;
+        PURE_NODISCARD virtual int getCategories() const = 0;
+        PURE_NODISCARD virtual std::string ToString() const { return getName(); }
 
-        [[nodiscard]] inline bool isInCategory(E_EventCategory category) const
+        PURE_NODISCARD inline bool isInCategory(E_EventCategory category) const
         {
             return ( getCategories() & category );
         }
-        [[nodiscard]] inline bool getHandled() const { return m_handled; }
+        PURE_NODISCARD inline bool getHandled() const { return m_handled; }
 
     protected:
         bool m_handled = false;

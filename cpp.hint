@@ -1,4 +1,4 @@
 // Hint files help the Visual Studio IDE interpret Visual C++ identifiers
 // such as names of functions and macros.
 // For more information see https://go.microsoft.com/fwlink/?linkid=865984
-#define PNT_TYPE_INDEX_DEF() template<typename T>[[nodiscard]] static std::type_index s_getTypeIndex(){ return std::type_index(typeid(T));}
+#define PNT_TYPE_INDEX_DEF() template<typename T>PURE_NODISCARD static std::type_index s_getTypeIndex(){ return std::type_index(typeid(T));}

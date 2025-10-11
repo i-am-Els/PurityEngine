@@ -7,7 +7,7 @@
 #include "purity_core_pch.h"
 
 #define PNT_TYPE_INDEX_DEF() template<typename T>\
-[[nodiscard]] static std::type_index s_getTypeIndex(){\
+PURE_NODISCARD static std::type_index s_getTypeIndex(){\
     return std::type_index(typeid(T));\
 } \
 
@@ -19,7 +19,7 @@ namespace purity{
 
         /// Virtual function to get the base type index of the service.
         /// Should be overridden in each service interface to return the typeid of the base interface.
-        [[nodiscard]] virtual std::type_index getTypeIndex() const = 0;
+        PURE_NODISCARD virtual std::type_index getTypeIndex() const = 0;
     };
     // For initialization phases
 

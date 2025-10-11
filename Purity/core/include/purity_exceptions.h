@@ -13,7 +13,7 @@ namespace purity::exceptions
     class PURITY_API NullBufferError final : public std::exception
     {
     public:
-        [[nodiscard]] const char* what() const noexcept override{
+        PURE_NODISCARD const char* what() const noexcept override{
             return "Buffer pointer is a null pointer";
         }
     };
@@ -22,7 +22,7 @@ namespace purity::exceptions
     {
     public:
         operator int() { return -1; }
-        [[nodiscard]] const char* what() const noexcept override{
+        PURE_NODISCARD const char* what() const noexcept override{
             return "Accessed pointer is a null pointer";
         }
     };
@@ -30,7 +30,7 @@ namespace purity::exceptions
     class PURITY_API NullCallbackError final : public std::exception
     {
     public:
-        [[nodiscard]] const char* what() const noexcept override{
+        PURE_NODISCARD const char* what() const noexcept override{
             return "Callback has not been set and as a result is a null function pointer";
         }
     };
@@ -39,7 +39,7 @@ namespace purity::exceptions
     {
     public:
         operator int() { return -1; }
-        [[nodiscard]] const char* what() const noexcept override{
+        PURE_NODISCARD const char* what() const noexcept override{
             return "Query index is out of bounds, the result cannot be found, check that your is correct and try again.";
         }
     };
@@ -48,7 +48,7 @@ namespace purity::exceptions
     {
     public:
         operator int() { return 0; }
-        [[nodiscard]] const char* what() const noexcept override{
+        PURE_NODISCARD const char* what() const noexcept override{
             return "Shader Program creation failed. Test the GlError to see the full description.";
         }
     };
@@ -57,7 +57,7 @@ namespace purity::exceptions
     {
     public:
         operator int() { return -1; }
-        [[nodiscard]] const char* what() const noexcept override{
+        PURE_NODISCARD const char* what() const noexcept override{
             return "The opengl context has change and s no more the current glfwWindow.";
         }
     };
@@ -71,7 +71,7 @@ namespace purity::exceptions
             : _message(std::string("There was an error while reading the file '") + path + "'.") {
         }
         operator int() { return -1; }
-        [[nodiscard]] const char* what() const noexcept override {
+        PURE_NODISCARD const char* what() const noexcept override {
             return _message.c_str();
         }
     };
@@ -82,7 +82,7 @@ namespace purity::exceptions
         std::string _message;
     public:
         operator int() { return -1; }
-        [[nodiscard]] const char* what() const noexcept override {
+        PURE_NODISCARD const char* what() const noexcept override {
             return "The maximum array size is reached, the array/vector is not allowed to take in more values, this can be a cap placed on the container for masking reasons.";
         }
     };

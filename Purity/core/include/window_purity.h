@@ -48,15 +48,15 @@ namespace purity{
             m_data.vsync = allowVSync;
         }
 
-        [[nodiscard]] inline bool isVSynced() const {
+        PURE_NODISCARD inline bool isVSynced() const {
             return m_data.vsync;
         }
 
         void deleteWindow();
         ~PWindow();
 
-        [[nodiscard]] inline int getWidth() const { return m_data.width; }
-        [[nodiscard]] inline int getHeight() const { return m_data.height; }
+        PURE_NODISCARD inline int getWidth() const { return m_data.width; }
+        PURE_NODISCARD inline int getHeight() const { return m_data.height; }
 
     private:
         struct WindowInfo {

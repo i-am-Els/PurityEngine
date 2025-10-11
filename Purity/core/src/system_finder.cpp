@@ -3,9 +3,11 @@
 //
 
 #include "system_finder.h"
-#include "papplication.h"
-#include "service_locator.h"
 #include "ecs_service_conc.h"
+#include "papplication.h"
+#include "renderer_service_conc.h"
+#include "service_locator.h"
+
 
 namespace purity{
     PApplication* PSystemFinder::application = nullptr;
@@ -16,6 +18,11 @@ namespace purity{
 
     PECSService *PSystemFinder::GetECSService() {
         return GetApplication()->serviceLocator->getService<AECSService, PECSService>().get();
+    }
+
+    PRendererService* PSystemFinder::GetRendererService()
+    {
+        return GetApplication()->serviceLocator->getService<ARendererService, PRendererService>().get();
     }
 
     std::shared_ptr<PServiceLocator> PSystemFinder::GetServiceLocator() {

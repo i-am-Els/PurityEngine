@@ -24,10 +24,10 @@ namespace purity{
     public:
         WindowResizeEvent(const uint32_t width, const uint32_t height) : m_width(width), m_height(height) {}
 
-        [[nodiscard]] inline uint32_t getWidth() const { return m_width; }
-        [[nodiscard]] inline uint32_t getHeight() const { return m_height; }
+        PURE_NODISCARD inline uint32_t getWidth() const { return m_width; }
+        PURE_NODISCARD inline uint32_t getHeight() const { return m_height; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "WindowResizeEvent: Window resized to {" << m_width << ", "<< m_height << "}";
             return ss.str();
@@ -48,10 +48,10 @@ namespace purity{
     public:
         WindowMovedEvent(const int x, const int y) : xPos(x), yPos(y) {}
 
-        [[nodiscard]] inline int getWidth() const { return xPos; }
-        [[nodiscard]] inline int getHeight() const { return yPos; }
+        PURE_NODISCARD inline int getWidth() const { return xPos; }
+        PURE_NODISCARD inline int getHeight() const { return yPos; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "WindowMovedEvent: Window moved to {" << xPos << ", "<< yPos << "}";
             return ss.str();
@@ -72,9 +72,9 @@ namespace purity{
     public:
         explicit WindowFocusEvent(const int focused) : m_focused(focused){}
 
-        [[nodiscard]] inline int getFocused() const { return m_focused; }
+        PURE_NODISCARD inline int getFocused() const { return m_focused; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "WindowFocusEvent: Focus is {" << m_focused << "}";
             return ss.str();
@@ -94,9 +94,9 @@ namespace purity{
     public:
         explicit WindowCursorEnterEvent(const int entered) : m_entered(entered){}
 
-        [[nodiscard]] inline int getEntered() const { return m_entered; }
+        PURE_NODISCARD inline int getEntered() const { return m_entered; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "WindowCursorEnterEvent: Cursor Entered is {" << m_entered << "}";
             return ss.str();

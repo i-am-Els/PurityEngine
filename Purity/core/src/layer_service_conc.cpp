@@ -8,7 +8,7 @@ using namespace purity::exceptions;
 
 namespace purity
 {
-    int PLayerService::MAX_SIZE = 32;
+    int PLayerService::START_SIZE = 32;
 
     void PLayerService::exit() {
         for (auto& layer : m_layers){
@@ -16,7 +16,8 @@ namespace purity
             delete layer;
             layer = nullptr;
         }
-
+        m_layers.clear();
+        m_layerMap.clear();
     }
 
     PLayer* PLayerService::getLayerByPUUID(const PUUID& id)
@@ -38,17 +39,16 @@ namespace purity
 
     PLayerService::PLayerService()
     {
-        m_layers.reserve(MAX_SIZE);
-        m_layerInsert = m_layers.begin();
+        m_layers.reserve(START_SIZE);
     }
 
     PUUID PLayerService::PushLayer(PLayer* layer)
     {
-        if (m_layers.size() == MAX_SIZE)
+        auto first_overlay_it = std::find_if(begin(), end(), [](PLayer* item)
         {
-            throw MaxArraySizeExceededError();
-        }
-        m_layerInsert = m_layers.emplace(m_layerInsert, layer);
+            return item->isOverlay();
+        });
+        m_layers.emplace(first_overlay_it, layer);
         PUUID id = layer->getID();
         m_layerMap[id] = layer;
         layer->attached();
@@ -57,10 +57,6 @@ namespace purity
 
     PUUID PLayerService::PushOverlay(PLayer* overlay)
     {
-        if (m_layers.size() == MAX_SIZE)
-        {
-            throw MaxArraySizeExceededError();
-        }
         m_layers.emplace_back(overlay);
         PUUID id = overlay->getID();
         m_layerMap[id] = overlay;
@@ -76,21 +72,14 @@ namespace purity
             PUUID id = layer->getID();
             layer->detached();
             m_layerMap.erase(id);
+            delete *it;
             m_layers.erase(it);
-            --m_layerInsert;
         }
     }
 
     void PLayerService::PopOverlay(PLayer* overlay)
     {
-        auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-        if (it != m_layers.end())
-        {
-            PUUID id = overlay->getID();
-            overlay->detached();
-            m_layerMap.erase(id);
-            m_layers.erase(it);
-        }
+        PopLayer(overlay);
     }
 
 
@@ -113,6 +102,22 @@ namespace purity
             if (layer == nullptr) continue;
             layer->update();
         }
+    }
+
+    void PLayerService::preRender()
+    {
+    }
+
+    void PLayerService::render()
+    {
+        for (const auto layer : m_layers){
+            if (layer == nullptr) continue;
+            layer->render();
+        }
+    }
+
+    void PLayerService::postRender()
+    {
     }
 
     void PLayerService::init() {

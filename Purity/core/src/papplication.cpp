@@ -51,9 +51,11 @@
 #include <window_events.h>
 
 #include "assetdb_service_conc.h"
+#include "renderer_service_conc.h"
 
 using namespace isle_engine::math;
 using namespace purity::ecs;
+using namespace purity::graphics;
 
 namespace purity{
     bool PApplication::verify()
@@ -78,10 +80,20 @@ namespace purity{
         }
     }
 
+
     void PApplication::render() {
-        for (const auto renderable : serviceLocator->getRenderables())
+        const auto renderables = serviceLocator->getRenderables();
+        for (const auto renderable : renderables)
+        {
+            renderable->preRender();
+        }
+        for (const auto renderable : renderables)
         {
             renderable->render();
+        }
+        for (const auto renderable : renderables)
+        {
+            renderable->postRender();
         }
     }
 
@@ -98,6 +110,7 @@ namespace purity{
         const auto ecsService = std::make_shared<PECSService>(window.get());
         const auto layerService = std::make_shared<PLayerService>();
         const auto assetService = std::make_shared<assetDB::PAssetDatabase>();
+        const auto rendererService = std::make_shared<PRendererService>(window->getGLFWwindow());
 
         assetService->preInit(assetdbData);
 
@@ -105,6 +118,7 @@ namespace purity{
         serviceLocator->registerService<AECSService, PECSService>(ecsService);
         serviceLocator->registerService<ALayerService, PLayerService>(layerService);
         serviceLocator->registerService<AAssetDBService, assetDB::PAssetDatabase>(assetService);
+        serviceLocator->registerService<ARendererService, PRendererService>(rendererService);
     }
 
     void PApplication::init() {
@@ -136,6 +150,7 @@ namespace purity{
     void PApplication::exit() {
         // nothing for now
         PWindow::unbind();
+        serviceLocator->unregisterService<ARendererService>();
         serviceLocator->unregisterService<AAssetDBService>();
         serviceLocator->unregisterService<ALayerService>();
         serviceLocator->unregisterService<AECSService>();
@@ -168,9 +183,12 @@ namespace purity{
             const auto _tmp = (*--it);
             if (_tmp == nullptr) continue;
             (_tmp)->eventFired(event);
-            if (event.getHandled()) break;
+            if (event.getHandled())
+            {
+                std::cout << event;
+                break;
+            }
         }
-        std::cout << event;
     }
 
     /// Takes in already loaded scene

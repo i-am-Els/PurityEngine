@@ -11,7 +11,9 @@ namespace editor::gui::definitions
     class SceneHierarchyWindow final : public EditorWindow
     {
     public:
-        explicit SceneHierarchyWindow(const std::string& name) : EditorWindow(name) {}
+        explicit SceneHierarchyWindow(const std::string& name) : EditorWindow(name, nullptr, DockArea::Left) {}
+
+        PURE_NODISCARD float getPreferredSplitRatio() const override { return 0.25f; }
 
         void render() override
         {
@@ -41,7 +43,7 @@ namespace editor::gui::definitions
     class PropertiesWindow final : public EditorWindow
     {
     public:
-        explicit PropertiesWindow(const std::string& name) : EditorWindow(name) {}
+        explicit PropertiesWindow(const std::string& name) : EditorWindow(name, nullptr, DockArea::Left) {}
 
         void render() override
         {
@@ -74,7 +76,7 @@ namespace editor::gui::definitions
     class ViewportWindow final : public EditorWindow
     {
     public:
-        explicit ViewportWindow(const std::string& name) : EditorWindow(name) {}
+        explicit ViewportWindow(const std::string& name) : EditorWindow(name, nullptr, DockArea::Center) {}
 
         void render() override
         {
@@ -105,7 +107,9 @@ namespace editor::gui::definitions
     class ConsoleWindow final : public EditorWindow
     {
     public:
-        explicit ConsoleWindow(const std::string& name) : EditorWindow(name) {}
+        explicit ConsoleWindow(const std::string& name) : EditorWindow(name, nullptr, DockArea::Bottom) {}
+
+        PURE_NODISCARD float getPreferredSplitRatio() const override { return 0.3f; }
 
         void render() override
         {
@@ -139,7 +143,7 @@ namespace editor::gui::definitions
     class AssetsWindow final : public EditorWindow
     {
     public:
-        explicit AssetsWindow(const std::string& name) : EditorWindow(name) {}
+        explicit AssetsWindow(const std::string& name) : EditorWindow(name, nullptr, DockArea::Bottom) {}
 
         void render() override
         {

@@ -7,6 +7,7 @@
 #include "editors.h"
 #include "editor_layer.h"
 #include "fstream"
+#include "game_layer.h"
 #include "layer_service.h"
 #include "layer_service_conc.h"
 using namespace commons; 
@@ -35,6 +36,7 @@ namespace editor {
     std::optional<DatabaseData> PEditorApplication::validateDBFile() const
     {
         // Build the expected DB file path.
+        std::cout << "Testing:: " << m_projectEditorInfo.projectDir << std::endl;
         std::filesystem::path pDBfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / "Assets" / (m_applicationInfo.title + ".peDB");
 
         if (!commons::_validateFileExistence(pDBfilePath) || !commons::_validateSchemaAdherence(pDBfilePath.string(), commons::pDatabaseSchema)) { return std::nullopt; }
@@ -115,11 +117,14 @@ namespace editor {
     void PEditorApplication::init() {
         PApplication::init();
         const auto layer_service = serviceLocator->getService<ALayerService, PLayerService>();
-        auto editorOverlayName = "Editor_UI";
+        const auto editorOverlayName = "Editor_UI";
         const auto id = layer_service->PushOverlay(new gui::EditorLayer(editorOverlayName));
         // layer_service->PushOverlay(new gui::ImGuiLayer("UI"));
         const auto editor = dynamic_cast<gui::EditorLayer*>(layer_service->getLayerByPUUID(id));
         gui::EditorLayer::setupEditor(editor);
+
+        // Add game layer/ scene render layer
+        const auto gameLayerID = layer_service->PushLayer(new editor::layers::GameLayer("Game"));
     }
 
     void PEditorApplication::start() {

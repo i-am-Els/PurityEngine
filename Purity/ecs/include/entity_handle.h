@@ -69,7 +69,7 @@ namespace purity::ecs {
             return m_data->AddComponent<T>();
         }
 
-        [[nodiscard]] inline PUUID getInstanceID() const {
+        PURE_NODISCARD inline PUUID getInstanceID() const {
             if (!m_data) { return PUUID(0); }
             return m_data->getInstanceID();
         }

@@ -9,6 +9,6 @@
 namespace purity::ecs{
     class PURITY_API IRenderSystem : public ISystem<PRenderComponent>{
         public:
-            virtual void setUpShader() =  0;
+            virtual void setUpShader(){}
     };
 }

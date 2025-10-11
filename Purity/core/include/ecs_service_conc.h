@@ -28,7 +28,7 @@ namespace purity{
             setSystem<PTagComponent>(std::make_unique<ecs::PTagManager>());
             setSystem<PTransformComponent>(std::make_unique<ecs::PTransformSS>());
             setSystem<PMeshComponent>(std::make_unique<ecs::P3DGeometricMeshSS>());
-            setSystem<PRenderComponent>(std::make_unique<ecs::POpenGLRenderSS>(_window->getGLFWwindow()));
+            setSystem<PRenderComponent>(std::make_unique<ecs::POpenGLRenderSS>());
         }
 
         ~PECSService() override {
@@ -95,7 +95,7 @@ namespace purity{
         PNT_TYPE_INDEX_DEF()
 
 //        template<typename T>
-//        [[nodiscard]] static ISystem<T>* s_getSystem(){
+//        PURE_NODISCARD static ISystem<T>* s_getSystem(){
 //            auto index = s_getTypeIndex<T>();
 //            auto it = system_map.find(index);
 //            if (it == system_map.end()){
@@ -105,7 +105,7 @@ namespace purity{
 //        }
 
         template<typename T>
-        [[nodiscard]] ISystem<T>* getSystem(){
+        PURE_NODISCARD ISystem<T>* getSystem(){
             auto index = s_getTypeIndex<T>();
             auto it = system_map.find(index);
             if (it == system_map.end()){

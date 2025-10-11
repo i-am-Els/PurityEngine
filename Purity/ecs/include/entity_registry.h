@@ -17,8 +17,8 @@ namespace purity::ecs{
         ~PEntityRegistry();
         PEntityRegistry(const PEntityRegistry& registry) = delete;
         PEntityRegistry operator=(const PEntityRegistry& registry) = delete; // Copy of a class with a unique ptr member iis not allowed
-        [[nodiscard]]PEntityHandle Create(PUUID uuid);
-        [[nodiscard]]PEntityHandle Create(PUUID uuid, const std::string& name);
+        PURE_NODISCARD PEntityHandle Create(PUUID uuid);
+        PURE_NODISCARD PEntityHandle Create(PUUID uuid, const std::string& name);
         void Destroy(PUUID uuid);
 
         PEntityHandle GetEntity(PUUID id);

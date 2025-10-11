@@ -18,6 +18,7 @@
 #include <mutex>
 #include <stdexcept>
 #include <typeindex>
+#include <variant>
 
 // Data structures
 #include <string>
@@ -43,3 +44,4 @@
 #include "math/islemath.h"
 #include "handle_base.h"
 #include "system_finder.h"
+#include "color.h"

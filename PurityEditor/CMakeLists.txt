@@ -26,9 +26,11 @@ add_executable(PurityEditor
         editor/include/editor_layer.h
         editor/include/editor_pch.h
         editor/include/editors.h
+        editor/include/game_layer.h
         editor/include/imgui_layer.h
         editor/include/p_editor_application.h
         editor/src/editor_layer.cpp
+        editor/src/game_layer.cpp
         editor/src/imgui_layer.cpp
         editor/src/p_editor_application.cpp
 )

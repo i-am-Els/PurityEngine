@@ -35,13 +35,13 @@ namespace purity::assetDB{
 
     private:
         template<typename T>
-        [[nodiscard]]static Ref<T> performGetOperation(const QuerySpec<T>& spec);
+        PURE_NODISCARD static Ref<T> performGetOperation(const QuerySpec<T>& spec);
         template<typename T>
-        [[nodiscard]]static Ref<T> performAddOperation(const QuerySpec<T>& spec);
+        PURE_NODISCARD static Ref<T> performAddOperation(const QuerySpec<T>& spec);
         template<typename T>
-        [[nodiscard]]static Ref<T> performUpdateOperation(const QuerySpec<T>& spec);
+        PURE_NODISCARD static Ref<T> performUpdateOperation(const QuerySpec<T>& spec);
         template<typename T>
-        [[nodiscard]]static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
+        PURE_NODISCARD static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
     public:
         void exit() override;
 

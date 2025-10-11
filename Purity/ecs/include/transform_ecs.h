@@ -38,10 +38,10 @@ namespace purity::ecs{
         /// @brief A read only getter for the model matrix representing the transform
         /// @return Matrix4f - the m_localToWorldTransform matrix.
         /// @details The return matrix is the transforms local to world space transformation matrix
-        [[nodiscard]] Matrix4f getModelTransformMatrix() const;
+        PURE_NODISCARD Matrix4f getModelTransformMatrix() const;
 
         /// @brief The return matrix is the transforms world to local space transformation matrix
-        [[nodiscard]] Matrix4f getLocalTransformMatrix() const;
+        PURE_NODISCARD Matrix4f getLocalTransformMatrix() const;
 
     public:
         /// @brief Position - world position of the transform

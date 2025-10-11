@@ -1,28 +1,29 @@
 #include "serialize_utilities.h"
 
 namespace commons {
-	bool _validateFileExistence(std::string path)
+	bool _validateFileExistence(const std::string& path)
 	{
 		std::filesystem::path _filepath = { path };
 		return std::filesystem::exists(_filepath);
 	}
 
-	bool _validateFileExistence(std::filesystem::path path)
+	bool _validateFileExistence(const std::filesystem::path& path)
 	{
 		return std::filesystem::exists(path);
 	}
 
-	bool _validateSchemaAdherence(std::string path, json schema) {
+	bool _validateSchemaAdherence(const std::string& path, const json& schema) {
 
 		std::ifstream data(path);
-		json data_json = json::parse(data);
+		const json data_json = json::parse(data);
 		if (!data && !data_json) { return false; }
 
 		json_schema_validator validator;
 		validator.set_root_schema(schema);
 		try {
-			validator.validate(data_json);
+			auto json_content = validator.validate(data_json);
 			std::cout << "Validation of file " << path << " succeeded\n";
+			return true;
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Validation failed, here is why: " << e.what() << "\n";

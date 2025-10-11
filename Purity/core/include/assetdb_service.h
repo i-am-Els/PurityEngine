@@ -11,7 +11,7 @@ namespace purity{
     class PURITY_API AAssetDBService : public IService, public IInitializableService, public ITerminableService{
     public:
 
-        [[nodiscard]] std::type_index getTypeIndex() const override {
+        PURE_NODISCARD std::type_index getTypeIndex() const override {
             return {typeid(AAssetDBService)};
         }
         ~AAssetDBService() override = default;

@@ -29,6 +29,7 @@ namespace purity::assetDB {
     protected:
         void* m_data;
         PUUID id{};
+
     };
 
 

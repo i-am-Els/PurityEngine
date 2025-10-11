@@ -4,6 +4,7 @@
 
 #pragma once
 
+
 #include "purity_core_pch.h"
 #include "core_macros.h"
 #include "assetdb_enums.h"
@@ -24,12 +25,18 @@ namespace purity::assetDB
         {
         }
 
-        [[nodiscard]] virtual AssetType getAssetType() const
+        PURE_NODISCARD virtual AssetType getAssetType() const
         {
             return m_type;
         }
 
-        std::string rel_path;
+        // union u_asset_query_info
+        // {
+        //     std::string rel_path;
+        //     PUUID asset_id;
+        // } assetQueryInfo;
+
+        std::variant<std::string, PUUID> assetQueryInfo;
 
         virtual ~QuerySpec()
         {
@@ -147,6 +154,7 @@ namespace purity::assetDB
 
         ~QuerySkeletonAssetSpec() override{
             PLog::echoMessage("Destroying skeleton query spec.");
+            delete strategy;
         }
         AssetType m_type = AssetType::SkeletonAsset;
 
@@ -245,18 +253,19 @@ namespace purity::assetDB
         explicit QueryLevelAssetSpec(const PUUID& id)
             : QuerySpec<PLevelAsset>(new LevelAssetOperationStrategy())
         {
+            assetQueryInfo = id;
         }
 
         explicit QueryLevelAssetSpec(const std::string& path)
             : QuerySpec<PLevelAsset>(new LevelAssetOperationStrategy())
         {
+            assetQueryInfo = path;
         }
 
         ~QueryLevelAssetSpec() override{
             PLog::echoMessage("Destroying level query spec.");
         }
         AssetType m_type = AssetType::LevelAsset;
-
         // and other rules
     };
 
