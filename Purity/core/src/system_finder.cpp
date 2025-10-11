@@ -4,8 +4,11 @@
 
 #include "system_finder.h"
 #include "ecs_service_conc.h"
+#include "layer_service.h"
+#include "layer_service_conc.h"
 #include "papplication.h"
 #include "renderer_service_conc.h"
+#include "scene_layer.h"
 #include "service_locator.h"
 
 
@@ -34,6 +37,8 @@ namespace purity{
     }
 
     scene::PScene *PSystemFinder::GetScene() {
-        return GetApplication()->Scene;
+        auto const layer = GetApplication()->serviceLocator->getService<ALayerService, PLayerService>()->fetchLayerByName(artifacts::builtInLayerNames["scene"]);
+        auto const sceneLayer = dynamic_cast<scene::SceneLayer*>(layer);
+        return sceneLayer != nullptr ? sceneLayer->getAttachedScene() : nullptr;
     }
 }

@@ -43,9 +43,6 @@ namespace purity{
         virtual void onEvent(Event& placeholder1);
 
         std::shared_ptr<PServiceLocator> serviceLocator;
-        scene::PScene* Scene;
-
-        void switchScene(scene::PScene* scene);
 
         struct PURITY_API ApplicationInfo{
             std::string title;

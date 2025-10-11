@@ -118,7 +118,6 @@ namespace project {
 		json scene_json = {
 			{"id", id},
 			{"source", "scene"},
-			{"parentID", "0"},
 			{"type_", "LevelAsset"},
 			{"data_", json::object()},
 			{"ref_assets", json::array() }

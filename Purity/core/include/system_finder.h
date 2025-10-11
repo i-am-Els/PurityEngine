@@ -7,7 +7,6 @@
 #include "iservices.h"
 #include "isystems.h"
 
-
 namespace purity{
     namespace scene {
         class PScene;
@@ -47,3 +46,4 @@ namespace purity{
     };
 
 }
+

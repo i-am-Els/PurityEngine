@@ -43,12 +43,12 @@
 
 #include <iostream>
 
-#include "system_finder.h"
 #include "papplication.h"
-#include "input.h"
-#include "ecs_service_conc.h"
-#include "layer_service_conc.h"
 #include <window_events.h>
+#include "ecs_service_conc.h"
+#include "input.h"
+#include "layer_service_conc.h"
+#include "system_finder.h"
 
 #include "assetdb_service_conc.h"
 #include "renderer_service_conc.h"
@@ -108,16 +108,16 @@ namespace purity{
 
         // Create all Services
         const auto ecsService = std::make_shared<PECSService>(window.get());
-        const auto layerService = std::make_shared<PLayerService>();
         const auto assetService = std::make_shared<assetDB::PAssetDatabase>();
+        const auto layerService = std::make_shared<PLayerService>();
         const auto rendererService = std::make_shared<PRendererService>(window->getGLFWwindow());
 
         assetService->preInit(assetdbData);
 
         // Register Services
         serviceLocator->registerService<AECSService, PECSService>(ecsService);
-        serviceLocator->registerService<ALayerService, PLayerService>(layerService);
         serviceLocator->registerService<AAssetDBService, assetDB::PAssetDatabase>(assetService);
+        serviceLocator->registerService<ALayerService, PLayerService>(layerService);
         serviceLocator->registerService<ARendererService, PRendererService>(rendererService);
     }
 
@@ -127,6 +127,9 @@ namespace purity{
         {
             initializable->init();
         }
+
+        // Scene layer must have been created now and attached will already be called
+        // on it since its Pushed to stack on Init.
     }
 
     void PApplication::postInit()
@@ -135,7 +138,7 @@ namespace purity{
         {
             initializable->postInit();
         }
-        switchScene(scene::PScene::LoadScene(PUUID(0))); // TODO - This should switch to the default scene no the arbitrary 0 id-ed scene
+        // INFO: The default scene will be not nullptr after this point.
     }
 
     void PApplication::destroy() {
@@ -151,8 +154,8 @@ namespace purity{
         // nothing for now
         PWindow::unbind();
         serviceLocator->unregisterService<ARendererService>();
-        serviceLocator->unregisterService<AAssetDBService>();
         serviceLocator->unregisterService<ALayerService>();
+        serviceLocator->unregisterService<AAssetDBService>();
         serviceLocator->unregisterService<AECSService>();
     }
 
@@ -167,7 +170,6 @@ namespace purity{
     : serviceLocator(std::make_shared<PServiceLocator>())
     {
         window = std::make_shared<PWindow>();
-        Scene = new scene::PScene();
     }
 
     void PApplication::onEvent(Event& event)
@@ -188,17 +190,6 @@ namespace purity{
                 std::cout << event;
                 break;
             }
-        }
-    }
-
-    /// Takes in already loaded scene
-    void PApplication::switchScene(scene::PScene* scene)
-    {
-        const auto temp = Scene;
-        Scene = scene;
-        if (temp != Scene && temp != nullptr)
-        {
-            delete temp;
         }
     }
 

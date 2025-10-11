@@ -32,7 +32,7 @@
 
 
 // Windows Specific Includes
-#ifdef PNT_PLATFORM_WINDOWS
+#ifdef PURITY_PLATFORM_WINDOWS
 #include "windows.h"
 #endif
 
@@ -43,5 +43,10 @@
 #include "log.h"
 #include "math/islemath.h"
 #include "handle_base.h"
-#include "system_finder.h"
 #include "color.h"
+
+#include "data_hash_table.h"
+
+#ifdef PURITY_SYSTEM_FINDER
+#include "system_finder.h"
+#endif

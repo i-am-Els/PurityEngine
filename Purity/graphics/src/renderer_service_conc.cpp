@@ -4,6 +4,7 @@
 
 #include "renderer_service_conc.h"
 #include "papplication.h"
+#include "purity_exceptions.h"
 #include "data_hash_table.h"
 #include "fileio.h"
 
@@ -23,7 +24,7 @@ namespace purity::graphics
         PRendererService::exit();
     }
 
-    void PRendererService::preInit(std::any data)
+    void PRendererService::preInit(const std::any& data)
     {
     }
 
@@ -145,6 +146,11 @@ namespace purity::graphics
 
     bool PRendererService::hasSomethingToRender() const noexcept
     {
-        return scene::PScene::HasAnythingToRender(); // TODO - Change this method to check if any object with an `enabled` render component is present in the scene
+        auto scene = PSystemFinder::GetScene();
+        if (scene == nullptr)
+        {
+            throw exceptions::NullPointerError();
+        }
+        return scene->hasAnythingToRender();
     }
 }

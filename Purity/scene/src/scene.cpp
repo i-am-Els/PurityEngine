@@ -41,20 +41,24 @@ namespace purity::scene{
         m_registry.Destroy(uuid);
     }
 
-    PScene::PScene() = default;
+    PScene::PScene() : m_scene_id(PUUID()){}
+
+    PScene::PScene(const PUUID& id) : m_scene_id(id)
+    {
+    }
 
     PScene::~PScene() {
         // TODO - clear out all systems and there components during scene switch
         PLog::echoMessage("Destroying Scene.");
     }
 
-    bool PScene::HasAnythingToRender() {
-        return !PSystemFinder::GetScene()->m_registry.entityMapIsEmpty();
+    bool PScene::hasAnythingToRender() {
+        return !m_registry.entityMapIsEmpty(); // TODO - Change this method to check if any object with an `enabled` render component is present in the scene
     }
 
-    PScene* PScene::LoadScene(const PUUID& scene_id)
+    std::unique_ptr<PScene> PScene::LoadScene(const PUUID& scene_id)
     {
-        PScene* scene;
+        std::unique_ptr<PScene> scene;
         if (static_cast<int>(scene_id) != 0)
         {
             // TODO - Start Serializing from json using Cereal.
@@ -64,7 +68,8 @@ namespace purity::scene{
             // return scene;
         }
         // TODO - create a new asset file repressenting this asset in asset DB
-        scene = new PScene();
+        // TODO - Never forget to set scene name
+        scene = std::move(std::make_unique<PScene>());
         auto bunny = scene->CreateEntity("Bunny");
 
         auto mesh = bunny.AddComponent<PMeshComponent>();
@@ -75,8 +80,8 @@ namespace purity::scene{
         return scene;
     }
 
-    PScene* PScene::UnloadScene()
+    void PScene::UnloadScene()
     {
-        return nullptr;
+        // TODO: Replace with actual unload logic
     }
 }

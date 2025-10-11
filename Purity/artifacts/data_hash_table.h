@@ -14,4 +14,10 @@ namespace purity::artifacts{
         {"basic_shader_Inv_vert", "Shaders/basicShaderInv.vert"},
         {"basic_shader_Inv_frag", "Shaders/basicShaderInv.frag"}
     };
+
+    static std::map<std::string, std::string> builtInLayerNames{
+        {"scene", "SceneLayer"},
+        {"ui", "EditorUI"},
+        {"game", "GameLayer"}
+    };
 }

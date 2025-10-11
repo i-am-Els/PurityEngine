@@ -7,7 +7,7 @@
 #include "papplication.h"
 
 namespace purity::assetDB{
-    void PAssetDatabase::preInit(std::any data)
+    void PAssetDatabase::preInit(const std::any& data)
     {
         if(!data.has_value())
         {
@@ -19,7 +19,7 @@ namespace purity::assetDB{
             {
                 for (const auto& [id, path] : *map_ptr)
                 {
-                    m_AssetContainer[id] = {id, path};
+                    m_AssetContainer[id] = {id, path, AssetType::None};
                     std::cout << "Inside assetDB we add id: " << id << " to asset database metadata container" << std::endl;
                 }
             }
@@ -27,6 +27,8 @@ namespace purity::assetDB{
         {
             throw std::runtime_error("Incorrect type in std::any. Expected std::map<PUUID, std::string>.");
         }
+
+        // TODO: Clean the assetdbData std::any parameter after this
     }
 
     void PAssetDatabase::postInit()

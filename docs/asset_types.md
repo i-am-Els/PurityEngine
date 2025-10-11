@@ -124,9 +124,23 @@ The structure of the scene file describes the hierarchical tree of entity transf
 {
   "id": "6543210987654321",
   "source" : "scene",
-  "parentID": 0,
   "type_" : "LevelAsset",
   "data_" : {
+     "children": [
+        {
+           "id": "4321210965438765",
+           "name": "box",
+           "components": {
+              "transformComponent": {},
+              "tagComp" : {
+                 "tag" : 0
+              },
+              "idComp" : "4321210965438765",
+              "meshComponent": 1
+           },
+           "children": []
+        }
+     ]
   },
   "ref_assets": []
 }
@@ -148,7 +162,6 @@ An 'Asset' asset is one that was imported through the fileIO system. It has an e
 {
   "id": "6543210987654321",
   "source" : "asset",
-  "parentID": 0,
   "type_" : "StaticMeshAsset",
   "data_" : {
     "vertices" : {
@@ -173,8 +186,7 @@ The Keys:
 ```json
 {
   "id" : "4321210965438765",
-  "source" : "prefab"
-  "parentID": 0,
+  "source" : "prefab",
   "type_" : "LevelAsset",
   "data_" : {
     "components" : [
@@ -183,7 +195,7 @@ The Keys:
           "position" : [0, 0, 0],
           "scale" : [1, 1, 1],
           "rotation" : [0, 90, 0],
-          "children": []
+          "children": ["3876543212109654", "1096543876543212"]
         },
         "tagComp" : {
           "tag" : 0

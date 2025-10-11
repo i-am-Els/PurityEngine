@@ -28,8 +28,8 @@ namespace purity::assetDB {
     class PURITY_API PAsset : public RefCounted {
     protected:
         void* m_data;
-        PUUID id{};
-
+        PUUID id;
+        PUUID getID() { return id; }
     };
 
 
@@ -41,10 +41,9 @@ namespace purity::assetDB {
 
     class PURITY_API PTextureAsset : public PAsset {
     public:
-        uint64_t getID() { return id; }
-        void getType(std::string _type) { type = _type; }
+        void setType(std::string _type) { type = _type; }
         std::string getType() const { return type; }
-        std::string type; // Diffuse or Specular
+        std::string type; // Diffuse or Normal
         //void setID(uint64_t uuid); 
     };
 

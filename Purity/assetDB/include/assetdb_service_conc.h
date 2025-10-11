@@ -21,7 +21,7 @@ namespace purity::assetDB{
             PLog::echoMessage("Destroying AssetDB.");
         }
 
-        void preInit(std::any data) override;
+        void preInit(const std::any& data) override;
         void init() override;
         void postInit() override;
 

@@ -6,7 +6,7 @@
 
 namespace purity{
 //    std::map<std::type_index, std::unique_ptr<ecs::ISystemBase>> PECSService::system_map;
-void PECSService::preInit(std::any data)
+void PECSService::preInit(const std::any& data)
 {
 }
 

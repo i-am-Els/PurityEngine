@@ -3,6 +3,7 @@
 //
 
 #include "layer_service_conc.h"
+#include "scene_layer.h"
 
 using namespace purity::exceptions;
 
@@ -27,7 +28,7 @@ namespace purity
     }
 
     // Return type Layer* can be interpreted as an unsigned int*
-    [[maybe_unused]] PLayer *PLayerService::fetchLayerByName(const std::string &name) const
+    PURE_MAYBE_UNUSED PLayer *PLayerService::fetchLayerByName(const std::string &name) const
     {
         for (const auto layer : m_layers){
             if (layer != nullptr && static_cast<std::string>(*layer) == name){
@@ -44,7 +45,7 @@ namespace purity
 
     PUUID PLayerService::PushLayer(PLayer* layer)
     {
-        auto first_overlay_it = std::find_if(begin(), end(), [](PLayer* item)
+        const auto first_overlay_it = std::find_if(begin(), end(), [](PLayer* item)
         {
             return item->isOverlay();
         });
@@ -66,10 +67,9 @@ namespace purity
 
     void PLayerService::PopLayer(PLayer* layer)
     {
-        auto it = std::find(m_layers.begin(), m_layers.end(), layer);
-        if (it != m_layers.end())
+        if (const auto it = std::find(m_layers.begin(), m_layers.end(), layer); it != m_layers.end())
         {
-            PUUID id = layer->getID();
+            const PUUID id = layer->getID();
             layer->detached();
             m_layerMap.erase(id);
             delete *it;
@@ -88,12 +88,15 @@ namespace purity
         PLayerService::exit();
     }
 
-    void PLayerService::preInit(std::any data)
+    void PLayerService::preInit(const std::any& data)
     {
     }
 
     void PLayerService::postInit()
     {
+        // TODO : Have your Scene Layer initialize the Project default scene.
+
+        // dynamic_cast<scene::SceneLayer*>(getLayerByPUUID(m_sceneLayerID))->switchScene();
     }
 
     void PLayerService::update(float deltaTime)
@@ -120,8 +123,9 @@ namespace purity
     {
     }
 
-    void PLayerService::init() {
-
+    void PLayerService::init()
+    {
+        m_sceneLayerID = PushLayer(new scene::SceneLayer(purity::artifacts::builtInLayerNames["scene"]));
     }
 
     void PLayerService::destroy() {

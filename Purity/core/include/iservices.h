@@ -25,7 +25,7 @@ namespace purity{
 
     class PURITY_API IInitializableService {
     public:
-        virtual void preInit(std::any data) = 0;
+        virtual void preInit(const std::any& data) = 0;
         virtual void init() = 0;
         virtual void postInit() = 0;
         virtual ~IInitializableService() = default;

@@ -51,7 +51,9 @@ add_dependencies(PurityEditor IsleMath Purity Commons)
 # Link against the Purity library (assuming it's built in a sibling directory)
 target_link_libraries(PurityEditor PRIVATE Purity cereal::cereal imgui::imgui glfw glad::glad ImGuiFileDialog nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator Commons)
 
-target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS)
+target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS
+        PURITY_SYSTEM_FINDER
+)
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityEditor DESTINATION ${CMAKE_INSTALL_BINDIR})

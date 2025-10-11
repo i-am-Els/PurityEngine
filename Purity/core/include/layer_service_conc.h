@@ -3,9 +3,10 @@
 //
 
 #pragma once
+#include "purity_core_pch.h"
+
 #include "layer.h"
 #include "layer_service.h"
-#include "purity_core_pch.h"
 
 namespace purity
 {
@@ -29,7 +30,7 @@ namespace purity
         void PopLayer(PLayer* layer);
         void PopOverlay(PLayer* overlay);
 
-        void preInit(std::any data) override;
+        void preInit(const std::any& data) override;
         void init() override;
         void postInit() override;
         void update(float deltaTime) override;
@@ -50,6 +51,8 @@ namespace purity
         std::unordered_map<PUUID, PLayer*> m_layerMap;
 
         static int START_SIZE;
+
+        PUUID m_sceneLayerID;
     };
 }
 

@@ -138,7 +138,7 @@ namespace purity{
             return system_map;
         }
 
-        void preInit(std::any data) override;
+        void preInit(const std::any& data) override;
         void postInit() override;
         void preRender() override;
         void postRender() override;

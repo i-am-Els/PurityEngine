@@ -1,6 +1,8 @@
 #include "serialize_utilities.h"
 
 namespace commons {
+	json_schema_validator validator;
+
 	bool _validateFileExistence(const std::string& path)
 	{
 		std::filesystem::path _filepath = { path };
@@ -18,7 +20,6 @@ namespace commons {
 		const json data_json = json::parse(data);
 		if (!data && !data_json) { return false; }
 
-		json_schema_validator validator;
 		validator.set_root_schema(schema);
 		try {
 			auto json_content = validator.validate(data_json);

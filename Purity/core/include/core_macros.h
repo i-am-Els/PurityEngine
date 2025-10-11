@@ -38,3 +38,4 @@
 
 #define PURE_NODISCARD [[nodiscard]]
 #define PURE_INLINE __forceinline
+#define PURE_MAYBE_UNUSED [[maybe_unused]]

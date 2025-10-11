@@ -10,7 +10,8 @@
 #include "game_layer.h"
 #include "layer_service.h"
 #include "layer_service_conc.h"
-using namespace commons; 
+using namespace commons;
+using namespace purity;
 
 namespace editor {
 
@@ -117,14 +118,11 @@ namespace editor {
     void PEditorApplication::init() {
         PApplication::init();
         const auto layer_service = serviceLocator->getService<ALayerService, PLayerService>();
-        const auto editorOverlayName = "Editor_UI";
-        const auto id = layer_service->PushOverlay(new gui::EditorLayer(editorOverlayName));
-        // layer_service->PushOverlay(new gui::ImGuiLayer("UI"));
-        const auto editor = dynamic_cast<gui::EditorLayer*>(layer_service->getLayerByPUUID(id));
+        const auto uiLayerID = layer_service->PushOverlay(new gui::EditorLayer(purity::artifacts::builtInLayerNames["ui"]));
+        const auto editor = dynamic_cast<gui::EditorLayer*>(layer_service->getLayerByPUUID(uiLayerID));
         gui::EditorLayer::setupEditor(editor);
 
-        // Add game layer/ scene render layer
-        const auto gameLayerID = layer_service->PushLayer(new editor::layers::GameLayer("Game"));
+        const auto gameLayerID = layer_service->PushLayer(new editor::layers::GameLayer(purity::artifacts::builtInLayerNames["game"]));
     }
 
     void PEditorApplication::start() {

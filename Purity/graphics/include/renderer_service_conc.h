@@ -30,7 +30,7 @@ namespace purity::graphics
         explicit PRendererService(GLFWwindow* window);
         ~PRendererService() noexcept override;
 
-        void preInit(std::any data) override;
+        void preInit(const std::any& data) override;
         void init() override;
         void postInit() override;
         void start() override;

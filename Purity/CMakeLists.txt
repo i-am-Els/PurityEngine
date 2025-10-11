@@ -187,9 +187,16 @@ add_library(Purity
         platform/src/imgui_opengl3_renderer.cpp
         #--------------------------------
         scene/src/scene.cpp
+        scene/src/scene_layer.cpp
+        scene/include/scene_layer.h
 )
 
-target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS PURITY_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE GLAD_DLL)
+target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS
+        PURITY_BUILD_DLL
+        PURITY_SYSTEM_FINDER
+        ISLE_PLATFORM_WINDOWS
+        GLFW_INCLUDE_NONE
+        GLAD_DLL)
 
 # Add the core directories for your library and dependencies
 target_include_directories(Purity PUBLIC
