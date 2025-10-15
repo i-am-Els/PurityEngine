@@ -21,6 +21,7 @@ namespace purity::assetDB{
                 {
                     m_AssetContainer[id] = {id, path, AssetType::None};
                     std::cout << "Inside assetDB we add id: " << id << " to asset database metadata container" << std::endl;
+
                 }
             }
         }else
@@ -36,6 +37,10 @@ namespace purity::assetDB{
     }
 
     void PAssetDatabase::init() {
+        for(const auto& [id, path] : m_AssetContainer)
+        {
+
+        }
         // queryDBForAsset({QueryStaticMeshAssetSpec("gun", "gun.fbx", "material.ml"), QueryOperation::Read});
 
     }

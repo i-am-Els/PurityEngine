@@ -113,12 +113,19 @@ namespace purity{
         const auto rendererService = std::make_shared<PRendererService>(window->getGLFWwindow());
 
         assetService->preInit(assetdbData);
+        // call all pre-init
+        // for (const auto initializable : serviceLocator->getInitializables())
+        // {
+        //     if (dynamic_cast<assetDB::PAssetDatabase*>(initializable) == nullptr) { continue; }
+        //     initializable->preInit();
+        // }
 
         // Register Services
         serviceLocator->registerService<AECSService, PECSService>(ecsService);
         serviceLocator->registerService<AAssetDBService, assetDB::PAssetDatabase>(assetService);
         serviceLocator->registerService<ALayerService, PLayerService>(layerService);
         serviceLocator->registerService<ARendererService, PRendererService>(rendererService);
+
     }
 
     void PApplication::init() {

@@ -14,31 +14,57 @@
 
 namespace purity{
     PApplication* PSystemFinder::application = nullptr;
+    std::shared_ptr<PWindow> PSystemFinder::window = nullptr;
+    scene::PScene* PSystemFinder::scene = nullptr;
+    PECSService* PSystemFinder::ecsService = nullptr;
+    graphics::PRendererService* PSystemFinder::rendererService = nullptr;
+    std::shared_ptr<PServiceLocator> PSystemFinder::serviceLocator = nullptr;
 
     PApplication *PSystemFinder::GetApplication() {
         return application;
     }
 
     PECSService *PSystemFinder::GetECSService() {
-        return GetApplication()->serviceLocator->getService<AECSService, PECSService>().get();
+        if (ecsService == nullptr)
+        {
+            ecsService = GetApplication()->serviceLocator->getService<AECSService, PECSService>().get();
+        }
+        return ecsService;
     }
 
     PRendererService* PSystemFinder::GetRendererService()
     {
-        return GetApplication()->serviceLocator->getService<ARendererService, PRendererService>().get();
+        if (rendererService == nullptr)
+        {
+            rendererService = GetApplication()->serviceLocator->getService<ARendererService, PRendererService>().get();
+        }
+        return rendererService;
     }
 
     std::shared_ptr<PServiceLocator> PSystemFinder::GetServiceLocator() {
-        return GetApplication()->serviceLocator;
+        if (serviceLocator == nullptr)
+        {
+            serviceLocator = GetApplication()->serviceLocator;
+        }
+        return serviceLocator;
     }
 
-    std::shared_ptr<PWindow>& PSystemFinder::GetWindow() {
-        return GetApplication()->window;
+    std::shared_ptr<PWindow>& PSystemFinder::GetWindow()
+    {
+        if (window == nullptr)
+        {
+            window = GetApplication()->window;
+        }
+        return window;
     }
 
     scene::PScene *PSystemFinder::GetScene() {
-        auto const layer = GetApplication()->serviceLocator->getService<ALayerService, PLayerService>()->fetchLayerByName(artifacts::builtInLayerNames["scene"]);
-        auto const sceneLayer = dynamic_cast<scene::SceneLayer*>(layer);
-        return sceneLayer != nullptr ? sceneLayer->getAttachedScene() : nullptr;
+        if (scene == nullptr)
+        {
+            auto const layer = GetApplication()->serviceLocator->getService<ALayerService, PLayerService>()->fetchLayerByName(artifacts::builtInLayerNames["scene"]);
+            auto const sceneLayer = dynamic_cast<scene::SceneLayer*>(layer);
+            scene = sceneLayer != nullptr ? sceneLayer->getAttachedScene() : nullptr;
+        }
+        return scene;
     }
 }

@@ -189,6 +189,12 @@ add_library(Purity
         scene/src/scene.cpp
         scene/src/scene_layer.cpp
         scene/include/scene_layer.h
+        core/include/ISerializable.h
+        core/src/object_registry.cpp
+        core/include/object_registry.h
+        core/src/serializer.cpp
+        core/include/serializer.h
+        core/include/serialization_macros.h
 )
 
 target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS
