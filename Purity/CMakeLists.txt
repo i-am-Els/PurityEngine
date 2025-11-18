@@ -8,7 +8,7 @@ project(PurityEngine:Purity VERSION 0.1.2 LANGUAGES CXX)
 #project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -51,7 +51,6 @@ set(GLFW_INSTALL ON)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
 
 
 # Create the Purity library
@@ -186,15 +185,24 @@ add_library(Purity
         #--------------------------------
         platform/src/imgui_opengl3_renderer.cpp
         #--------------------------------
-        scene/src/scene.cpp
-        scene/src/scene_layer.cpp
         scene/include/scene_layer.h
         core/include/ISerializable.h
+#        core/include/object_registry.h
+#        core/include/serializer.h
+        core/include/serialization_macros.h
+        ecs/include/weak_ptr_utility.h
+#        core/src/object_registry.cpp
+        scene/src/scene.cpp
+        scene/src/scene_layer.cpp
+#        core/src/serializer.cpp
+)
+
+target_sources(
+        Purity PRIVATE
         core/src/object_registry.cpp
         core/include/object_registry.h
         core/src/serializer.cpp
         core/include/serializer.h
-        core/include/serialization_macros.h
 )
 
 target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS
@@ -244,6 +252,8 @@ target_precompile_headers(Purity PRIVATE core/include/purity_core_pch.h)
 
 # Link against GLFW and GLEW libraries
 target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp Commons imgui::imgui)
+
+target_compile_features(Purity PUBLIC cxx_std_20)
 
 
 if(PURITY_INSTALL)

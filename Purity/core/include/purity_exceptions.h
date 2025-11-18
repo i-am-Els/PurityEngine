@@ -18,12 +18,16 @@ namespace purity::exceptions
         }
     };
 
+
     class PURITY_API NullPointerError final : public std::exception
     {
+        const char* exception_message;
     public:
+        NullPointerError() = default;
+        explicit NullPointerError(const char* message) : exception_message(message) {}
         operator int() { return -1; }
         PURE_NODISCARD const char* what() const noexcept override{
-            return "Accessed pointer is a null pointer";
+            return (!exception_message) ? "Accessed pointer is a null pointer": exception_message;
         }
     };
 

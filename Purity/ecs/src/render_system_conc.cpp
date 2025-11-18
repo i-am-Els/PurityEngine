@@ -41,18 +41,18 @@ namespace purity::ecs {
         PLog::echoMessage("Destroying OpenGL Render System.");
     }
 
-    PRenderComponent *POpenGLRenderSS::AddComponent(PEntity *entity) {
+    std::weak_ptr<PRenderComponent> POpenGLRenderSS::AddComponent(std::weak_ptr<PEntity> entity) {
         try {
             SRenderProfile profile = {true}; // Set the profile of the render component, through the DTO
-            renderComponents.emplace_back(std::make_unique<PRenderComponent>(entity, profile));
-            return renderComponents.back().get();
+            renderComponents.emplace_back(std::make_shared<PRenderComponent>(entity, profile));
+            return renderComponents.back();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Render Comp Generic Assertion failed");
         }
-        return nullptr;
+        return {};
     }
 
-    void POpenGLRenderSS::RemoveComponent(PEntity *entity, PRenderComponent *component) {
+    void POpenGLRenderSS::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PRenderComponent> component) {
 
     }
 

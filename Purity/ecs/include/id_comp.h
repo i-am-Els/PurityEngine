@@ -16,12 +16,12 @@ namespace purity{
     namespace  ecs{
         class PIDManager;
 
-        class PURITY_API PIDComponent final: public PComponent{
+        class PURITY_API PIDComponent final: public PComponent, public std::enable_shared_from_this<PIDComponent>{
             friend class purity::scene::PScene;
         public:
-            explicit PIDComponent(PEntity *entity);
+            explicit PIDComponent(std::weak_ptr<PEntity> entity);
 
-            PIDComponent(PEntity *entity, PUUID id);
+            PIDComponent(std::weak_ptr<PEntity> entity, PUUID id);
 
             ~PIDComponent() override { PLog::echoMessage("Destroying ID Component"); };
 
@@ -36,6 +36,12 @@ namespace purity{
         private:
             PUUID m_entityInstanceID{0};
             void setID(PUUID id);
+
+        public:
+            void Serialize(cereal::JSONOutputArchive& ar) const override;
+            void Deserialize(cereal::JSONInputArchive& ar) override;
+
+        private:
             // All components must have this comm
 
             friend class PIDManager;

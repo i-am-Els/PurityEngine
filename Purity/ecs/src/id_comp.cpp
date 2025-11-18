@@ -7,10 +7,10 @@
 
 namespace purity::ecs{
 
-    PIDComponent::PIDComponent(PEntity *entity) : PComponent(entity) {
+    PIDComponent::PIDComponent(std::weak_ptr<PEntity> entity) : PComponent(entity) {
     }
 
-    PIDComponent::PIDComponent(PEntity *entity, PUUID id) : PComponent(entity) {
+    PIDComponent::PIDComponent(std::weak_ptr<PEntity> entity, PUUID id) : PComponent(entity) {
         setID(id);
     }
 
@@ -24,6 +24,15 @@ namespace purity::ecs{
 
     void PIDComponent::setID(PUUID id) {
         m_entityInstanceID = id;
-        dynamic_cast<PEntityBase*>(m_entity)->m_instanceID = id;
+        auto locked = m_entity.lock();
+        (locked)->id = id;
+    }
+
+    void PIDComponent::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PIDComponent::Deserialize(cereal::JSONInputArchive& ar)
+    {
     }
 }

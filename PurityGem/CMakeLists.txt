@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.26)
 
 project(PurityEngine:PurityGem VERSION 0.1.2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -43,6 +43,8 @@ target_link_libraries(PurityGem PUBLIC imgui::imgui glfw glad::glad nlohmann_jso
 target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
 target_compile_definitions(PurityGem PUBLIC PURITY_PLATFORM_WINDOWS)
+
+target_compile_features(PurityGem PUBLIC cxx_std_20)
 
 add_dependencies(PurityGem Commons)
 

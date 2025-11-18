@@ -20,9 +20,9 @@ namespace purity::ecs{
         std::string relAssetPath;
     };
 
-    class PURITY_API PMeshComponent final : public PComponent{
+    class PURITY_API PMeshComponent final : public PComponent,  public std::enable_shared_from_this<PMeshComponent>{
     public:
-        explicit PMeshComponent(PEntity *entity, SMeshProfile profile);
+        explicit PMeshComponent(std::weak_ptr<PEntity> entity, SMeshProfile profile);
         ~PMeshComponent() override { PLog::echoMessage("Destroying mesh"); }
 
         void update(float deltaTime) override;
@@ -30,6 +30,8 @@ namespace purity::ecs{
 
 
         P_GET_COMPONENT_TYPE(PComponentType::PMeshComponent)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
         SMeshProfile m_MeshProfile;
 
     private:

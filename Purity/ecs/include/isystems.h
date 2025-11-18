@@ -27,8 +27,8 @@ namespace purity::ecs{
 //
         virtual void destroy() = 0;
 
-        virtual ComponentType* AddComponent(PEntity* entity) = 0;
-        virtual void RemoveComponent(PEntity* entity, ComponentType* component) = 0;
+        virtual std::weak_ptr<ComponentType> AddComponent(std::weak_ptr<PEntity> entity) = 0;
+        virtual void RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<ComponentType> component) = 0;
 
     };
 

@@ -42,6 +42,7 @@
 #include "log.h"
 #include "purity_exceptions.h"
 #include "serialize_utilities.h"
+#include "weak_ptr_utility.h"
 #include "math/islemath.h"
 
 #include "data_hash_table.h"

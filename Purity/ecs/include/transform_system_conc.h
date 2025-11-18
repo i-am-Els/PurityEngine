@@ -29,12 +29,12 @@ namespace purity::ecs{
             PLog::echoMessage("Destroying Transform System.");
         }
 
-        PTransformComponent *AddComponent(PEntity *entity) override;
+        std::weak_ptr<PTransformComponent> AddComponent(std::weak_ptr<PEntity> entity) override;
 
-        void RemoveComponent(PEntity *entity, PTransformComponent *component) override;
+        void RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PTransformComponent> component) override;
 
     private:
-        std::vector<std::unique_ptr<PTransformComponent>> transformComponents;
+        std::vector<std::shared_ptr<PTransformComponent>> transformComponents;
 
 
     };

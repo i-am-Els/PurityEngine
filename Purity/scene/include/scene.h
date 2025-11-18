@@ -7,6 +7,12 @@
 #include "uuid.h"
 #include "entity_registry.h"
 
+
+namespace purity::ecs
+{
+    class PEntityHandle;
+}
+
 namespace purity::scene{
     class PURITY_API PScene{
     public:
@@ -16,7 +22,7 @@ namespace purity::scene{
         //explicit PScene(const ecs::PEntityRegistry& registry );
         ecs::PEntityHandle CreateEntity(const std::string& name);
         ecs::PEntityHandle CreateEntityWithUUID(PUUID uuid, const std::string& name);
-        void DestroyEntity(PEntityHandle entity);
+        void DestroyEntity(ecs::PEntityHandle entity);
         void DestroyEntityWithUUID(PUUID uuid);
 
         bool hasAnythingToRender();

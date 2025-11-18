@@ -4,12 +4,13 @@
 
 #pragma once
 
-#include "purity_core_pch.h"
-#include "vertex_array.h"
+#include "assetdb_enums.h"
 #include "buffer.h"
 #include "handle_base.h"
+#include "purity_core_pch.h"
 #include "ref_counted.h"
-#include "assetdb_enums.h"
+#include "serialization_macros.h"
+#include "vertex_array.h"
 
 
 using namespace commons;
@@ -29,6 +30,18 @@ namespace purity::assetDB {
     protected:
         void* m_data;
         PUUID id;
+
+    public:
+        PAsset() = default;
+        PURE_NODISCARD PAsset(void* data, const PUUID& id)
+            : m_data(data),
+              id(id)
+        {
+        }
+
+        ~PAsset() override = default;
+
+    protected:
         PUUID getID() { return id; }
     };
 
@@ -39,35 +52,55 @@ namespace purity::assetDB {
 
     // Add getters and setters that should be exposed to handles in the asset classes, make them public, but make the asset constructor private.
 
-    class PURITY_API PTextureAsset : public PAsset {
+    class PURITY_API PTextureAsset final : public PAsset, public ISerializable {
     public:
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
+
+        SERIALIZABLE(PTextureAsset)
         void setType(std::string _type) { type = _type; }
         std::string getType() const { return type; }
         std::string type; // Diffuse or Normal
         //void setID(uint64_t uuid); 
     };
 
-    class PURITY_API PSpriteAsset : public PAsset {
-
-    };
-
-    class PURITY_API PShaderAsset : public PAsset {
-
-    };
-
-    class PURITY_API PMeshAsset : public PAsset {
-
-    };
-
-    class PURITY_API PSkeletonAsset : public PAsset {
-
-    };
-
-    class PURITY_API PStaticMeshAsset : public PAsset {
+    class PURITY_API PSpriteAsset final : public PAsset, public ISerializable {
     public:
+        SERIALIZABLE(PSpriteAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
+    };
+
+    class PURITY_API PShaderAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PShaderAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
+    };
+
+    class PURITY_API PMeshAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PMeshAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
+    };
+
+    class PURITY_API PSkeletonAsset final : public PAsset , public ISerializable {
+    public:
+        SERIALIZABLE(PSkeletonAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
+    };
+
+    class PURITY_API PStaticMeshAsset final : public PAsset , public ISerializable {
+    public:
+        SERIALIZABLE(PStaticMeshAsset)
+
         std::vector<PVertex> vertices;
         std::vector<unsigned int> indices;
         PUUID getTextureAsset() const { return refTextureAssetID; }
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
         //        std::vector<PTextureAsset> textures; // I think the texture asset should only be referenced.
 
     private:
@@ -77,36 +110,60 @@ namespace purity::assetDB {
         ElementBuffer ebo;
     };
 
-    class PURITY_API PMaterialAsset : public PAsset {
-
+    class PURITY_API PMaterialAsset final : public PAsset , public ISerializable {
+    public:
+        SERIALIZABLE(PMaterialAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PSplineAsset : public PAsset {
-
+    class PURITY_API PSplineAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PSplineAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PP2DPolygonMeshAsset : public PAsset {
-
+    class PURITY_API PP2DPolygonMeshAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PP2DPolygonMeshAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PSoundSourceAsset : public PAsset {
-
+    class PURITY_API PSoundSourceAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PSoundSourceAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PP3DSoundSourceAsset : public PAsset {
-
+    class PURITY_API PP3DSoundSourceAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PP3DSoundSourceAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PLevelAsset : public PAsset {
-
+    class PURITY_API PLevelAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PLevelAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PParticleAsset : public PAsset {
-
+    class PURITY_API PParticleAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PParticleAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
-    class PURITY_API PRenderMapAsset : public PAsset {
-
+    class PURITY_API PRenderMapAsset final : public PAsset, public ISerializable {
+    public:
+        SERIALIZABLE(PRenderMapAsset)
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
 }

@@ -18,6 +18,6 @@ namespace user_script {
         std::cout << getName() << std::endl;
 
         auto transform = GetComponent<PTransformComponent>();
-        PLog::echoValue(transform->m_right);
+        // PLog::echoValue(ecs::fetch_or_throw(transform)->m_right);
     }
 } // user_script

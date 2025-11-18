@@ -7,7 +7,7 @@
 
 namespace user_script {
 
-    class QuadComp : private PBehaviourScriptComponent{
+    class QuadComp : public PBehaviourScriptComponent{
     public:
         ~QuadComp() override;
 

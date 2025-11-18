@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.26)
 project(PurityEngine:PurityEditor VERSION 0.1.2 LANGUAGES CXX)
 #project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -54,6 +54,9 @@ target_link_libraries(PurityEditor PRIVATE Purity cereal::cereal imgui::imgui gl
 target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS
         PURITY_SYSTEM_FINDER
 )
+
+target_compile_features(PurityEditor PUBLIC cxx_std_20)
+
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityEditor DESTINATION ${CMAKE_INSTALL_BINDIR})

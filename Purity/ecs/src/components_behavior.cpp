@@ -8,15 +8,21 @@
 
 namespace purity::ecs{
 
-    PEntity *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntity(ManipulativeBehaviour* behaviourOwner) {
-        return dynamic_cast<PEntity*>(behaviourOwner);
+    std::weak_ptr<PEntity> ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntity(ManipulativeBehaviour* behaviourOwner) {
+        if (const auto entity = dynamic_cast<PEntity*>(behaviourOwner))
+            return entity->getSharedPtr();
+        return {};
     }
 
-    PEntity *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityFromBehaviour(ManipulativeBehaviour* behaviourOwner) {
-        return dynamic_cast<PBehaviourScriptComponent*>(behaviourOwner)->m_entity;
+    std::weak_ptr<PEntity> ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityFromBehaviour(ManipulativeBehaviour* behaviourOwner) {
+        if (const auto script = dynamic_cast<PBehaviourScriptComponent*>(behaviourOwner))
+            return script->m_entity;
+        return {};
     }
 
-    PEntityBase *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityBase(PEntity *entity) const {
-        return dynamic_cast<PEntityBase*>(entity);
+    PEntityBase *ManipulativeBehaviour::PImpl_ComponentBehaviour::getEntityBase(const std::weak_ptr<PEntity>& entity) const {
+        if (const auto locked = entity.lock())
+            return locked.get();
+        return nullptr;
     }
 }

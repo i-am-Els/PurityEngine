@@ -66,7 +66,8 @@ namespace editor::gui::definitions
                 if (ImGui::CollapsingHeader("Mesh Renderer"))
                 {
                     ImGui::Text("Material: Default");
-                    ImGui::ColorEdit3("Color", reinterpret_cast<float*>(&ImVec4(1, 1, 1, 1)));
+                    static auto color = ImVec4(1, 1, 1, 1); // persistent variable
+                    ImGui::ColorEdit3("Color", reinterpret_cast<float*>(&color));
                 }
             }
             ImGui::End();

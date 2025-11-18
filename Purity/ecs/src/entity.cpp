@@ -17,6 +17,14 @@ namespace purity::ecs{
 
     }
 
+    void PEntity::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PEntity::Deserialize(cereal::JSONInputArchive& ar)
+    {
+    }
+
     PEntity::PEntity(const std::string &name) : PEntityBase() {
         m_name = name;
     }

@@ -3,12 +3,13 @@
 //
 
 #include "scene.h"
+#include "entity_handle.h"
 
 #include "assetdb_service_conc.h"
-#include "tag_comp.h"
 #include "id_comp.h"
-#include "system_finder.h"
 #include "service_locator.h"
+#include "system_finder.h"
+#include "tag_comp.h"
 
 
 namespace purity::scene{
@@ -23,13 +24,16 @@ namespace purity::scene{
         // Add ID Component
         auto id = entity.AddComponent<PIDComponent>();
         // Set ID
-        id->setID(uuid);
+        auto sh_id = ecs::fetch_or_throw(id, "PIDComponent::setID");
+        sh_id->setID(uuid);
+
         // Add Transform Component,
         entity.AddComponent<PTransformComponent>();
         // Add Tag Component
         auto tag = entity.AddComponent<PTagComponent>();
         // Add Entity to Entity Map
-        PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", static_cast<std::string>(id->m_entityInstanceID).c_str());
+
+        PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", static_cast<std::string>(sh_id->m_entityInstanceID).c_str());
         return entity;
     }
 
@@ -75,7 +79,8 @@ namespace purity::scene{
         auto mesh = bunny.AddComponent<PMeshComponent>();
         auto render = bunny.AddComponent<PRenderComponent>();
 
-        PLog::echoValue(bunny.GetComponent<PTransformComponent>()->m_position);
+        const auto bunny_transform = ecs::fetch_or_throw(bunny.GetComponent<PTransformComponent>());
+        PLog::echoValue(bunny_transform->m_position);
 
         return scene;
     }

@@ -120,7 +120,7 @@ namespace isle_engine::math
      */
     template <class T>
     Vector4<T> lerp(const Vector4<T>& a, const Vector4<T>& b, float t) {
-        t = std::max(0.0f, std::min(1.0f, t));
+        t = (std::max)(0.0f, (std::min)(1.0f, t));
         return (1 - t) * a + t * b;
     }
 
@@ -134,7 +134,7 @@ namespace isle_engine::math
      */
     template <class T>
     Vector3<T> lerp(const Vector3<T>& a, const Vector3<T>& b, float t) {
-        t = std::max(0.0f, std::min(1.0f, t));
+        t = (std::max)(0.0f, (std::min)(1.0f, t));
         return (1 - t) * a + t * b;
     }
 
@@ -148,7 +148,7 @@ namespace isle_engine::math
      */
     template <class T>
     Vector2<T> lerp(const Vector2<T>& a, const Vector2<T>& b, float t) {
-        t = std::max(0.0f, std::min(1.0f, t));
+        t = (std::max)(0.0f, (std::min)(1.0f, t));
         return (1 - t) * a + t * b;
     }
 

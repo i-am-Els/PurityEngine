@@ -33,16 +33,16 @@ namespace purity::ecs{
             PLog::echoMessage("Destroying 3D Geometric Mesh System.");
         }
 
-        PMeshComponent *AddComponent(PEntity *entity) override;
+        std::weak_ptr<PMeshComponent> AddComponent(std::weak_ptr<PEntity> entity) override;
 
-        void RemoveComponent(PEntity *entity, PMeshComponent *component) override;
+        void RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PMeshComponent> component) override;
 
 //        void LoadAllMeshAssets();
 //
 //        assetDB::PAssetHandle<assetDB::PStaticMeshAsset>* getAssetFromDataAssetBase();
 
     private:
-        std::vector<std::unique_ptr<PMeshComponent>> meshComponents;
+        std::vector<std::shared_ptr<PMeshComponent>> meshComponents;
     };
 }
 

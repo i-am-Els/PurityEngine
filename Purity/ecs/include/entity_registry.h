@@ -6,9 +6,16 @@
 
 #include "purity_core_pch.h"
 #include "entity_handle.h"
+#include "tags.h"
 
+
+namespace purity::ecs
+{
+    class PEntityHandle;
+}
 
 using namespace commons;
+using namespace purity::artifacts;
 
 namespace purity::ecs{
     class PURITY_API PEntityRegistry{
@@ -19,7 +26,7 @@ namespace purity::ecs{
         PEntityRegistry operator=(const PEntityRegistry& registry) = delete; // Copy of a class with a unique ptr member iis not allowed
         PURE_NODISCARD PEntityHandle Create(PUUID uuid);
         PURE_NODISCARD PEntityHandle Create(PUUID uuid, const std::string& name);
-        void Destroy(PUUID uuid);
+        void Destroy(const PUUID& uuid);
 
         PEntityHandle GetEntity(PUUID id);
 
@@ -31,6 +38,6 @@ namespace purity::ecs{
         }
 
     protected:
-        std::unordered_map<PUUID, std::unique_ptr<PEntity>> m_entityMap;
+        std::unordered_map<PUUID, std::shared_ptr<PEntity>> m_entityMap;
     };
 }

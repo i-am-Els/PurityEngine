@@ -4,6 +4,7 @@
 
 #include "assetdb_type_strategy.h"
 #include "assets_types.h"
+#include "serializer.h"
 
 namespace purity::assetDB
 {
@@ -14,6 +15,7 @@ namespace purity::assetDB
     }
 
     Ref<PTextureAsset> TextureAssetOperationStrategy::ReadOperation() {
+        // Serializer::load<Ref<PTextureAsset>>(AssetMetadata);
         return {};
     }
 

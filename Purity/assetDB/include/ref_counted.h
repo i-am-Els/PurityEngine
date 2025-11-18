@@ -6,7 +6,7 @@
 namespace purity::assetDB {
 
     // Base class that implements atomic reference counting
-    class RefCounted {
+    class PURITY_API RefCounted {
     protected:
         mutable std::atomic<int> refCount{ 0 };
 

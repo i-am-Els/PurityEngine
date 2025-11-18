@@ -42,9 +42,9 @@ namespace purity::ecs{
 
         // void SetUpBuffers(VertexBuffer* vbo, ElementBuffer* ebo);
 
-        PRenderComponent *AddComponent(PEntity* entity) override;
+        std::weak_ptr<PRenderComponent> AddComponent(std::weak_ptr<PEntity> entity) override;
 
-        void RemoveComponent(PEntity* entity, PRenderComponent *component) override;
+        void RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PRenderComponent> component) override;
 
         // using EDITOR_Render_Callback = std::function<void()>;
         // void setEditorRenderCallback(const EDITOR_Render_Callback& callback)
@@ -54,7 +54,7 @@ namespace purity::ecs{
 
     private:
         // EDITOR_Render_Callback editorRenderCallback;
-        std::vector<std::unique_ptr<PRenderComponent>> renderComponents;
+        std::vector<std::shared_ptr<PRenderComponent>> renderComponents;
 
 
         // static void clearWindow(GLbitfield masks, graphics::Color color);

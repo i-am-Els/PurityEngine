@@ -16,9 +16,10 @@ namespace purity::ecs{
         Transform Parent;
     };
 
-    class PURITY_API PTransformComponent final : public PComponent {
+
+    class PURITY_API PTransformComponent final : public PComponent, public std::enable_shared_from_this<PTransformComponent> {
     public:
-        explicit PTransformComponent(PEntity *entity, STransformProfile profile);
+        explicit PTransformComponent(std::weak_ptr<PEntity> entity, STransformProfile profile);
 
         ~PTransformComponent() override { PLog::echoMessage("Destroying transform"); };
 
@@ -83,6 +84,7 @@ namespace purity::ecs{
     public:
         void update(float deltaTime) override;
         void start() override;
-
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 }

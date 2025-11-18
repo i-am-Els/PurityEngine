@@ -34,18 +34,18 @@ namespace purity::ecs{
 
     }
 
-    PMeshComponent *P3DGeometricMeshSS::AddComponent(PEntity *entity) {
+     std::weak_ptr<PMeshComponent> P3DGeometricMeshSS::AddComponent(std::weak_ptr<PEntity> entity) {
         try {
             SMeshProfile profile = {true};
-            meshComponents.emplace_back(std::make_unique<PMeshComponent>(entity, profile));
-            return meshComponents.back().get();
+            meshComponents.emplace_back(std::make_shared<PMeshComponent>(entity, profile));
+            return meshComponents.back();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Mesh Comp Generic Assertion failed");
         }
-        return nullptr;
+        return {};
     }
 
-    void P3DGeometricMeshSS::RemoveComponent(PEntity *entity, PMeshComponent *component) {
+    void P3DGeometricMeshSS::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PMeshComponent> component) {
 
     }
 

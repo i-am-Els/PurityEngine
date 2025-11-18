@@ -9,9 +9,6 @@
       "type": "string",
       "enum": [ "asset", "prefab", "scene" ]
     },
-    "parentID": {
-      "type": "string"
-    },
     "type_": {
       "type": "string",
       "enum": [
@@ -41,7 +38,7 @@
       }
     }
   },
-  "required": ["id", "source", "parentID", "type_", "data_"],
+  "required": ["id", "source", "type_", "data_"],
   "definitions": {
     "Data": {
       "type": "object"

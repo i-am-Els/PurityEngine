@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "iserializable.h"
 
 namespace purity::graphics{
     struct PURITY_API Color{

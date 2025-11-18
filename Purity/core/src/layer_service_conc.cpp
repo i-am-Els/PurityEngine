@@ -67,7 +67,7 @@ namespace purity
 
     void PLayerService::PopLayer(PLayer* layer)
     {
-        if (const auto it = std::find(m_layers.begin(), m_layers.end(), layer); it != m_layers.end())
+        if (const auto it = std::ranges::find(m_layers, layer); it != m_layers.end())
         {
             const PUUID id = layer->getID();
             layer->detached();

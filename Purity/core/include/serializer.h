@@ -3,15 +3,16 @@
 //
 
 #pragma once
-#include "object_registry.h"
-#include <cereal/archives/json.hpp>
+
 #include <fstream>
 #include <functional>
 #include <vector>
+#include <cereal/archives/json.hpp>
+#include "object_registry.h"
 
 namespace purity
 {
-    class Serializer {
+    class PURITY_API Serializer {
     public:
         template <typename T>
         static void resolvePendingLinks()
@@ -48,7 +49,7 @@ namespace purity
         }
 
     private:
-        static PURE_INLINE std::vector<std::function<void()>> s_pendingLinks;
+        static inline std::vector<std::function<void()>> s_pendingLinks;
     };
 }
 
