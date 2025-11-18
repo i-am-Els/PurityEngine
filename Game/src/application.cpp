@@ -21,14 +21,14 @@ void Application::update(float deltaTime) {
 
 void Application::init() {
     PApplication::init();
-
-    auto quad = Scene.CreateEntity("Quad");
-
-    auto mesh = quad.AddComponent<PMeshComponent>();
-    auto render = quad.AddComponent<PRenderComponent>();
-
-
-    PLog::echoValue(quad.GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
+    //
+    // auto quad = Scene.CreateEntity("Quad");
+    //
+    // auto mesh = quad.AddComponent<PMeshComponent>();
+    // auto render = quad.AddComponent<PRenderComponent>();
+    //
+    //
+    // PLog::echoValue(quad.GetComponent<PTransformComponent>()->m_up); // Segfault here too, transform is null
 
 }
 

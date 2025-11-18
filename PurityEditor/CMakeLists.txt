@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.26)
 project(PurityEngine:PurityEditor VERSION 0.1.2 LANGUAGES CXX)
 #project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -23,27 +23,40 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 
 add_executable(PurityEditor
-        gui/src/editor.cpp
-        gui/include/editor.h
-        gui/src/p_editor_application.cpp
-        gui/include/p_editor_application.h
+        editor/include/editor_layer.h
+        editor/include/editor_pch.h
+        editor/include/editors.h
+        editor/include/game_layer.h
+        editor/include/imgui_layer.h
+        editor/include/p_editor_application.h
+        editor/src/editor_layer.cpp
+        editor/src/game_layer.cpp
+        editor/src/imgui_layer.cpp
+        editor/src/p_editor_application.cpp
 )
 
 
 # Add the core directory for the Purity library
 target_include_directories(PurityEditor PRIVATE
 #        ${CMAKE_SOURCE_DIR}/Purity/core
-        gui/include
+        editor/include
 #        $<BUILD_INTERFACE:${Purity_INCLUDE_DIRS}>
 #        $<BUILD_INTERFACE:${Purity_INCLUDE_DIRS}/core>
 )
+
+target_precompile_headers(PurityEditor PRIVATE editor/include/editor_pch.h)
 
 add_dependencies(PurityEditor IsleMath Purity Commons)
 
 # Link against the Purity library (assuming it's built in a sibling directory)
 target_link_libraries(PurityEditor PRIVATE Purity cereal::cereal imgui::imgui glfw glad::glad ImGuiFileDialog nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator Commons)
 
-target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS)
+target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS
+        PURITY_SYSTEM_FINDER
+)
+
+target_compile_features(PurityEditor PUBLIC cxx_std_20)
+
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityEditor DESTINATION ${CMAKE_INSTALL_BINDIR})
@@ -53,4 +66,7 @@ add_custom_command(TARGET PurityEditor POST_BUILD
         COMMAND_EXPAND_LISTS
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
+
+target_include_directories(ImGuiFileDialog PUBLIC ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
+
 

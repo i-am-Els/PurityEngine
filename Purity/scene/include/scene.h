@@ -7,22 +7,32 @@
 #include "uuid.h"
 #include "entity_registry.h"
 
+
+namespace purity::ecs
+{
+    class PEntityHandle;
+}
+
 namespace purity::scene{
     class PURITY_API PScene{
     public:
-        PScene() = default;
+        PScene();
+        explicit PScene(const PUUID& id);
         ~PScene();
         //explicit PScene(const ecs::PEntityRegistry& registry );
         ecs::PEntityHandle CreateEntity(const std::string& name);
         ecs::PEntityHandle CreateEntityWithUUID(PUUID uuid, const std::string& name);
-        void DestroyEntity(PEntityHandle entity);
+        void DestroyEntity(ecs::PEntityHandle entity);
         void DestroyEntityWithUUID(PUUID uuid);
 
-        static bool HasAnythingToRender();
-        static bool LoadScene(PUUID scene_id);
-        static bool UnloadScene();
+        bool hasAnythingToRender();
+        static std::unique_ptr<PScene> LoadScene(const PUUID& scene_id);
+        void UnloadScene();
+        auto getID() -> PUUID { return m_scene_id; }
 
     private:
+        PUUID m_scene_id;
+        std::string m_scene_name; // this is mostly the same as the scene file name in assetDB
         ecs::PEntityRegistry m_registry;
     };
 } // purity::scene

@@ -6,6 +6,7 @@
 
 #include "core_macros.h"
 #include "uuid.h"
+#include "log.h"
 
 namespace purity::fileIO{
     struct PURITY_API PHandleBase{

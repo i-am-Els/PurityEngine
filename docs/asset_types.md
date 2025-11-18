@@ -124,9 +124,23 @@ The structure of the scene file describes the hierarchical tree of entity transf
 {
   "id": "6543210987654321",
   "source" : "scene",
-  "parentID": 0,
   "type_" : "LevelAsset",
   "data_" : {
+     "children": [
+        {
+           "id": "4321210965438765",
+           "name": "box",
+           "components": {
+              "transformComponent": {},
+              "tagComp" : {
+                 "tag" : 0
+              },
+              "idComp" : "4321210965438765",
+              "meshComponent": 1
+           },
+           "children": []
+        }
+     ]
   },
   "ref_assets": []
 }
@@ -148,7 +162,6 @@ An 'Asset' asset is one that was imported through the fileIO system. It has an e
 {
   "id": "6543210987654321",
   "source" : "asset",
-  "parentID": 0,
   "type_" : "StaticMeshAsset",
   "data_" : {
     "vertices" : {
@@ -173,8 +186,7 @@ The Keys:
 ```json
 {
   "id" : "4321210965438765",
-  "source" : "prefab"
-  "parentID": 0,
+  "source" : "prefab",
   "type_" : "LevelAsset",
   "data_" : {
     "components" : [
@@ -183,7 +195,7 @@ The Keys:
           "position" : [0, 0, 0],
           "scale" : [1, 1, 1],
           "rotation" : [0, 90, 0],
-          "children": []
+          "children": ["3876543212109654", "1096543876543212"]
         },
         "tagComp" : {
           "tag" : 0
@@ -221,7 +233,7 @@ In the example above we have a `PREFAB` asset. This is what an asset created in 
 ## REFERENCE ASSET
 A `Ref<T>` asset such as `Ref<Texture>` is typically a smart pointer or reference-counted wrapper around an object of type T, in this case `Texture`. It is commonly used in game engines or graphics libraries to manage the lifetime of resources (like textures) efficiently. The purpose of `Ref` is to handle reference counting, ensuring that resources are properly released when no longer needed, while avoiding memory leaks or dangling pointers.
 
-Here’s an overview of how you can implement something like `Ref<T>` in C++:
+Hereâ€™s an overview of how you can implement something like `Ref<T>` in C++:
 
 ---
 

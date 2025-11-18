@@ -8,7 +8,7 @@ project(PurityEngine:Purity VERSION 0.1.2 LANGUAGES CXX)
 #project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -32,6 +32,7 @@ find_package(GTest CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 find_dependency(kubazip CONFIG)
 find_dependency(unofficial-minizip CONFIG)
@@ -50,7 +51,6 @@ set(GLFW_INSTALL ON)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
 
 
 # Create the Purity library
@@ -81,13 +81,13 @@ add_library(Purity
         core/include/iservices.h
         core/include/layer.h
         core/include/layer_service.h
+        core/include/layer_service_conc.h
         core/include/layerMask.h
         core/include/log.h
         core/include/papplication.h
         core/include/purity_core_pch.h
         core/include/purity_exceptions.h
         core/include/pobject.h
-        core/include/service_base.h
         core/include/service_locator.h
         core/include/system_finder.h
         core/include/window_purity.h
@@ -120,14 +120,19 @@ add_library(Purity
         #--------------------------------
         fileIO/include/fileio.h
         fileIO/include/handle_base.h
+        fileIO/include/importer.h
         fileIO/include/mesh_importer.h
         #--------------------------------
         # geometry/include
         #--------------------------------
         graphics/include/buffer.h
         graphics/include/color.h
+        graphics/include/renderer_service.h
+        graphics/include/renderer_service_conc.h
         graphics/include/shader.h
         graphics/include/vertex_array.h
+        #--------------------------------
+        platform/include/imgui_opengl3_renderer.h
         #--------------------------------
         scene/include/scene.h
         #--------------------------------
@@ -141,6 +146,7 @@ add_library(Purity
         core/src/ecs_service_conc.cpp
         core/src/input.cpp
         core/src/layer.cpp
+        core/src/layer_service_conc.cpp
         core/src/layerMask.cpp
         core/src/log.cpp
         core/src/papplication.cpp
@@ -166,19 +172,45 @@ add_library(Purity
         ecs/src/transform_system_conc.cpp
         #--------------------------------
         fileIO/src/fileio.cpp
+        fileIO/src/importer.cpp
         fileIO/src/mesh_importer.cpp
         #--------------------------------
         # geometry/src
         #--------------------------------
         graphics/src/buffer.cpp
         graphics/src/color.cpp
+        graphics/src/renderer_service_conc.cpp
         graphics/src/shader.cpp
         graphics/src/vertex_array.cpp
         #--------------------------------
+        platform/src/imgui_opengl3_renderer.cpp
+        #--------------------------------
+        scene/include/scene_layer.h
+        core/include/ISerializable.h
+#        core/include/object_registry.h
+#        core/include/serializer.h
+        core/include/serialization_macros.h
+        ecs/include/weak_ptr_utility.h
+#        core/src/object_registry.cpp
         scene/src/scene.cpp
-         )
+        scene/src/scene_layer.cpp
+#        core/src/serializer.cpp
+)
 
-target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS PURITY_BUILD_DLL ISLE_PLATFORM_WINDOWS GLFW_INCLUDE_NONE GLAD_DLL)
+target_sources(
+        Purity PRIVATE
+        core/src/object_registry.cpp
+        core/include/object_registry.h
+        core/src/serializer.cpp
+        core/include/serializer.h
+)
+
+target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS
+        PURITY_BUILD_DLL
+        PURITY_SYSTEM_FINDER
+        ISLE_PLATFORM_WINDOWS
+        GLFW_INCLUDE_NONE
+        GLAD_DLL)
 
 # Add the core directories for your library and dependencies
 target_include_directories(Purity PUBLIC
@@ -196,6 +228,8 @@ target_include_directories(Purity PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/fileIO>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/graphics/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/graphics>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/platform/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/platform>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scene/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Purity/scene>
         # -----------------------------------------------------------------
@@ -217,7 +251,9 @@ target_include_directories(Purity PUBLIC
 target_precompile_headers(Purity PRIVATE core/include/purity_core_pch.h)
 
 # Link against GLFW and GLEW libraries
-target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp Commons)
+target_link_libraries(Purity PUBLIC glfw glad::glad opengl32 IsleMath cereal::cereal GTest::gtest assimp::assimp Commons imgui::imgui)
+
+target_compile_features(Purity PUBLIC cxx_std_20)
 
 
 if(PURITY_INSTALL)
@@ -230,6 +266,7 @@ if(PURITY_INSTALL)
     install(DIRECTORY ecs/include/          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/ecs)
     install(DIRECTORY fileIO/include/       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/fileIO)
     install(DIRECTORY graphics/include/     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/graphics)
+    install(DIRECTORY platform/include/     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/platform)
     install(DIRECTORY scene/include/        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Purity/scene)
 
 

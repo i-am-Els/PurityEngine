@@ -10,6 +10,8 @@
 #include "scene.h"
 #include "window_events.h"
 
+using namespace purity::graphics;
+
 #include <filesystem>
 
 namespace purity{
@@ -17,15 +19,18 @@ namespace purity{
     class PURITY_API PApplication {
     protected:
         PApplication();
+        std::map<PUUID, std::string> assetdbData;
 
     public:
         bool m_runningApp = true;
-        std::unique_ptr<PWindow> window;
+        std::shared_ptr<PWindow> window;
 
         virtual ~PApplication() {
             PLog::echoMessage("Destroying PApplication.");
         }
+        virtual void preInit();
         virtual void init();
+        virtual void postInit();
         virtual void start();
         virtual void process();
         virtual void update(float deltaTime);
@@ -38,16 +43,15 @@ namespace purity{
         virtual void onEvent(Event& placeholder1);
 
         std::shared_ptr<PServiceLocator> serviceLocator;
-        scene::PScene Scene{};
 
         struct PURITY_API ApplicationInfo{
             std::string title;
             int width;
             int height;
 
-            ApplicationInfo(){}
+            ApplicationInfo() : title("Purity Game Engine"), width(1024), height(512) {}
 
-            ApplicationInfo(std::string t, int w, int h){
+            ApplicationInfo(const std::string& t, const int w, const int h){
                 title = t;
                 width = w;
                 height = h;
@@ -58,16 +62,17 @@ namespace purity{
             std::string projectFilePath;
             std::string projectDir;
             std::string startUpSceneRelPath;
+            Color clearColor = Color(.7f, .2f, .1f, .5f);
 
-            ProjectEditorInfo(){}
+            ProjectEditorInfo()= default;
 
-            ProjectEditorInfo(std::string _projectFilePath, std::string _startUpScene) {
-                projectFilePath = _projectFilePath;
+            ProjectEditorInfo(std::string _projectFilePath, const std::string& _startUpScene) {
+                projectFilePath = std::move(_projectFilePath);
                 projectDir = std::filesystem::path(projectFilePath).parent_path().string();
                 startUpSceneRelPath = _startUpScene;
             }
 
-            std::string getProjectName() {
+            PURE_NODISCARD std::string getProjectName() const {
                 return std::filesystem::path(projectFilePath).stem().string();
             }
         };

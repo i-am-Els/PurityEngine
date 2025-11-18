@@ -8,7 +8,7 @@ set(BUILD_SHARED_LIBS ON)
 option(Commons_INSTALL "Install Commons library" ON)
 option(Commons_EXPORT "Export Commons targets for downstream projects" ON)
 
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
@@ -29,6 +29,8 @@ target_compile_definitions(
         PURITY_PLATFORM_WINDOWS
         COMMON_BUILD_DLL
 )
+target_compile_features(Commons PUBLIC cxx_std_20)
+
 
 include(GNUInstallDirs)
 

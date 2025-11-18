@@ -3,29 +3,37 @@
 //
 
 #include "scene.h"
-#include "tag_comp.h"
+#include "entity_handle.h"
+
+#include "assetdb_service_conc.h"
 #include "id_comp.h"
+#include "service_locator.h"
+#include "system_finder.h"
+#include "tag_comp.h"
 
 
 namespace purity::scene{
+
     PEntityHandle PScene::CreateEntity(const std::string &name) {
         return CreateEntityWithUUID(PUUID(), name);
     }
 
-    // TODO  Replace Entity return with Entity Handle
     PEntityHandle PScene::CreateEntityWithUUID(commons::PUUID uuid, const std::string& name) {
         // Add entity to Entity Registry
         auto entity = m_registry.Create(uuid, name);
         // Add ID Component
         auto id = entity.AddComponent<PIDComponent>();
         // Set ID
-        id->setID(uuid);
+        auto sh_id = ecs::fetch_or_throw(id, "PIDComponent::setID");
+        sh_id->setID(uuid);
+
         // Add Transform Component,
         entity.AddComponent<PTransformComponent>();
         // Add Tag Component
         auto tag = entity.AddComponent<PTagComponent>();
         // Add Entity to Entity Map
-        PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", static_cast<std::string>(id->m_entityInstanceID).c_str());
+
+        PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", static_cast<std::string>(sh_id->m_entityInstanceID).c_str());
         return entity;
     }
 
@@ -37,12 +45,48 @@ namespace purity::scene{
         m_registry.Destroy(uuid);
     }
 
+    PScene::PScene() : m_scene_id(PUUID()){}
+
+    PScene::PScene(const PUUID& id) : m_scene_id(id)
+    {
+    }
+
     PScene::~PScene() {
+        // TODO - clear out all systems and there components during scene switch
         PLog::echoMessage("Destroying Scene.");
     }
 
-    bool PScene::HasAnythingToRender() {
-        return !PSystemFinder::GetScene()->m_registry.entityMapIsEmpty();
+    bool PScene::hasAnythingToRender() {
+        return !m_registry.entityMapIsEmpty(); // TODO - Change this method to check if any object with an `enabled` render component is present in the scene
     }
 
+    std::unique_ptr<PScene> PScene::LoadScene(const PUUID& scene_id)
+    {
+        std::unique_ptr<PScene> scene;
+        if (static_cast<int>(scene_id) != 0)
+        {
+            // TODO - Start Serializing from json using Cereal.
+            // auto scene_asset = PSystemFinder::GetServiceLocator()->getService<AAssetDBService, assetDB::PAssetDatabase>()->
+            // queryDBForAsset<assetDB::PLevelAsset>(assetDB::QueryLevelAssetSpec(scene_id), assetDB::QueryOperation::Read);
+            // scene = scene_asset.get();
+            // return scene;
+        }
+        // TODO - create a new asset file repressenting this asset in asset DB
+        // TODO - Never forget to set scene name
+        scene = std::move(std::make_unique<PScene>());
+        auto bunny = scene->CreateEntity("Bunny");
+
+        auto mesh = bunny.AddComponent<PMeshComponent>();
+        auto render = bunny.AddComponent<PRenderComponent>();
+
+        const auto bunny_transform = ecs::fetch_or_throw(bunny.GetComponent<PTransformComponent>());
+        PLog::echoValue(bunny_transform->m_position);
+
+        return scene;
+    }
+
+    void PScene::UnloadScene()
+    {
+        // TODO: Replace with actual unload logic
+    }
 }

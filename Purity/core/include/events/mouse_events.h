@@ -10,7 +10,7 @@ namespace purity{
 
     class PURITY_API MouseButtonEvent : public Event {
     public:
-        [[nodiscard]] inline int getMouseButton() const { return m_button; }
+        PURE_NODISCARD inline int getMouseButton() const { return m_button; }
 
         EVENT_CATEGORY(E_EventCategory::MouseBtnEvent | E_EventCategory::InputEvent)
 
@@ -19,15 +19,15 @@ namespace purity{
         }
 
     protected:
-        explicit MouseButtonEvent(int button) : m_button(button) {}
+        explicit MouseButtonEvent(const int button) : m_button(button) {}
         int m_button;
     };
 
-    class PURITY_API MouseButtonPressedEvent : public MouseButtonEvent{
+    class PURITY_API MouseButtonPressedEvent final : public MouseButtonEvent{
     public:
-        explicit MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
+        explicit MouseButtonPressedEvent(const int button) : MouseButtonEvent(button) {}
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "MouseButtonPressedEvent: " << m_button << " clicked";
             return ss.str();
@@ -40,11 +40,11 @@ namespace purity{
         }
     };
 
-    class PURITY_API MouseButtonReleasedEvent : public MouseButtonEvent{
+    class PURITY_API MouseButtonReleasedEvent final : public MouseButtonEvent{
     public:
-        explicit MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+        explicit MouseButtonReleasedEvent(const int button) : MouseButtonEvent(button) {}
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "MouseButtonReleasedEvent: " << m_button << " clicked";
             return ss.str();
@@ -57,14 +57,14 @@ namespace purity{
         }
     };
 
-    class PURITY_API MouseMovedEvent : public Event{
+    class PURITY_API MouseMovedEvent final : public Event{
     public:
-        explicit MouseMovedEvent(float x, float y) : m_xPos(x), m_yPos(y) {}
+        explicit MouseMovedEvent(const float x, const float y) : m_xPos(x), m_yPos(y) {}
 
-        [[nodiscard]] inline float getX() const { return m_xPos; }
-        [[nodiscard]] inline float getY() const { return m_yPos; }
+        PURE_NODISCARD inline float getX() const { return m_xPos; }
+        PURE_NODISCARD inline float getY() const { return m_yPos; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "MouseMovedEvent: Pointer at x{" << getX() << "}, y{" << getY() << "}";
             return ss.str();
@@ -81,14 +81,14 @@ namespace purity{
         float m_xPos, m_yPos;
     };
 
-    class PURITY_API MouseScrolledEvent : public Event{
+    class PURITY_API MouseScrolledEvent final : public Event{
     public:
-        MouseScrolledEvent(float xOffset, float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
+        MouseScrolledEvent(const float xOffset, const float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
 
-        [[nodiscard]] inline float getXOffset() const { return m_xOffset; }
-        [[nodiscard]] inline float getYOffset() const { return m_yOffset; }
+        PURE_NODISCARD inline float getXOffset() const { return m_xOffset; }
+        PURE_NODISCARD inline float getYOffset() const { return m_yOffset; }
 
-        [[nodiscard]] std::string ToString() const override{
+        PURE_NODISCARD std::string ToString() const override{
             std::stringstream ss;
             ss << "MouseScrolledEvent: Scroll offset at x{" << getXOffset() << "}, y{" << getYOffset() << "}";
             return ss.str();
@@ -104,4 +104,6 @@ namespace purity{
     private:
         float m_xOffset, m_yOffset;
     };
+
+
 }

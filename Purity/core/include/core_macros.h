@@ -31,3 +31,11 @@
 #else
 #define PURITY_DEBUG_MT_LOG(msg) PLog::echoMessage(msg)
 #endif
+
+#define PURITY_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+
+
+#define PURE_NODISCARD [[nodiscard]]
+#define PURE_INLINE __forceinline
+#define PURE_MAYBE_UNUSED [[maybe_unused]]

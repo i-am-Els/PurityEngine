@@ -4,13 +4,14 @@
 
 #pragma once
 
-#include "purity_core_pch.h"
 #include "entity.h"
+#include "purity_core_pch.h"
+// #include "scene.h"
 
 
-namespace purity::scene {
-    class PScene;
-}
+// namespace purity::scene {
+//     class PScene;
+// }
 
 
 namespace purity::ecs {
@@ -23,14 +24,16 @@ namespace purity::ecs {
     /// Handle itself. Therefore, 2 or more handles pointing to the same entity have the same hash.
     class PURITY_API PEntityHandle final : public fileIO::PHandleBase {
     public:
-        PEntityHandle() : PHandleBase(), m_data(nullptr) {}
+        PEntityHandle() : PHandleBase(), m_data({}) {}
 
         // Constructor to initialize with an existing PEntity pointer
-        explicit PEntityHandle(PEntity* entity) : PHandleBase(), m_data(entity) {}
+        explicit PEntityHandle(std::weak_ptr<PEntity> entity) : PHandleBase(), m_data(entity) {}
 
         bool operator==(PEntityHandle & handle) const{
-            if (!m_data || !handle.m_data) { return false; }
-            return m_data->getInstanceID() == handle.m_data->getInstanceID() && m_data == handle.m_data;
+            auto entity = m_data.lock();
+            auto handle_entity = handle.m_data.lock();
+            if (!entity || !handle_entity) { return false; }
+            return entity->getUUID() == handle_entity->getUUID() && entity == handle_entity;
         }
 
 //        PEntityHandle(PEntityHandle&& handle) noexcept ;
@@ -39,39 +42,46 @@ namespace purity::ecs {
         // Destructor
         ~PEntityHandle() override {
             // Prevent dangling pointer usage after destruction
-            m_data = nullptr;
+            // auto entity = m_data.lock();
+            // entity = nullptr;
             PLog::echoMessage("Destroying PEntityHandle.");
         }
 
         void destroy();
 
         template<typename T>
-        T *GetComponent() {
-            if (!m_data) { return nullptr; }
-            return m_data->GetComponent<T>();
+        std::weak_ptr<T> GetComponent() {
+            const auto entity = m_data.lock();
+            if (!entity) { return {}; }
+            return entity->GetComponent<T>();
         }
 
         template<typename T>
         void RemoveComponent(T* component) {
-            if (!m_data) { return; }
-            m_data->RemoveComponent(component);
+            const auto entity = m_data.lock();
+            if (!entity) { return; }
+            entity->RemoveComponent(component);
         }
 
         template<typename T>
-        bool HasComponent() {
-            if (!m_data) { return false; }
-            return m_data->HasComponent<T>();
+        bool HasComponent() const
+        {
+            const auto entity = m_data.lock();
+            if (!entity) { return false; }
+            return entity->HasComponent<T>();
         }
 
         template<typename T>
-        T *AddComponent() {
-            if (!m_data) { return nullptr; }
-            return m_data->AddComponent<T>();
+        std::weak_ptr<T> AddComponent() {
+            const auto entity = m_data.lock();
+            if (!entity) { return {}; }
+            return entity->AddComponent<T>();
         }
 
-        [[nodiscard]] inline PUUID getInstanceID() const {
-            if (!m_data) { return PUUID(0); }
-            return m_data->getInstanceID();
+        PURE_NODISCARD PURE_INLINE PUUID getInstanceID() const {
+            const auto entity = m_data.lock();
+            if (!entity) { return PUUID(0); }
+            return entity->getUUID();
         }
 
         // Optionally, provide access to the PEntity
@@ -79,7 +89,7 @@ namespace purity::ecs {
 //        void setEntity(PEntity* entity) { m_data = entity; }
         friend bool operator==(const PEntityHandle & l_handle, const  PEntityHandle & r_handle);
     private:
-        PEntity* m_data; // Raw pointer; the handle does not own this data
+        std::weak_ptr<PEntity> m_data; // Raw pointer; the handle does not own this data
 
         // Other entity operations...
 
@@ -103,15 +113,18 @@ namespace purity::ecs {
 //    }
 
     inline bool operator==(const PEntityHandle & l_handle, const  PEntityHandle & r_handle){
-        if (!l_handle.m_data || !r_handle.m_data) { return false; }
-        return l_handle.m_data->getInstanceID() == r_handle.m_data->getInstanceID();
+        const auto l_entity = l_handle.m_data.lock();
+        const auto r_entity = r_handle.m_data.lock();
+        if (!l_entity || !r_entity) { return false; }
+        return l_entity->getUUID() == r_entity->getUUID();
     }
 }
 
 namespace std{
     template<>
     struct hash<purity::ecs::PEntityHandle>{
-        std::size_t operator()(const purity::ecs::PEntityHandle& handle) const{
+        std::size_t operator()(const purity::ecs::PEntityHandle& handle) const noexcept
+        {
             return hash<uint64_t>()((uint64_t)handle.getInstanceID());
         }
     };

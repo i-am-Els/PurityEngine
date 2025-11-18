@@ -12,7 +12,7 @@ set(BUILD_SHARED_LIBS ON)
 option(IsleMath_INSTALL "Install IsleMath library" ON)
 option(IsleMath_EXPORT "Export IsleMath targets for downstream projects" ON)
 
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 # Build the math src to static library (library name = "IsleMath")
 add_library(
@@ -71,6 +71,8 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/math/vector>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/IsleMath/math/vector>
 )
+
+target_compile_features(IsleMath PUBLIC cxx_std_20)
 
 target_precompile_headers(IsleMath PRIVATE include/isle_pch.h)
 

@@ -21,7 +21,6 @@ namespace commons{
             stream << m_UUID;
 //            stream << std::hex << std::setfill('0') << std::setw(16) << m_UUID;
             return stream.str();
-            return stream.str();
         }
 
         static PUUID fromString(std::string str) {

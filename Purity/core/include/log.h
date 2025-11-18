@@ -19,7 +19,7 @@ namespace purity {
         static std::string stringifyLogLevel(LogLevel x);
     public:
         static LogLevel level;
-        [[nodiscard]] static PLog& getInstance();
+        PURE_NODISCARD static PLog& getInstance();
         static void echoMessage(const char* message, LogLevel _level = LogLevel::Info);
         static void echoMessage(LogLevel _level = LogLevel::Info, const char* message = "", ...);
 

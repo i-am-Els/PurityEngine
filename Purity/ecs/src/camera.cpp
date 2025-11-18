@@ -8,20 +8,28 @@ namespace purity::ecs
 {
     unsigned int PCameraComponent::s_count = 0;
 
-    PCameraComponent::PCameraComponent(PEntity *entity) : PComponent(entity) {
+    PCameraComponent::PCameraComponent(std::weak_ptr<PEntity> entity) : PComponent(entity) {
     }
 
-    PCameraComponent::PCameraComponent(PEntity *entity, unsigned int _width, unsigned int _height, int xPos, int yPos)
+    PCameraComponent::PCameraComponent(std::weak_ptr<PEntity> entity, unsigned int _width, unsigned int _height, int xPos, int yPos)
             : PComponent(entity), width(_width), height(_height), position(Vector2i(xPos, yPos)) {
 
     }
 
-    PCameraComponent::PCameraComponent(PEntity *entity, const purity::ecs::SCameraProfile &prop) : PComponent(entity),
+    PCameraComponent::PCameraComponent(std::weak_ptr<PEntity> entity, const purity::ecs::SCameraProfile &prop) : PComponent(entity),
                                                                                                   width(prop.width),
                                                                                                   height(prop.height),
                                                                                                   position(prop.position)
                                                                                                   {
 
+    }
+
+    void PCameraComponent::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PCameraComponent::Deserialize(cereal::JSONInputArchive& ar)
+    {
     }
 }
 

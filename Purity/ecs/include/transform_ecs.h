@@ -16,9 +16,10 @@ namespace purity::ecs{
         Transform Parent;
     };
 
-    class PURITY_API PTransformComponent final : public PComponent {
+
+    class PURITY_API PTransformComponent final : public PComponent, public std::enable_shared_from_this<PTransformComponent> {
     public:
-        explicit PTransformComponent(PEntity *entity, STransformProfile profile);
+        explicit PTransformComponent(std::weak_ptr<PEntity> entity, STransformProfile profile);
 
         ~PTransformComponent() override { PLog::echoMessage("Destroying transform"); };
 
@@ -38,10 +39,10 @@ namespace purity::ecs{
         /// @brief A read only getter for the model matrix representing the transform
         /// @return Matrix4f - the m_localToWorldTransform matrix.
         /// @details The return matrix is the transforms local to world space transformation matrix
-        [[nodiscard]] Matrix4f getModelTransformMatrix() const;
+        PURE_NODISCARD Matrix4f getModelTransformMatrix() const;
 
         /// @brief The return matrix is the transforms world to local space transformation matrix
-        [[nodiscard]] Matrix4f getLocalTransformMatrix() const;
+        PURE_NODISCARD Matrix4f getLocalTransformMatrix() const;
 
     public:
         /// @brief Position - world position of the transform
@@ -83,6 +84,7 @@ namespace purity::ecs{
     public:
         void update(float deltaTime) override;
         void start() override;
-
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
+        void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 }

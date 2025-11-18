@@ -7,7 +7,6 @@
 #include "iservices.h"
 #include "isystems.h"
 
-
 namespace purity{
     namespace scene {
         class PScene;
@@ -16,6 +15,11 @@ namespace purity{
     class PWindow;
     class PServiceLocator;
     class PECSService;
+
+    namespace graphics
+    {
+        class PRendererService;
+    }
 
     class PURITY_API PSystemFinder {
         friend PApplication;
@@ -27,16 +31,25 @@ namespace purity{
 
         static PApplication *GetApplication();
 
-        static PWindow *GetWindow();
+        static std::shared_ptr<PWindow>& GetWindow();
 
         static scene::PScene *GetScene();
 
         static PECSService * GetECSService();
 
+        static graphics::PRendererService * GetRendererService();
+
         static std::shared_ptr<PServiceLocator> GetServiceLocator();
 
     private:
         static PApplication* application;
+
+        static std::shared_ptr<PWindow> window;
+        static scene::PScene* scene;
+        static PECSService* ecsService;
+        static graphics::PRendererService* rendererService;
+        static std::shared_ptr<PServiceLocator> serviceLocator;
     };
 
 }
+

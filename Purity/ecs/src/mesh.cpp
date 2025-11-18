@@ -7,7 +7,7 @@
 namespace purity::ecs{
     unsigned int PMeshComponent::s_count = 0;
 
-    PMeshComponent::PMeshComponent(PEntity *entity, SMeshProfile profile) : PComponent(entity) {
+    PMeshComponent::PMeshComponent(std::weak_ptr<PEntity> entity, SMeshProfile profile) : PComponent(entity) {
         m_MeshProfile = profile;
     }
 
@@ -19,4 +19,11 @@ namespace purity::ecs{
         PComponent::start();
     }
 
+    void PMeshComponent::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PMeshComponent::Deserialize(cereal::JSONInputArchive& ar)
+    {
+    }
 }

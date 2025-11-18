@@ -5,6 +5,7 @@
 
 #pragma once
 #include "log.h"
+#include "serialization_macros.h"
 #include "uuid.h"
 
 using namespace commons;
@@ -30,26 +31,22 @@ namespace purity::ecs {
         PCameraComponent
     };
 
-    class PURITY_API PComponent {
+    class PURITY_API PComponent: public ISerializable
+    // PURITY_SERIALIZABLE_CLASS(PComponent)
+    {
     public:
-
-        explicit PComponent(PEntity *entity);
-        virtual ~PComponent(){ PLog::echoMessage("Destroying component base"); }
+        explicit PComponent(std::weak_ptr<PEntity> entity);
+        ~PComponent() override{ PLog::echoMessage("Destroying component base"); }
 
         virtual void update(float deltaTime){}
         virtual void start(){}
         virtual void destroy(){}
 
-        [[nodiscard]] inline PUUID getID() const{ return m_id; }
-
         virtual PComponentType getComponentType() const = 0;
 
         virtual const char* getName() const = 0;
 
-        PEntity* m_entity;
-
-    protected:
-        PUUID m_id;
+        std::weak_ptr<PEntity> m_entity;
     };
 
 }

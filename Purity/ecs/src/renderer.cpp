@@ -9,7 +9,7 @@ namespace purity::ecs{
 
     unsigned int PRenderComponent::s_count = 0;
 
-    PRenderComponent::PRenderComponent(PEntity *entity, SRenderProfile profile) : PComponent(entity) {
+    PRenderComponent::PRenderComponent(std::weak_ptr<PEntity> entity, SRenderProfile profile) : PComponent(entity) {
         m_RenderProfile = profile;
     }
 
@@ -21,4 +21,11 @@ namespace purity::ecs{
         PComponent::start();
     }
 
+    void PRenderComponent::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PRenderComponent::Deserialize(cereal::JSONInputArchive& ar)
+    {
+    }
 }

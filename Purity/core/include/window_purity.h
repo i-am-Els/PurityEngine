@@ -33,7 +33,7 @@ namespace purity{
 
         void update();
 
-        inline GLFWwindow*& getWindow()
+        inline GLFWwindow* getGLFWwindow()
         {
             return m_glfwWindow;
         }
@@ -48,17 +48,20 @@ namespace purity{
             m_data.vsync = allowVSync;
         }
 
-        inline bool isVSynced() const {
+        PURE_NODISCARD inline bool isVSynced() const {
             return m_data.vsync;
         }
 
         void deleteWindow();
         ~PWindow();
 
+        PURE_NODISCARD inline int getWidth() const { return m_data.width; }
+        PURE_NODISCARD inline int getHeight() const { return m_data.height; }
+
     private:
         struct WindowInfo {
             std::string title;
-            uint32_t width, height;
+            int width, height;
             bool vsync;
             EventCallbackFunction eventCallbackFunction;
         };

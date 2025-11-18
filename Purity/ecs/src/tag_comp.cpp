@@ -5,7 +5,7 @@
 #include "tag_comp.h"
 
 namespace purity::ecs{
-    PTagComponent::PTagComponent(PEntity *entity) : PComponent(entity) {
+    PTagComponent::PTagComponent(std::weak_ptr<PEntity> entity) : PComponent(entity) {
 
     }
 
@@ -16,5 +16,13 @@ namespace purity::ecs{
 
     void PTagComponent::start(){
 
+    }
+
+    void PTagComponent::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PTagComponent::Deserialize(cereal::JSONInputArchive& ar)
+    {
     }
 }

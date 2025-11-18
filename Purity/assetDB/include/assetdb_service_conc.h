@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "service_base.h"
-#include "handle_base.h"
 #include "assetdb_enums.h"
 #include "assetdb_service.h"
 #include "assetdb_query_specs.h"
@@ -17,21 +15,15 @@ namespace purity::assetDB{
     // TODO - Implement the Specs GetAssetHandle methods...
 
 
-    class PURITY_API PAssetDatabase final : public PServiceBase<IAssetDBService>{
+    class PURITY_API PAssetDatabase final : public AAssetDBService{
     public:
         ~PAssetDatabase() override{
             PLog::echoMessage("Destroying AssetDB.");
         }
 
+        void preInit(const std::any& data) override;
         void init() override;
-
-        void start();
-
-        void process();
-
-        void render();
-
-        void update(float deltaTime);
+        void postInit() override;
 
         void destroy() override;
 
@@ -43,15 +35,19 @@ namespace purity::assetDB{
 
     private:
         template<typename T>
-        [[nodiscard]]static Ref<T> performGetOperation(const QuerySpec<T>& spec);
+        PURE_NODISCARD static Ref<T> performGetOperation(const QuerySpec<T>& spec);
         template<typename T>
-        [[nodiscard]]static Ref<T> performAddOperation(const QuerySpec<T>& spec);
+        PURE_NODISCARD static Ref<T> performAddOperation(const QuerySpec<T>& spec);
         template<typename T>
-        [[nodiscard]]static Ref<T> performUpdateOperation(const QuerySpec<T>& spec);
+        PURE_NODISCARD static Ref<T> performUpdateOperation(const QuerySpec<T>& spec);
         template<typename T>
-        [[nodiscard]]static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
+        PURE_NODISCARD static Ref<T> performDeleteOperation(const QuerySpec<T>& spec); // handle id is nullptr in this case if deletion succeeded...
+    public:
+        void exit() override;
 
-        
+        PNT_TYPE_INDEX_DEF()
+
+    private:
         // Switch on QueryType...
         std::map<PUUID, AssetMetadata> m_AssetContainer;
         std::map<PUUID, Ref<PAsset>> m_LoadedAssetContainer;

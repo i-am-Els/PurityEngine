@@ -44,7 +44,7 @@ namespace purity::graphics{
             glDeleteBuffers(1, &ID);
         }
 
-        [[nodiscard]] inline unsigned int getBufferID() const {
+        PURE_NODISCARD inline unsigned int getBufferID() const {
             return m_bufferID;
         }
 
@@ -70,7 +70,7 @@ namespace purity::graphics{
             return m_data;
         }
 
-        [[nodiscard]] inline unsigned int getItemCount() const {
+        PURE_NODISCARD inline unsigned int getItemCount() const {
             return m_data.size();
         }
 
@@ -96,7 +96,7 @@ namespace purity::graphics{
             return m_data;
         }
 
-        [[nodiscard]] inline unsigned int getItemCount() const {
+        PURE_NODISCARD inline unsigned int getItemCount() const {
             return m_data.size();
         }
     private:

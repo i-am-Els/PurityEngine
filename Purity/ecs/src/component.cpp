@@ -7,8 +7,7 @@
 
 namespace purity::ecs {
 
-    PComponent::PComponent(PEntity *entity) : m_entity(entity){
-        m_id = PUUID();
+    PComponent::PComponent(std::weak_ptr<PEntity> entity) : ISerializable(), m_entity(entity){
     }
 
 }

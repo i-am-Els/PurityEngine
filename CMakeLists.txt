@@ -9,7 +9,13 @@ cmake_minimum_required(VERSION 3.26)
 project(PurityEngine VERSION 0.1.2  LANGUAGES CXX)
 
 # Set the C++ standard (adjust as needed)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+# Optional safeguard for MSVC
+if(MSVC)
+    add_compile_options(/Zc:__cplusplus /std:c++20)
+endif()
 
 set(USING_PACKAGE_MANAGER_VCPKG ON CACHE BOOL "Use the package manager")
 

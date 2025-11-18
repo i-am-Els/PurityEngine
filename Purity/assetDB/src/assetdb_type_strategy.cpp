@@ -4,6 +4,7 @@
 
 #include "assetdb_type_strategy.h"
 #include "assets_types.h"
+#include "serializer.h"
 
 namespace purity::assetDB
 {
@@ -14,7 +15,8 @@ namespace purity::assetDB
     }
 
     Ref<PTextureAsset> TextureAssetOperationStrategy::ReadOperation() {
-        return Ref<PTextureAsset>();
+        // Serializer::load<Ref<PTextureAsset>>(AssetMetadata);
+        return {};
     }
 
     Ref<PTextureAsset> TextureAssetOperationStrategy::WriteOperation() {
@@ -212,19 +214,19 @@ namespace purity::assetDB
     }
 
     Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::ReadOperation() {
-        return Ref<PSoundSourceAsset>();
+        return {};
     }
 
     Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::WriteOperation() {
-        return Ref<PSoundSourceAsset>();
+        return {};
     }
 
     Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::UpdateOperation() {
-        return Ref<PSoundSourceAsset>();
+        return {};
     }
 
     Ref<PSoundSourceAsset> SoundSourceAssetOperationStrategy::DeleteOperation() {
-        return Ref<PSoundSourceAsset>();
+        return {};
     }
 
     // Level Strategy

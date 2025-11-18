@@ -22,10 +22,10 @@ namespace purity::ecs{
         ~PIDManager() override {
             PLog::echoMessage("Destroying ID Manager.");
         }
-        PIDComponent *AddComponent(PEntity *entity) override;
-        void RemoveComponent(PEntity *entity, PIDComponent *component) override;
+        std::weak_ptr<PIDComponent> AddComponent(std::weak_ptr<PEntity> entity) override;
+        void RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PIDComponent> component) override;
     private:
-        std::vector<std::unique_ptr<PIDComponent>> idComponents;
+        std::vector<std::shared_ptr<PIDComponent>> idComponents;
     };
 
 
@@ -43,9 +43,9 @@ namespace purity::ecs{
         ~PTagManager() override {
             PLog::echoMessage("Destroying Tag Manager.");
         }
-        PTagComponent *AddComponent(PEntity *entity) override;
-        void RemoveComponent(PEntity *entity, PTagComponent *component) override;
+        std::weak_ptr<PTagComponent> AddComponent(std::weak_ptr<PEntity> entity) override;
+        void RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PTagComponent> component) override;
     private:
-        std::vector<std::unique_ptr<PTagComponent>> tagComponents;
+        std::vector<std::shared_ptr<PTagComponent>> tagComponents;
     };
 }

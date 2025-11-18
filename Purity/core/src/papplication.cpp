@@ -43,15 +43,19 @@
 
 #include <iostream>
 
-#include "system_finder.h"
 #include "papplication.h"
-#include "input.h"
-#include "ecs_service_conc.h"
-#include "layer.h"
 #include <window_events.h>
+#include "ecs_service_conc.h"
+#include "input.h"
+#include "layer_service_conc.h"
+#include "system_finder.h"
+
+#include "assetdb_service_conc.h"
+#include "renderer_service_conc.h"
 
 using namespace isle_engine::math;
 using namespace purity::ecs;
+using namespace purity::graphics;
 
 namespace purity{
     bool PApplication::verify()
@@ -61,81 +65,139 @@ namespace purity{
 
     void PApplication::process() {
         // Call the process method on all the services
-        serviceLocator->getConcreteService<IECSService, PECSService>()->process();
         PInput::PollEvents();
+        for (const auto runnable : serviceLocator->getRunnables())
+        {
+            runnable->process();
+        }
     }
 
     void PApplication::update(float deltaTime) {
         // Call the update method on all the services
-        serviceLocator->getConcreteService<IECSService, PECSService>()->update(1.0f);
+        for (const auto updatable : serviceLocator->getUpdatables())
+        {
+            updatable->update(1.0f);
+        }
     }
+
 
     void PApplication::render() {
-        // Call the render method on all the services
-        serviceLocator->getConcreteService<IECSService, PECSService>()->render();
+        const auto renderables = serviceLocator->getRenderables();
+        for (const auto renderable : renderables)
+        {
+            renderable->preRender();
+        }
+        for (const auto renderable : renderables)
+        {
+            renderable->render();
+        }
+        for (const auto renderable : renderables)
+        {
+            renderable->postRender();
+        }
     }
 
-    void PApplication::init() {
+    void PApplication::preInit()
+    {
         purity::PSystemFinder::application = this;
-
         // Set up window
-        PWindow::bindWindowBackendAPI(); 
+        PWindow::bindWindowBackendAPI();
         window->createWindow(m_applicationInfo.width, m_applicationInfo.height, m_applicationInfo.title.c_str());
         PWindow::EventCallbackFunction boundCallback = [this](auto&& placeholder1) { onEvent(std::forward<decltype(placeholder1)>(placeholder1)); };
         window->setWindowsEventCallbacks(boundCallback);
 
         // Create all Services
-        auto ecsService = std::make_shared<PECSService>(window.get());
-        auto layerService = std::make_shared<PLayerService>();
+        const auto ecsService = std::make_shared<PECSService>(window.get());
+        const auto assetService = std::make_shared<assetDB::PAssetDatabase>();
+        const auto layerService = std::make_shared<PLayerService>();
+        const auto rendererService = std::make_shared<PRendererService>(window->getGLFWwindow());
+
+        assetService->preInit(assetdbData);
+        // call all pre-init
+        // for (const auto initializable : serviceLocator->getInitializables())
+        // {
+        //     if (dynamic_cast<assetDB::PAssetDatabase*>(initializable) == nullptr) { continue; }
+        //     initializable->preInit();
+        // }
 
         // Register Services
-        serviceLocator->registerService<IECSService>(ecsService);
-        serviceLocator->registerService<ILayerService>(layerService);
+        serviceLocator->registerService<AECSService, PECSService>(ecsService);
+        serviceLocator->registerService<AAssetDBService, assetDB::PAssetDatabase>(assetService);
+        serviceLocator->registerService<ALayerService, PLayerService>(layerService);
+        serviceLocator->registerService<ARendererService, PRendererService>(rendererService);
 
+    }
+
+    void PApplication::init() {
         // Call the init method on all the services
-        serviceLocator->getService<IECSService>()->init();
+        for (const auto initializable : serviceLocator->getInitializables())
+        {
+            initializable->init();
+        }
 
-        // Set windows call event update function
+        // Scene layer must have been created now and attached will already be called
+        // on it since its Pushed to stack on Init.
+    }
+
+    void PApplication::postInit()
+    {
+        for (const auto initializable : serviceLocator->getInitializables())
+        {
+            initializable->postInit();
+        }
+        // INFO: The default scene will be not nullptr after this point.
     }
 
     void PApplication::destroy() {
         // Call the destroy method on all the services
         window->deleteWindow();
-        serviceLocator->getService<ILayerService>()->destroy();
-        serviceLocator->getService<IECSService>()->destroy();
+        for (const auto terminable : serviceLocator->getTerminables())
+        {
+            terminable->destroy();
+        }
     }
 
     void PApplication::exit() {
         // nothing for now
         PWindow::unbind();
+        serviceLocator->unregisterService<ARendererService>();
+        serviceLocator->unregisterService<ALayerService>();
+        serviceLocator->unregisterService<AAssetDBService>();
+        serviceLocator->unregisterService<AECSService>();
     }
 
     void PApplication::start() {
-        serviceLocator->getConcreteService<IECSService, PECSService>()->start();
+        for (const auto runnable : serviceLocator->getRunnables())
+        {
+            runnable->start();
+        }
     }
 
     PApplication::PApplication()
     : serviceLocator(std::make_shared<PServiceLocator>())
     {
-        window = std::make_unique<PWindow>();
+        window = std::make_shared<PWindow>();
     }
 
     void PApplication::onEvent(Event& event)
     {
         EventDispatcher dispatcher(event);
         // To close forward the WindowCloseEvent to the
-        dispatcher.dispatch<WindowCloseEvent>(std::bind(&PApplication::shouldClose, this, std::placeholders::_1)); // OR
+        dispatcher.dispatch<WindowCloseEvent>(PURITY_BIND_EVENT_FN(PApplication::shouldClose)); // OR
         /*dispatcher.dispatch<WindowCloseEvent>([this](auto && placeholder1) {
             return shouldClose(std::forward<decltype(placeholder1)>(placeholder1));
         });*/
-        auto layerService = serviceLocator->getConcreteService<ILayerService, PLayerService>();
-        for (auto it = layerService->layerStack.end(); it != layerService->layerStack.begin();) {
-            auto _tmp = (*--it);
+        const auto layerService = serviceLocator->getService<ALayerService, PLayerService>();
+        for (auto it = layerService->m_layers.end(); it != layerService->m_layers.begin();) {
+            const auto _tmp = (*--it);
             if (_tmp == nullptr) continue;
             (_tmp)->eventFired(event);
-            if (event.getHandled()) break;
+            if (event.getHandled())
+            {
+                std::cout << event;
+                break;
+            }
         }
-        std::cout << event;
     }
 
     bool PApplication::shouldClose(const WindowCloseEvent& event)

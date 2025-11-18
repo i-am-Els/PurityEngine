@@ -4,6 +4,7 @@
 
 #pragma once
 #define PURITY_ENTRY_POINT
+#include "editor_pch.h"
 #include "purity.h"
 #include <nlohmann/json.hpp>
 #include <nlohmann/json-schema.hpp>
@@ -18,13 +19,13 @@ using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
 using namespace purity;
 
-namespace gui {
+namespace editor {
     struct DatabaseData {
         PUUID id;
         std::vector<std::map<std::string, std::string>> assets;
     };
 
-    class PEditorApplication : public PApplication{
+    class PEditorApplication final : public PApplication{
     public:
         PEditorApplication();
 
@@ -47,13 +48,18 @@ namespace gui {
         bool verify() override;
 
     private:
-        std::map<PUUID, std::string> assetdbData;
 
-        std::optional<DatabaseData> validateDBFile();
-        bool validateSceneFile();
-        bool validateAssetFiles(PUUID id, const std::string& assetPath);
-        void reportInvalidAssets(PUUID file_id, const std::string& assetPath);
-        void storeValidAssets(PUUID file_id, const std::string& assetPath);
+        PURE_NODISCARD std::optional<DatabaseData> validateDBFile() const;
+        PURE_NODISCARD bool validateSceneFile() const;
+        PURE_NODISCARD bool validateAssetFiles(const PUUID& id, const std::string& assetPath) const;
+        static void reportInvalidAssets(const PUUID& file_id, const std::string& assetPath);
+        void storeValidAssets(const PUUID& file_id, const std::string& assetPath);
+
+    public:
+        void preInit() override;
+        void postInit() override;
+        bool shouldClose(const WindowCloseEvent& event) override;
+        void onEvent(Event& placeholder1) override;
     };
 
 } // gui

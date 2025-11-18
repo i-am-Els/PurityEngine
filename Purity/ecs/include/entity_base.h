@@ -14,15 +14,17 @@ namespace purity::ecs{
     class PIDComponent;
 
 
-    class PURITY_API PEntityBase{
+    class PURITY_API PEntityBase : public ISerializable
+    {
     public:
         PEntityBase() = default;
-        virtual ~PEntityBase() = default;
-        explicit PEntityBase(PUUID mInstanceId) : m_instanceID(mInstanceId) {}
+
+        ~PEntityBase() override = default;
+
+        explicit PEntityBase(const PUUID& mInstanceId) : ISerializable(mInstanceId) {}
 
     protected:
-        PUUID m_instanceID{0};
-        std::vector<PComponent*> m_components = {};
+        std::vector<std::weak_ptr<PComponent>> m_components = {};
 
         friend class ManipulativeBehaviour;
         friend class PIDManager;

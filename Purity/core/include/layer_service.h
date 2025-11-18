@@ -8,10 +8,15 @@
 
 namespace purity{
 
-    class PURITY_API ILayerService : public IService{
+    class PURITY_API ALayerService : public IService, public IInitializableService, public IUpdatableService, public  IRenderableService, public ITerminableService{
     public:
 
+        PURE_NODISCARD std::type_index getTypeIndex() const override {
+            return {typeid(ALayerService)};
+        }
+        ~ALayerService() override = default;
 
+        virtual PLayer* getLayerByPUUID(const PUUID& id) = 0;
     };
 }
 

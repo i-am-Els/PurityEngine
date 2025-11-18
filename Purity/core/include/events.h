@@ -15,8 +15,8 @@ namespace purity{
     enum class E_EventType{
         None=0,
         AppUpdate, AppRender, AppTick,
-        WindowClose, WindowMoved, WindowResize, WindowFocused, WindowLostFocus,
-        KeyPressed, KeyReleased,
+        WindowClose, WindowMoved, WindowResize, WindowFocused, WindowLostFocus, WindowCursorEnter,
+        KeyPressed, KeyReleased, KeyTyped,
         MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 
@@ -47,16 +47,16 @@ namespace purity{
     public:
         virtual ~Event() = default;
 
-        [[nodiscard]] virtual E_EventType getEventType() const = 0;
-        [[nodiscard]] virtual const char* getName() const = 0;
-        [[nodiscard]] virtual int getCategories() const = 0;
-        [[nodiscard]] virtual std::string ToString() const { return getName(); }
+        PURE_NODISCARD virtual E_EventType getEventType() const = 0;
+        PURE_NODISCARD virtual const char* getName() const = 0;
+        PURE_NODISCARD virtual int getCategories() const = 0;
+        PURE_NODISCARD virtual std::string ToString() const { return getName(); }
 
-        [[nodiscard]] inline bool isInCategory(E_EventCategory category) const
+        PURE_NODISCARD inline bool isInCategory(E_EventCategory category) const
         {
             return ( getCategories() & category );
         }
-        [[nodiscard]] inline bool getHandled() const { return m_handled; }
+        PURE_NODISCARD inline bool getHandled() const { return m_handled; }
 
     protected:
         bool m_handled = false;
@@ -64,7 +64,10 @@ namespace purity{
 
 
     class PURITY_API EventDispatcher{
-        // Use template function
+        /** @brief Type required for event callbacks to be used in the event dispatcher
+         * @return bool
+         * @note Expects a bool return from the callback denoting whether it handled the event and
+         * it should stop being progragating down to other layers **/
         template<class T>
         using pEventFunc = std::function<bool(const T&)>;
     public:
@@ -75,11 +78,12 @@ namespace purity{
         {
 
             // Ensuring Type Safety
-            static_assert(std::is_base_of<Event, T>::value, "T must be derived from Event");
+            static_assert(std::is_base_of_v<Event, T>, "T must be derived from Event");
             if (m_Event.getEventType() == T::s_GetStaticType()){ // Here lies the reason for having pEventFunc as a template definition
                 // Because Event the base class does not declare the s_GetStaticType() method.
 
-                m_Event.m_handled = callbackFunc(*(T*)&m_Event);
+                // The callback returns a bool denoting whether it handled the event and it should stop being progragating down to other layers or dispatchers.
+                m_Event.m_handled = callbackFunc(*static_cast<T*>(&m_Event));
                 return true;
             }
             return false;

@@ -1,11 +1,12 @@
 #pragma once
 #include "common_macros.h"
 
-#include <iostream>
-#include <fstream>
 #include <filesystem>
-#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iostream>
+#include <optional>
 #include <nlohmann/json-schema.hpp>
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
@@ -118,7 +119,13 @@ namespace commons{
 	  }
 	})"_json;
 
-	bool COMMON_API _validateFileExistence(std::string path);
-	bool COMMON_API _validateFileExistence(std::filesystem::path path);
-	bool COMMON_API _validateSchemaAdherence(std::string path, json schema);
+	bool COMMON_API _validateFileExistence(const std::string& path);
+	bool COMMON_API _validateFileExistence(const std::filesystem::path& path);
+	bool COMMON_API _validateSchemaAdherence(const std::string& path, const json& schema);
+
+	namespace fileIO
+	{
+		std::string COMMON_API extractSourceFromFile(const char *path);
+		std::optional<json> COMMON_API extractSourceFromJSON(const char *path);
+	}
 }

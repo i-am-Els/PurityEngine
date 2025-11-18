@@ -20,9 +20,9 @@ namespace isle_engine::math
         MatrixNM(const MatrixNM<N, M, T> &matrix);
         ~MatrixNM();
 
-        [[nodiscard]] int size() const;
-        [[nodiscard]] int rowsize() const;
-        [[nodiscard]] int columnsize() const;
+        PURE_NODISCARD int size() const;
+        PURE_NODISCARD int rowsize() const;
+        PURE_NODISCARD int columnsize() const;
         T get(int i, int j) const;
         void set(int i, int j, T value);
         T sum()const;

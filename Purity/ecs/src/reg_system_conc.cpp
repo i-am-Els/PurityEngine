@@ -31,17 +31,17 @@ namespace purity::ecs{
 
     }
 
-    PIDComponent *PIDManager::AddComponent(PEntity *entity) {
+    std::weak_ptr<PIDComponent> PIDManager::AddComponent(std::weak_ptr<PEntity> entity) {
         try {
-            idComponents.emplace_back(std::make_unique<PIDComponent>(entity));
-            return idComponents.back().get();
+            idComponents.emplace_back(std::make_shared<PIDComponent>(entity));
+            return idComponents.back();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Transform Comp Generic Assertion failed");
         }
-        return nullptr;
+        return {};
     }
 
-    void PIDManager::RemoveComponent(PEntity *entity, PIDComponent *component) {
+    void PIDManager::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PIDComponent> component) {
 
     }
 
@@ -69,17 +69,19 @@ namespace purity::ecs{
 
     }
 
-    PTagComponent *PTagManager::AddComponent(PEntity *entity) {
+    std::weak_ptr<PTagComponent> PTagManager::AddComponent(std::weak_ptr<PEntity> entity) {
         try {
-            tagComponents.emplace_back(std::make_unique<PTagComponent>(entity));
-            return tagComponents.back().get();
+            auto tagComponent = std::make_shared<PTagComponent>(entity);
+            tagComponents.emplace_back(tagComponent);
+            ObjectRegistry::registerObject(tagComponent);
+            return tagComponents.back();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Transform Comp Generic Assertion failed");
         }
-        return nullptr;
+        return {};
     }
 
-    void PTagManager::RemoveComponent(PEntity *entity, PTagComponent *component) {
+    void PTagManager::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PTagComponent> component) {
 
     }
 

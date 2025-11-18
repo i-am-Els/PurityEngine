@@ -4,11 +4,9 @@
 
 #pragma once
 
+#include <utility>
+
 #include "purity_core_pch.h"
-
-#include "service_base.h"
-#include "layer_service.h"
-
 
 
 namespace purity {
@@ -17,124 +15,33 @@ namespace purity {
     class PApplication;
 
     class Event;
-    enum class ELayerType{
-        Layer,
-        OverlayLayer
-    };
 
-    class PURITY_API PLayerService : public PServiceBase<ILayerService>{
-        friend class PApplication;
-
-    private:
-        // ==================================================================================================
-        // ====================================== START OF LAYER CLASS ======================================
-        // ==================================================================================================
-        class PURITY_API PLayer {
-            friend class PLayerService;
-
-
-            using CallbackFn = std::function<void()>;
-            using CallbackFnWithEventArg1 = std::function<void(Event&)>;
-
-        public:
-            inline void enable() { m_enabled = true; }
-            inline void disable() { m_enabled = false; }
-            [[nodiscard]] [[maybe_unused]] inline bool isEnabled() const { return m_enabled; }
-
-            explicit operator unsigned int() const { return m_id; }
-            explicit operator std::string() const { return m_name;
-            }
-
-            PLayer() = delete;
-            virtual ~PLayer() { PLog::echoMessage("Destroying Layer.");};
-            PLayer& operator=(const PLayer& l) = delete; // copy assignment
-            PLayer& operator=(PLayer&&) = delete; // move assignment
-
-            void update();
-            void attached();
-            void detached();
-            void eventFired(Event & event);
-
-            [[maybe_unused]] void setAttachedCallback(CallbackFn callback);
-
-            [[maybe_unused]] void setDetachedCallback(CallbackFn callback);
-
-            [[maybe_unused]] void setUpdateCallback(CallbackFn callback);
-
-            [[maybe_unused]] void setEventFireCallback(CallbackFnWithEventArg1 callback);
-        private:
-            PLayer(const PLayer& layer); // copy constructor
-            PLayer(PLayer&& a) noexcept = default; // move constructor
-            PLayer(unsigned int id, const std::string&);
-
-            std::string m_name;
-            unsigned int m_id;
-            bool m_enabled;
-
-            CallbackFn onUpdateCallback;
-            CallbackFn onAttachedCallback;
-            CallbackFn onDetachedCallback;
-            CallbackFnWithEventArg1 onEventCallback;
-        };
-        // ========================================= END OF LAYERS =======================================
-        // ===============================================================================================
-        // ======================================= START OF ImGuiLayer =====================================
-
-
-        class PURITY_API ImGuiLayer : public PLayer{
-            friend class PLayerService;
-            friend class PApplication;
-        private:
-        protected:
-            ImGuiLayer(unsigned int id, const std::string& name);
-            public:
-            ImGuiLayer() = delete;
-
-        };
-        // ======================================== END OF ImGuiLayer ========================================
-        // =================================================================================================
-        // ================================== LAYER MANAGER CLASS DETAILS ==================================
+    class PURITY_API PLayer {
     public:
-        PLayerService(const PLayerService&) = delete;
-        PLayerService(PLayerService&&) = delete;
-        PLayerService& operator=(const PLayerService&) = delete;
-        PLayerService& operator=(PLayerService&&) = delete;
+        inline void enable() { m_enabled = true; }
+        inline void disable() { m_enabled = false; }
+        PURE_NODISCARD [[maybe_unused]] inline bool isEnabled() const { return m_enabled; }
 
-        void terminate();
+        explicit operator unsigned int() const { return m_id; }
+        explicit operator std::string() const { return m_name; }
+        PLayer(): m_id(PUUID()), m_name(static_cast<std::string>("Layer" + m_id)) {}
+        PURE_NODISCARD inline PUUID getID() const{ return static_cast<PUUID>(m_id); }
 
+        virtual ~PLayer() { PLog::echoMessage("Destroying Layer.");};
+        explicit PLayer(std::string name) : m_id(PUUID()), m_name(std::move(name)), m_enabled(true) {}
 
-        [[maybe_unused]] PLayer* fetchLayerByID(unsigned int id);
-
-        [[maybe_unused]] PLayer* fetchLayerByName(const std::string &name);
-
-        [[maybe_unused]] static bool s_IsReservedLayer(unsigned int layerIndex);
-        ~PLayerService() noexcept override;
-
-        void init() override;
-
-        void destroy() override;
-
-        PNT_TYPE_INDEX_DEF()
-        PLayerService() = default;
-
+        virtual void update() = 0;
+        virtual void render() {}
+        virtual void attached() = 0;
+        virtual void detached() = 0;
+        virtual void eventFired(Event & event) = 0;
+        virtual bool isOverlay() { return false; }
     protected:
-//        PLayerService() = default;
-
-        /// Use this as interface
-        [[maybe_unused]] [[nodiscard]] unsigned int s_CreateLayer(unsigned int id, const std::string& name, ELayerType layerType=ELayerType::Layer);
-
-        /// Use this as interface
-        [[maybe_unused]] bool deleteLayer(unsigned int id);
-    private:
-
-        // Do not use outside the LayerManager class
-        void MakeLayer(ELayerType layerType, unsigned int id, const std::string& name);
-
-
-        static const unsigned int MAX_LAYER = ARRAY_SIZE;
-        static const unsigned int BASE_LAYER_COUNT;
-        std::array<PLayer*, MAX_LAYER> layerStack{};
+        unsigned int m_id{};
+        std::string m_name;
+        bool m_enabled{};
     };
+    // ========================================= END OF LAYERS =======================================
 } // purity
 
 

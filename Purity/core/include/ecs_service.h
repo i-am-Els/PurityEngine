@@ -8,9 +8,13 @@
 
 namespace purity{
 
-    class PURITY_API IECSService : public IService{
+    class PURITY_API AECSService : public IService, public IInitializableService, public IRunnableService, public IUpdatableService, public IRenderableService, public ITerminableService{
     public:
+        PURE_NODISCARD std::type_index getTypeIndex() const override {
+            return {typeid(AECSService)};
+        }
 
+        ~AECSService() override = default;
 
     };
 }

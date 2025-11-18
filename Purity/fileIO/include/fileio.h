@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string.h>
 
+using namespace nlohmann;
 
 namespace purity::fileIO{
 
@@ -55,8 +56,10 @@ namespace purity::fileIO{
     class PURITY_API PFileIO{
     public:
         static std::string extractSourceFromFile(const char *path);
+        static json extractSourceFromJSON(const char *path);
 
         static std::string getProjectRoot();
+
 
 
     };

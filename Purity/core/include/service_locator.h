@@ -8,61 +8,149 @@
 
 #include "iservices.h"
 
+
+
 namespace purity{
-    class PURITY_API PServiceLocator{
-    private:
-        std::map<std::type_index, std::shared_ptr<IService>> services;
+    class PURITY_API PServiceLocator {
+        std::vector<IInitializableService*> m_initializables;
+        std::vector<IUpdatableService*> m_updatables;
+        std::vector<IRenderableService*> m_renderables;
+        std::vector<IRunnableService*> m_runnables;
+        std::vector<ITerminableService*> m_terminables;
+
         mutable std::mutex mutex;
+        std::map<std::type_index, std::shared_ptr<IService>> services; // Owns all services
+
+
+        // Register interfaces for a service
+        template<typename Abstract>
+        void registerInterfaces(Abstract* service) {
+            if (auto* init = dynamic_cast<IInitializableService*>(service)) {
+                m_initializables.push_back(init);
+            }
+            if (auto* upd = dynamic_cast<IUpdatableService*>(service)) {
+                m_updatables.push_back(upd);
+            }
+            if (auto* rend = dynamic_cast<IRenderableService*>(service)) {
+                m_renderables.push_back(rend);
+            }
+            if (auto* run = dynamic_cast<IRunnableService*>(service)) {
+                m_runnables.push_back(run);
+            }
+            if (auto* term = dynamic_cast<ITerminableService*>(service)) {
+                m_terminables.push_back(term);
+            }
+        }
+
+        // Unregister interfaces for a service
+        template<typename Abstract>
+        void unregisterInterfaces(const Abstract* service) {
+            auto removeFromList = [service](auto& list) {
+                list.erase(
+                    std::remove_if(
+                        list.begin(), list.end(),
+                        [service](const auto* ptr) {
+                            // Compare the raw pointer addresses by converting to void*
+                            return reinterpret_cast<const void*>(ptr) == reinterpret_cast<const void*>(service);
+                        }
+                    ),
+                    list.end()
+                );
+            };
+
+            removeFromList(m_initializables);
+            removeFromList(m_updatables);
+            removeFromList(m_renderables);
+            removeFromList(m_runnables);
+            removeFromList(m_terminables);
+        }
+
 
     public:
-        template<typename T>
-        void registerService(std::shared_ptr<T> service){
-            static_assert(std::is_base_of<IService, T>::value, "T must be a subclass of IService");
+        // Interface accessors
+        PURE_NODISCARD const std::vector<IInitializableService*>& getInitializables() const
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            return m_initializables;
+        }
+        PURE_NODISCARD const std::vector<IUpdatableService*>& getUpdatables() const
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            return m_updatables;
+        }
+        PURE_NODISCARD const std::vector<IRenderableService*>& getRenderables() const
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            return m_renderables;
+        }
+        PURE_NODISCARD const std::vector<IRunnableService*>& getRunnables() const
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            return m_runnables;
+        }
+        PURE_NODISCARD const std::vector<ITerminableService*>& getTerminables() const
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            return m_terminables;
+        }
+
+        ~PServiceLocator()
+        {
+            PLog::echoMessage("Destroying Service Locator.");
+            // Clear all interface vectors
+            {
+                std::lock_guard<std::mutex> lock(mutex);
+                m_initializables.clear();
+                m_runnables.clear();
+                m_updatables.clear();
+                m_renderables.clear();
+                m_terminables.clear();
+                services.clear();
+            }
+        }
+
+        template<typename Abstract, typename Concrete>
+        void registerService(std::shared_ptr<Concrete> service){
+            static_assert(std::is_base_of_v<IService, Abstract>, "Abstract must be a subclass of IService");
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
-            std::type_index typeIndex =std::type_index(typeid(T)); //
-            PLog::echoValue(typeIndex.name());
+            const auto typeIndex = std::type_index(typeid(Abstract)); //
+            // PLog::echoValue(typeIndex.name());
 
             if (services.find(typeIndex) != services.end()){
                 throw std::runtime_error("Service already registered!");
             }
 
             services[typeIndex] = service;
+            registerInterfaces(service.get());
         }
 
-        template<typename T>
+        template<typename Abstract>
         void unregisterService(){
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
-            auto typeIndex = std::type_index(typeid(T));
-            PLog::echoValue(typeIndex.name());
+            const auto typeIndex = std::type_index(typeid(Abstract));
+            // PLog::echoValue(typeIndex.name());
 
-            if (services.find(typeIndex) == services.end()){
+            const auto it = services.find(typeIndex);
+            if (it == services.end()){
                 throw std::runtime_error("Service not registered!");
             }
 
-            services.erase(typeIndex);
+            unregisterInterfaces(it->second.get());
+            services.erase(it);
         }
 
-        template<typename T>
-        std::shared_ptr<T> getService() const {
+        template<typename Abstract, typename Concrete>
+        std::shared_ptr<Concrete> getService() const {
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
-            auto typeIndex = std::type_index(typeid(T));
-            auto it = services.find(typeIndex);
-            PLog::echoValue(typeIndex.name());
+            const auto typeIndex = std::type_index(typeid(Abstract));
+            const auto it = services.find(typeIndex);
+            // PLog::echoValue(typeIndex.name());
 
             if (it == services.end()){
                 throw std::runtime_error("Service not found!");
             }
 
-            return std::static_pointer_cast<T>(it->second); // Cast the IService into a std::shared_pointer of the type T.
-        }
-
-        template<typename Interface, typename Concrete>
-        Concrete* getConcreteService(){
-            return dynamic_cast<Concrete*>(getService<Interface>().get());
-        }
-
-        ~PServiceLocator() {
-            PLog::echoMessage("Destroying Service Locator.");
+            return std::dynamic_pointer_cast<Concrete>(it->second);
         }
     };
 }

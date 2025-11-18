@@ -16,7 +16,7 @@ namespace purity::graphics
 
     class PURITY_API PShader {
     private:
-        [[nodiscard]] static unsigned int compileShader(purity::graphics::ShaderType type, unsigned int id) ;
+        PURE_NODISCARD static unsigned int compileShader(purity::graphics::ShaderType type, unsigned int id) ;
         unsigned int shaderProgramID = 0;
         static unsigned int setUpShader(ShaderType type, const std::string& source);
 
@@ -32,7 +32,7 @@ namespace purity::graphics
 
         void bindShader() const;
         static void unbindShader();
-        [[nodiscard]] unsigned int GetShaderProgramID() const;
+        PURE_NODISCARD unsigned int GetShaderProgramID() const;
         int getUniformLocation(const char* name) const;
         static int s_getUniformLocation(unsigned int programID, const char* name);
     };

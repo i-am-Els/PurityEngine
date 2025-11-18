@@ -9,7 +9,7 @@
 namespace purity::ecs{
     unsigned int PTransformComponent::s_count = 0;
 
-    PTransformComponent::PTransformComponent(PEntity *entity, STransformProfile profile) : PComponent(entity) ,
+    PTransformComponent::PTransformComponent(std::weak_ptr<PEntity> entity, STransformProfile profile) : PComponent(entity) ,
                                                                                            m_TransformProfile(std::move(profile)){
     }
 
@@ -35,6 +35,14 @@ namespace purity::ecs{
 
     void PTransformComponent::start() {
         PComponent::start();
+    }
+
+    void PTransformComponent::Serialize(cereal::JSONOutputArchive& ar) const
+    {
+    }
+
+    void PTransformComponent::Deserialize(cereal::JSONInputArchive& ar)
+    {
     }
 
     void PTransformComponent::Scale(const Vector3f &vector) {

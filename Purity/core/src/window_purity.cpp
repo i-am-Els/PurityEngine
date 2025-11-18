@@ -33,6 +33,10 @@ namespace purity {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         setVersion(gl_major_v, gl_minor_v);
 
+        m_data.width = width;
+        m_data.height = height;
+        m_data.title = title;
+
         m_glfwWindow = glfwCreateWindow(
                 width,
                 height,
@@ -55,6 +59,13 @@ namespace purity {
         glfwSetWindowUserPointer(m_glfwWindow, &m_data);
         setVSync(true);
 
+        glfwSetCharCallback(m_glfwWindow, [](GLFWwindow* window, unsigned int codepoint)
+        {
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+            KeyTypedEvent event(codepoint);
+            info.eventCallbackFunction(event);
+        });
+
         glfwSetWindowSizeCallback(m_glfwWindow, [](GLFWwindow* window, int width, int height){
             WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
             info.width = width;
@@ -68,6 +79,29 @@ namespace purity {
             WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
 
             WindowCloseEvent event;
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetCursorEnterCallback(m_glfwWindow, [](GLFWwindow* window, int entered)
+        {
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowCursorEnterEvent event(entered);
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetWindowFocusCallback(m_glfwWindow, [](GLFWwindow* window, int focused){
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowFocusEvent event(focused);
+            info.eventCallbackFunction(event);
+        });
+
+        glfwSetWindowPosCallback(m_glfwWindow, [](GLFWwindow* window, int xpos, int ypos)
+        {
+            WindowInfo& info =  *(WindowInfo*)glfwGetWindowUserPointer(window);
+
+            WindowMovedEvent event(xpos, ypos);
             info.eventCallbackFunction(event);
         });
 
@@ -162,9 +196,5 @@ namespace purity {
     void PWindow::update() {
 
     }
-
-
-    // Modern opengl things
-    // Using shaders and the likes to render instead of the legacy mode
 
 }

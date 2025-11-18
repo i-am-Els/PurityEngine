@@ -32,23 +32,23 @@ namespace purity::ecs{
 
     }
 
-    PTransformComponent *PTransformSS::AddComponent(PEntity *entity) {
+    std::weak_ptr<PTransformComponent> PTransformSS::AddComponent(std::weak_ptr<PEntity> entity) {
         try {
-            transformComponents.emplace_back(std::make_unique<PTransformComponent>(
+            transformComponents.emplace_back(std::make_shared<PTransformComponent>(
                     entity,
                     STransformProfile{
                     Transform(Vector3f::zero, Quaternion<float>::s_createIdentity(), Vector3f::one),
                     Transform()
                     }
                     ));
-            return transformComponents.back().get();
+            return transformComponents.back();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Transform Comp Generic Assertion failed");
         }
-        return nullptr;
+        return {};
     }
 
-    void PTransformSS::RemoveComponent(PEntity *entity, PTransformComponent *component) {
+    void PTransformSS::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PTransformComponent> component) {
 
     }
 
