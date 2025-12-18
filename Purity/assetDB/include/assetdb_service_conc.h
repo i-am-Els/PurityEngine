@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include "assetdb_enums.h"
+#include "asset_enums.h"
 #include "assetdb_service.h"
 #include "assetdb_query_specs.h"
 #include "assets_types.h"
+
+using QueryOperation = commons::QueryOperation;
 
 namespace purity::assetDB{
 

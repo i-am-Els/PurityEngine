@@ -8,8 +8,10 @@ set(BUILD_SHARED_LIBS ON)
 option(Commons_INSTALL "Install Commons library" ON)
 option(Commons_EXPORT "Export Commons targets for downstream projects" ON)
 
-#set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 
@@ -19,9 +21,14 @@ add_library(Commons SHARED
         include/uuid.h
         src/uuid.cpp
         include/common_macros.h
+        src/content_index.cpp
+        include/content_index.h
+        include/asset_record.h
+        include/asset_enums.h
+        include/time_manager.h
 )
 
-target_link_libraries(Commons PRIVATE nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator)
+target_link_libraries(Commons PRIVATE nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator unofficial::sqlite3::sqlite3)
 
 target_compile_definitions(
         Commons

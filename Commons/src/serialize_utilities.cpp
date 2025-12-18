@@ -18,10 +18,19 @@ namespace commons {
 	}
 
 	bool _validateSchemaAdherence(const std::string& path, const json& schema) {
-
 		std::ifstream data(path);
-		const json data_json = json::parse(data);
-		if (!data && !data_json) { return false; }
+		if (!data.is_open()) {
+			return false;
+		}
+
+		json data_json;
+		try {
+			// data >> data_json;
+			data_json = json::parse(data);
+		} catch (const json::parse_error& e) {
+			std::cerr << "JSON parse failed: " << e.what() << "\n";
+			return false;
+		}
 
 		validator.set_root_schema(schema);
 		try {
@@ -65,13 +74,13 @@ namespace commons {
 		/// @return A json object from the nlohmann library representing the unparsed schema-aligned contents of the file
 		std::optional<json> extractSourceFromJSON(const char* path)
 		{
-			json data_json;
 			const auto real_path = std::filesystem::path(path);
 
 			if (!_validateFileExistence(real_path)){ return std::nullopt; }
-			std::ifstream data(real_path);
+			std::ifstream data(real_path.c_str());
 			if (!data) { return std::nullopt; }
-			data >> data_json;
+			// data >> data_json;
+			json data_json = json::parse(data);
 			return data_json;
 		}
 	}

@@ -8,7 +8,7 @@ project(PurityEngine:Purity VERSION 0.1.2 LANGUAGES CXX)
 #project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
-#set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -34,7 +34,7 @@ find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-find_dependency(kubazip CONFIG)
+#find_dependency(kubazip CONFIG)
 find_dependency(unofficial-minizip CONFIG)
 find_dependency(pugixml CONFIG REQUIRED)
 find_dependency(poly2tri CONFIG)
@@ -62,7 +62,6 @@ add_library(Purity
         artifacts/data_hash_table.h
         artifacts/tags.h
         #--------------------------------
-        assetDB/include/assetdb_enums.h
         assetDB/include/assetdb_query_specs.h
         assetDB/include/assetdb_service_conc.h
         assetDB/include/assetdb_type_strategy.h
@@ -194,7 +193,7 @@ add_library(Purity
 #        core/src/object_registry.cpp
         scene/src/scene.cpp
         scene/src/scene_layer.cpp
-#        core/src/serializer.cpp
+        #        core/src/serializer.cpp
 )
 
 target_sources(

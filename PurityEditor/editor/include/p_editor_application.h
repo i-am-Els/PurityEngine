@@ -11,19 +11,19 @@
 
 #include <optional>
 
+#include "asset_record.h"
+
 using namespace commons;
 
 using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
+using DatabaseData = std::map<PUUID, commons::AssetRecord>;
 using namespace purity;
 
 namespace editor {
-    struct DatabaseData {
-        PUUID id;
-        std::vector<std::map<std::string, std::string>> assets;
-    };
+
 
     class PEditorApplication final : public PApplication{
     public:

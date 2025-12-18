@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "assetdb_enums.h"
+#include "asset_enums.h"
 #include "buffer.h"
 #include "handle_base.h"
 #include "purity_core_pch.h"

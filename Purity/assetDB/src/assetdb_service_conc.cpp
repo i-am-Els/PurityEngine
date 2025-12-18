@@ -19,6 +19,7 @@ namespace purity::assetDB{
             {
                 for (const auto& [id, path] : *map_ptr)
                 {
+
                     m_AssetContainer[id] = {id, path, AssetType::None};
                     std::cout << "Inside assetDB we add id: " << id << " to asset database metadata container" << std::endl;
 
@@ -52,4 +53,6 @@ namespace purity::assetDB{
     void PAssetDatabase::exit()
     {
     }
+
+
 }

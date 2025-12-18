@@ -27,6 +27,7 @@ namespace purity::scene{
 
         bool hasAnythingToRender();
         static std::unique_ptr<PScene> LoadScene(const PUUID& scene_id);
+        static std::unique_ptr<PScene> CreateDefaultScene();
         void UnloadScene();
         auto getID() -> PUUID { return m_scene_id; }
 

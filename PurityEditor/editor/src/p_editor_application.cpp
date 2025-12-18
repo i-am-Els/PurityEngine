@@ -6,7 +6,7 @@
 
 #include "editors.h"
 #include "editor_layer.h"
-#include "fstream"
+#include <fstream>
 #include "game_layer.h"
 #include "layer_service.h"
 #include "layer_service_conc.h"
@@ -18,17 +18,25 @@ namespace editor {
     bool PEditorApplication::verify() {
         std::optional<DatabaseData> dbData = validateDBFile();
         if (!dbData.has_value()) { return false; }
-        if (!validateSceneFile()) { return false; }
+        // if (!validateSceneFile()) { return false; } // TODO : Remove this, Scene file Absence should not stop verification since on new project we dont create scene files in project manager..
         auto assetDB_arr = dbData.value();
-        if (!assetDB_arr.assets.empty())
+        if (!assetDB_arr.empty())
         {
-            for (const auto& map_ : assetDB_arr.assets) {
-                PUUID id = PUUID::fromString(map_.at("id"));
-                if (!validateAssetFiles(id, map_.at("path"))) { 
-                    reportInvalidAssets(id, map_.at("path"));
+            for (const auto& item : assetDB_arr) {
+                PUUID id = PUUID::fromString(item.first);
+                auto assetRecord = item.second;
+                if (!validateAssetFiles(id, assetRecord.metaPath.string()))
+                {
+                    reportInvalidAssets(id, assetRecord.metaPath.string());
                     continue;
                 }
-                storeValidAssets(id, map_.at("path"));
+                if (!validateAssetFiles(id, assetRecord.binaryPath.value().string()))
+                {
+                    reportInvalidAssets(id, assetRecord.binaryPath.value().string());
+                    continue;
+                }
+                storeValidAssets(item.first, assetRecord.metaPath.string());
+                storeValidAssets(item.first, assetRecord.binaryPath.value().string());
             }
         }
         return true;
@@ -40,21 +48,18 @@ namespace editor {
         std::cout << "Testing:: " << m_projectEditorInfo.projectDir << std::endl;
         std::filesystem::path pDBfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / "Assets" / (m_applicationInfo.title + ".peDB");
 
-        if (!commons::_validateFileExistence(pDBfilePath) || !commons::_validateSchemaAdherence(pDBfilePath.string(), commons::pDatabaseSchema)) { return std::nullopt; }
+        if (!commons::_validateFileExistence(pDBfilePath)) { return std::nullopt; }
         
         try {
-            std::ifstream data(pDBfilePath);
-            if (!data) { return std::nullopt; }
-            json data_json;
-            data >> data_json;
+            // Open database file.
 
             // Build the result data structure.
             DatabaseData dbData;
-            dbData.id = commons::PUUID::fromString(data_json["id"].get<std::string>());
+            // dbData.id = commons::PUUID::fromString(data_json["id"].get<std::string>());
 
             // Assuming data_json["assets"] is an array of objects,
             // where each object is convertible to std::map<std::string, std::string>.
-            dbData.assets = data_json["assets"].get<std::vector<std::map<std::string, std::string>>>();
+                // dbData.assets = data_json["assets"].get<std::vector<std::map<std::string, std::string>>>();
 
             return dbData;
         }

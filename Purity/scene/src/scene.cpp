@@ -85,6 +85,22 @@ namespace purity::scene{
         return scene;
     }
 
+    std::unique_ptr<PScene> PScene::CreateDefaultScene()
+    {
+        // TODO - 1. create a new asset file repressenting this asset in asset DB
+        // TODO - 2. Never forget to set scene name
+        auto scene = std::make_unique<PScene>();
+        auto bunny = scene->CreateEntity("Bunny");
+
+        auto mesh = bunny.AddComponent<PMeshComponent>();
+        auto render = bunny.AddComponent<PRenderComponent>();
+
+        const auto bunny_transform = ecs::fetch_or_throw(bunny.GetComponent<PTransformComponent>());
+        PLog::echoValue(bunny_transform->m_position);
+
+        return scene;
+    }
+
     void PScene::UnloadScene()
     {
         // TODO: Replace with actual unload logic

@@ -127,5 +127,6 @@ namespace commons{
 	{
 		std::string COMMON_API extractSourceFromFile(const char *path);
 		std::optional<json> COMMON_API extractSourceFromJSON(const char *path);
+
 	}
 }

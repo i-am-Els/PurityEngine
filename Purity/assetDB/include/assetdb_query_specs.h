@@ -7,9 +7,11 @@
 
 #include "purity_core_pch.h"
 #include "core_macros.h"
-#include "assetdb_enums.h"
+#include "asset_enums.h"
 #include "assetdb_type_strategy.h"
 #include "assets_types.h"
+
+using AssetType = commons::AssetType;
 
 
 namespace purity::assetDB

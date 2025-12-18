@@ -146,7 +146,7 @@ namespace purity::graphics
 
     bool PRendererService::hasSomethingToRender() const noexcept
     {
-        return false;
+        // return false;
         auto scene = PSystemFinder::GetScene();
         if (scene == nullptr)
         {
