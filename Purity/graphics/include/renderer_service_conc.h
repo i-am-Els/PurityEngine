@@ -3,12 +3,14 @@
 //
 
 #pragma once
+#include <complex.h>
 #include <purity_core_pch.h>
 #include "renderer_service.h"
 #include <GLFW/glfw3.h>
 #include "buffer.h"
 #include "shader.h"
 #include "color.h"
+#include "content_index.h"
 #include "vertex_array.h"
 
 /***
@@ -30,7 +32,7 @@ namespace purity::graphics
         explicit PRendererService(GLFWwindow* window);
         ~PRendererService() noexcept override;
 
-        void preInit(const std::any& data) override;
+        void preInit(std::any& data) override;
         void init() override;
         void postInit() override;
         void start() override;

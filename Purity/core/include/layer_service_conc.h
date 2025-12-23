@@ -3,6 +3,9 @@
 //
 
 #pragma once
+#include <complex.h>
+
+#include "content_index.h"
 #include "purity_core_pch.h"
 
 #include "layer.h"
@@ -30,7 +33,7 @@ namespace purity
         void PopLayer(PLayer* layer);
         void PopOverlay(PLayer* overlay);
 
-        void preInit(const std::any& data) override;
+        void preInit(std::any& data) override;
         void init() override;
         void postInit() override;
         void update(float deltaTime) override;

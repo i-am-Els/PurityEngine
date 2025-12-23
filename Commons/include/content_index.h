@@ -4,11 +4,16 @@
 
 #pragma once
 
-#include <filesystem>
 #include <iostream>
+#include <filesystem>
+#include <functional>
 #include <sqlite3.h>
+#include <map>
 
 #include "asset_record.h"
+using AssetRecordMap = std::map<commons::PUUID, commons::AssetRecord>;
+using AssetFilter = std::function<bool(const commons::AssetRecord&)>;
+
 
 namespace commons::database {
 
@@ -23,11 +28,16 @@ namespace commons::database {
 
 		bool create_or_open_db(const std::filesystem::path& file_path);
 
-		bool execute(const std::filesystem::path& sql_path) const;
+		[[nodiscard]] bool execute(const std::filesystem::path& sql_path) const;
 
-		bool execute(const std::string& sql_query) const;
+		[[nodiscard]] bool execute(const std::string& sql_query) const;
 
-		bool insertAsset(AssetRecord& record) const;
+		[[maybe_unused]] bool insertAsset(AssetRecord record) const;
+		[[nodiscard]] AssetRecordMap readAllAssets(const AssetFilter& filter) const;
+		[[nodiscard]] std::optional<AssetRecord> readAssetByUUID(const commons::PUUID& uuid) const;
+		[[nodiscard]] std::optional<AssetRecord> readAssetById(int64_t id) const;
+		[[nodiscard]] bool updateAsset(const AssetRecord& record) const;
+		[[nodiscard]] bool deleteAsset(int64_t id) const;
 
 		void close_db() const;
 

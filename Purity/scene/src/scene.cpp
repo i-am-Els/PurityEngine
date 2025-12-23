@@ -91,6 +91,7 @@ namespace purity::scene{
         // TODO - 2. Never forget to set scene name
         auto scene = std::make_unique<PScene>();
         auto bunny = scene->CreateEntity("Bunny");
+        scene.get()->setName("DefaultScene");
 
         auto mesh = bunny.AddComponent<PMeshComponent>();
         auto render = bunny.AddComponent<PRenderComponent>();

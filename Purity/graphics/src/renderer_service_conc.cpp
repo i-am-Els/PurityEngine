@@ -24,7 +24,7 @@ namespace purity::graphics
         PRendererService::exit();
     }
 
-    void PRendererService::preInit(const std::any& data)
+    void PRendererService::preInit(std::any& data)
     {
     }
 

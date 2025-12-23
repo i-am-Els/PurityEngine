@@ -67,7 +67,6 @@ add_library(Purity
         assetDB/include/assetdb_type_strategy.h
         assetDB/include/assetdb_utility.h
         assetDB/include/assets_types.h
-        assetDB/include/ref_counted.h
         #--------------------------------
         core/include/assetdb_service.h
         core/include/core_macros.h
@@ -186,14 +185,16 @@ add_library(Purity
         #--------------------------------
         scene/include/scene_layer.h
         core/include/ISerializable.h
-#        core/include/object_registry.h
-#        core/include/serializer.h
+        core/include/object_registry.h
+        core/include/serializer.h
         core/include/serialization_macros.h
         ecs/include/weak_ptr_utility.h
-#        core/src/object_registry.cpp
+        core/src/object_registry.cpp
+        core/src/serializer.cpp
         scene/src/scene.cpp
         scene/src/scene_layer.cpp
-        #        core/src/serializer.cpp
+        assetDB/src/asset_registry.cpp
+        assetDB/include/asset_registry.h
 )
 
 target_sources(

@@ -112,7 +112,8 @@ namespace purity{
         const auto layerService = std::make_shared<PLayerService>();
         const auto rendererService = std::make_shared<PRendererService>(window->getGLFWwindow());
 
-        assetService->preInit(assetdbData);
+        std::any wrappedData = std::move(assetdbData);
+        assetService->preInit(wrappedData);
         // call all pre-init
         // for (const auto initializable : serviceLocator->getInitializables())
         // {

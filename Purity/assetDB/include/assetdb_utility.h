@@ -9,7 +9,13 @@
 namespace purity::assetDB
 {
     class PURITY_API PAssetDBUtility {
+        public:
+        PAssetDBUtility() = default;
+        ~PAssetDBUtility() = default;
 
+        static std::filesystem::path buildAbsolutePathFromRel(const std::string& relPath);
+
+        static PAssetDBUtility* instance;
     };
 }
 

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "asset_record.h"
 #include "purity_core_pch.h"
 #include "service_locator.h"
 #include "window_purity.h"
@@ -19,7 +20,7 @@ namespace purity{
     class PURITY_API PApplication {
     protected:
         PApplication();
-        std::map<PUUID, std::string> assetdbData;
+        std::map<PUUID, AssetRecord> assetdbData;
 
     public:
         bool m_runningApp = true;
@@ -39,6 +40,7 @@ namespace purity{
         virtual void exit();
         virtual bool shouldClose(const WindowCloseEvent& event);
         virtual bool verify();
+        virtual fs_path get_DB_file_path() = 0;
 
         virtual void onEvent(Event& placeholder1);
 

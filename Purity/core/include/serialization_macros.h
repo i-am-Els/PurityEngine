@@ -4,7 +4,6 @@
 
 #pragma once
 
-// #include "object_registry.h"
 #include "serializer.h"
 
 #define PURITY_SERIALIZABLE_CLASS(name)\

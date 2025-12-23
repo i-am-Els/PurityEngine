@@ -12,14 +12,17 @@
 #include <optional>
 
 #include "asset_record.h"
+#include "content_index.h"
 
 using namespace commons;
+using namespace commons::database;
 
 using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
 using DatabaseData = std::map<PUUID, commons::AssetRecord>;
+using Database = commons::database::ContentIndex;
 using namespace purity;
 
 namespace editor {
@@ -46,14 +49,15 @@ namespace editor {
         void exit() override;
 
         bool verify() override;
+        fs_path get_DB_file_path() override;
 
     private:
 
-        PURE_NODISCARD std::optional<DatabaseData> validateDBFile() const;
+        PURE_NODISCARD bool validate_db_file_and_collect_valid_db_records();
         PURE_NODISCARD bool validateSceneFile() const;
         PURE_NODISCARD bool validateAssetFiles(const PUUID& id, const std::string& assetPath) const;
         static void reportInvalidAssets(const PUUID& file_id, const std::string& assetPath);
-        void storeValidAssets(const PUUID& file_id, const std::string& assetPath);
+        void storeValidAssets(const PUUID& asset_id, const AssetRecord& asset_record);
 
     public:
         void preInit() override;

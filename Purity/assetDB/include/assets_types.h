@@ -8,7 +8,6 @@
 #include "buffer.h"
 #include "handle_base.h"
 #include "purity_core_pch.h"
-#include "ref_counted.h"
 #include "serialization_macros.h"
 #include "vertex_array.h"
 
@@ -19,28 +18,21 @@ using namespace purity::graphics;
 
 namespace purity::assetDB {
 
-    struct AssetMetadata {
-        PUUID id;
-        std::string rel_path;
-        AssetType type;
-    };
-
-
-    class PURITY_API PAsset : public RefCounted {
+    class PURITY_API PAsset {
     protected:
-        void* m_data;
+        // void* m_data;
         PUUID id;
 
     public:
-        PAsset() = default;
+        PAsset() = default; // TODO: We expect that serialisables should be created by the create() function call
         PURE_NODISCARD PAsset(void* data, const PUUID& id)
-            : m_data(data),
-              id(id)
+            : id(id)
         {
         }
 
-        ~PAsset() override = default;
+        ~PAsset() = default;
 
+        void setID(const PUUID& _id) { this->id = _id; }
     protected:
         PUUID getID() { return id; }
     };
@@ -148,8 +140,14 @@ namespace purity::assetDB {
     class PURITY_API PLevelAsset final : public PAsset, public ISerializable {
     public:
         SERIALIZABLE(PLevelAsset)
+        PLevelAsset() = default;
+        explicit PLevelAsset(scene::PScene* scenePtr) : m_scene(scenePtr) {}
+        void SetScene(scene::PScene* scenePtr) { m_scene = scenePtr; }
+        scene::PScene* GetScene() const { return m_scene; }
         void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
+    private:
+        scene::PScene* m_scene = nullptr;
     };
 
     class PURITY_API PParticleAsset final : public PAsset, public ISerializable {

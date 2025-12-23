@@ -7,6 +7,8 @@
 #include "editors.h"
 #include "editor_layer.h"
 #include <fstream>
+
+#include "content_index.h"
 #include "game_layer.h"
 #include "layer_service.h"
 #include "layer_service_conc.h"
@@ -16,57 +18,55 @@ using namespace purity;
 namespace editor {
 
     bool PEditorApplication::verify() {
-        std::optional<DatabaseData> dbData = validateDBFile();
-        if (!dbData.has_value()) { return false; }
-        // if (!validateSceneFile()) { return false; } // TODO : Remove this, Scene file Absence should not stop verification since on new project we dont create scene files in project manager..
-        auto assetDB_arr = dbData.value();
-        if (!assetDB_arr.empty())
-        {
-            for (const auto& item : assetDB_arr) {
-                PUUID id = PUUID::fromString(item.first);
-                auto assetRecord = item.second;
-                if (!validateAssetFiles(id, assetRecord.metaPath.string()))
-                {
-                    reportInvalidAssets(id, assetRecord.metaPath.string());
-                    continue;
-                }
-                if (!validateAssetFiles(id, assetRecord.binaryPath.value().string()))
-                {
-                    reportInvalidAssets(id, assetRecord.binaryPath.value().string());
-                    continue;
-                }
-                storeValidAssets(item.first, assetRecord.metaPath.string());
-                storeValidAssets(item.first, assetRecord.binaryPath.value().string());
-            }
-        }
-        return true;
+        return validate_db_file_and_collect_valid_db_records();
+
     }
 
-    std::optional<DatabaseData> PEditorApplication::validateDBFile() const
+    fs_path PEditorApplication::get_DB_file_path()
+    {
+        std::cout << "Testing:: " << m_projectEditorInfo.projectDir << std::endl;
+        fs_path pDBfilePath = fs_path(m_projectEditorInfo.projectDir) / "Assets" / (m_applicationInfo.title + ".peDB");
+        return pDBfilePath;
+    }
+
+    bool PEditorApplication::validate_db_file_and_collect_valid_db_records()
     {
         // Build the expected DB file path.
-        std::cout << "Testing:: " << m_projectEditorInfo.projectDir << std::endl;
-        std::filesystem::path pDBfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / "Assets" / (m_applicationInfo.title + ".peDB");
+        fs_path pDBfilePath = get_DB_file_path();
 
-        if (!commons::_validateFileExistence(pDBfilePath)) { return std::nullopt; }
-        
+        if (!commons::_validateFileExistence(pDBfilePath)) { return false; }
+
         try {
             // Open database file.
+            Database db;
+            db.create_or_open_db(pDBfilePath);
 
-            // Build the result data structure.
-            DatabaseData dbData;
-            // dbData.id = commons::PUUID::fromString(data_json["id"].get<std::string>());
+            DatabaseData dbData = db.readAllAssets(
+                [&](const AssetRecord& asset)
+                {
+                    if (!validateAssetFiles(asset.uuid, asset.metaPath.string()))
+                    {
+                        reportInvalidAssets(asset.uuid, asset.metaPath.string());
+                        return false;
+                    }
 
-            // Assuming data_json["assets"] is an array of objects,
-            // where each object is convertible to std::map<std::string, std::string>.
-                // dbData.assets = data_json["assets"].get<std::vector<std::map<std::string, std::string>>>();
+                    if (asset.binaryPath &&
+                        !validateAssetFiles(asset.uuid, asset.binaryPath.value().string()))
+                    {
+                        reportInvalidAssets(asset.uuid, asset.binaryPath.value().string());
+                        return false;
+                    }
 
-            return dbData;
+                    storeValidAssets(asset.uuid, asset);
+                    return true;
+                });
+            if (!dbData.empty()) { return false; }
+            return true;
         }
         catch(const std::exception& e){
             // Log the exception message if needed.
             std::cerr << "Error parsing DB file: " << e.what() << std::endl;
-            return std::nullopt;
+            return false;
         }
     }
 
@@ -90,10 +90,10 @@ namespace editor {
         PLog::echoMessage(LogLevel::Warning, "%s %s %s %s %s", "Asset of id", static_cast<std::string>(file_id).c_str(), "at", assetPath.c_str(), "is not valid, hence removed from asset database.");
     }
 
-    void PEditorApplication::storeValidAssets(const PUUID& file_id, const std::string& assetPath)
+    void PEditorApplication::storeValidAssets(const PUUID& asset_id, const AssetRecord& asset_record)
     {
-        PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(file_id).c_str(), "and path:", assetPath.c_str(), "to the queue going to the asset database.");
-        assetdbData[file_id] = assetPath;
+        PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(asset_id).c_str(), "and path:", asset_record.metaPath.c_str(), "to the queue going to the asset database.");
+        assetdbData[asset_id] = asset_record;
     }
 
     void PEditorApplication::preInit()

@@ -7,30 +7,26 @@
 #include "papplication.h"
 
 namespace purity::assetDB{
-    void PAssetDatabase::preInit(const std::any& data)
+    void PAssetDatabase::preInit(std::any& data)
     {
+        m_Database.create_or_open_db(PSystemFinder::GetApplication()->get_DB_file_path());
+
         if(!data.has_value())
         {
             throw std::runtime_error("std::any passed without any value!!!");
         }
-        if(const auto* map_ptr = std::any_cast<std::map<PUUID, std::string>>(&data))
+        if(const auto* map_ptr = std::any_cast<std::map<PUUID, AssetRecord>>(&data))
         {
             if(!map_ptr->empty())
             {
-                for (const auto& [id, path] : *map_ptr)
-                {
+                m_AssetContainer = std::move(*map_ptr);
 
-                    m_AssetContainer[id] = {id, path, AssetType::None};
-                    std::cout << "Inside assetDB we add id: " << id << " to asset database metadata container" << std::endl;
-
-                }
+                data.reset();
             }
         }else
         {
-            throw std::runtime_error("Incorrect type in std::any. Expected std::map<PUUID, std::string>.");
+            throw std::runtime_error("Incorrect type in std::any. Expected std::map<PUUID, AssetRecord>.");
         }
-
-        // TODO: Clean the assetdbData std::any parameter after this
     }
 
     void PAssetDatabase::postInit()
@@ -38,7 +34,8 @@ namespace purity::assetDB{
     }
 
     void PAssetDatabase::init() {
-        for(const auto& [id, path] : m_AssetContainer)
+        // Fill Content Drawer with data if available yet. (GUI must be in place for this)...
+        for(const auto& [id, record] : m_AssetContainer)
         {
 
         }
@@ -47,7 +44,7 @@ namespace purity::assetDB{
     }
 
     void PAssetDatabase::destroy() {
-
+        m_Database.close_db();
     }
 
     void PAssetDatabase::exit()

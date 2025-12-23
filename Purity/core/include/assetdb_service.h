@@ -5,6 +5,7 @@
 #pragma once
 
 #include "iservices.h"
+using Database = database::ContentIndex;
 
 namespace purity{
 
@@ -16,5 +17,7 @@ namespace purity{
         }
         ~AAssetDBService() override = default;
 
+    protected:
+        Database m_Database = {};
     };
 }

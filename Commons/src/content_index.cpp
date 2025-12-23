@@ -4,6 +4,7 @@
 
 #include "content_index.h"
 #include "serialize_utilities.h"
+#include "time_manager.h"
 
 
 namespace commons::database {
@@ -43,7 +44,7 @@ namespace commons::database {
 		return true;
 	}
 
-	bool ContentIndex::insertAsset(AssetRecord& record) const
+	bool ContentIndex::insertAsset(AssetRecord record) const
 	{
 		const char* sql =
 			"INSERT INTO assets ("
@@ -86,6 +87,307 @@ namespace commons::database {
 		sqlite3_finalize(stmt);
 		return success;
 	}
+
+	AssetRecordMap ContentIndex::readAllAssets(const AssetFilter& filter) const
+	{
+	    AssetRecordMap records;
+
+	    const char* sql =
+	        "SELECT "
+	        "id, uuid, name, asset_type, representation, "
+	        "meta_path, source_path, binary_path, "
+	        "is_dirty, is_deleted, created_at, modified_at "
+	        "FROM assets "
+	        "WHERE is_deleted = 0;";
+
+	    sqlite3_stmt* stmt = nullptr;
+
+	    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+	        return records;
+
+	    while (sqlite3_step(stmt) == SQLITE_ROW)
+	    {
+	        AssetRecord record;
+
+	        record.id = sqlite3_column_int64(stmt, 0);
+
+	        // UUID (TEXT → std::string → PUUID)
+	        {
+	            const unsigned char* uuidText = sqlite3_column_text(stmt, 1);
+	            if (!uuidText)
+	                continue; // corrupted row, skip
+
+	            record.uuid = commons::PUUID::fromString(
+	                std::string(reinterpret_cast<const char*>(uuidText))
+	            );
+	        }
+
+	        record.name =
+	            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+
+	        record.assetType = static_cast<AssetType>(
+	            sqlite3_column_int(stmt, 3)
+	        );
+
+	        record.representation = static_cast<AssetRepresentation>(
+	            sqlite3_column_int(stmt, 4)
+	        );
+
+	        record.metaPath = std::filesystem::path(
+	            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5))
+	        );
+
+	        // source_path (nullable)
+	        {
+	            const unsigned char* src = sqlite3_column_text(stmt, 6);
+	            if (src)
+	                record.sourcePath = std::filesystem::path(
+	                    reinterpret_cast<const char*>(src)
+	                );
+	            else
+	                record.sourcePath.reset();
+	        }
+
+	        // binary_path (nullable)
+	        {
+	            const unsigned char* bin = sqlite3_column_text(stmt, 7);
+	            if (bin)
+	                record.binaryPath = std::filesystem::path(
+	                    reinterpret_cast<const char*>(bin)
+	                );
+	            else
+	                record.binaryPath.reset();
+	        }
+
+	        record.isDirty   = sqlite3_column_int(stmt, 8) != 0;
+	        record.isDeleted = sqlite3_column_int(stmt, 9) != 0;
+
+	        record.createdAt  = sqlite3_column_int64(stmt, 10);
+	        record.modifiedAt = sqlite3_column_int64(stmt, 11);
+
+	    	// KEY FILTER HOOK (policy lives outside DB)
+	    	if (filter && !filter(record))
+	    		continue;
+
+	        // Insert into map keyed by UUID
+	        records.emplace(record.uuid, std::move(record));
+	    }
+
+	    sqlite3_finalize(stmt);
+	    return records;
+	}
+
+	std::optional<AssetRecord> ContentIndex::readAssetByUUID(const commons::PUUID& uuid) const
+	{
+	    const char* sql =
+	        "SELECT "
+	        "id, uuid, name, asset_type, representation, "
+	        "meta_path, source_path, binary_path, "
+	        "is_dirty, is_deleted, created_at, modified_at "
+	        "FROM assets "
+	        "WHERE uuid = ? AND is_deleted = 0 "
+	        "LIMIT 1;";
+
+	    sqlite3_stmt* stmt = nullptr;
+
+	    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+	        return std::nullopt;
+
+	    sqlite3_bind_text(stmt, 1, static_cast<std::string>(uuid).c_str(), -1, SQLITE_TRANSIENT);
+
+	    AssetRecord record;
+	    bool found = false;
+
+	    if (sqlite3_step(stmt) == SQLITE_ROW)
+	    {
+	        found = true;
+
+	        record.id = sqlite3_column_int64(stmt, 0);
+
+	        record.uuid = commons::PUUID::fromString(
+	            std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)))
+	        );
+
+	        record.name =
+	            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+
+	        record.assetType = static_cast<AssetType>(
+	            sqlite3_column_int(stmt, 3)
+	        );
+
+	        record.representation = static_cast<AssetRepresentation>(
+	            sqlite3_column_int(stmt, 4)
+	        );
+
+	        record.metaPath = std::filesystem::path(
+	            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5))
+	        );
+
+	        const unsigned char* src = sqlite3_column_text(stmt, 6);
+	        record.sourcePath = src
+	            ? std::optional<std::filesystem::path>(reinterpret_cast<const char*>(src))
+	            : std::nullopt;
+
+	        const unsigned char* bin = sqlite3_column_text(stmt, 7);
+	        record.binaryPath = bin
+	            ? std::optional<std::filesystem::path>(reinterpret_cast<const char*>(bin))
+	            : std::nullopt;
+
+	        record.isDirty   = sqlite3_column_int(stmt, 8) != 0;
+	        record.isDeleted = sqlite3_column_int(stmt, 9) != 0;
+
+	        record.createdAt  = sqlite3_column_int64(stmt, 10);
+	        record.modifiedAt = sqlite3_column_int64(stmt, 11);
+	    }
+
+	    sqlite3_finalize(stmt);
+
+	    if (!found)
+	        return std::nullopt;
+
+	    return record;
+	}
+
+	std::optional<AssetRecord> ContentIndex::readAssetById(int64_t id) const
+	{
+		const char* sql =
+			"SELECT "
+			"id, uuid, name, asset_type, representation, "
+			"meta_path, source_path, binary_path, "
+			"is_dirty, is_deleted, created_at, modified_at "
+			"FROM assets "
+			"WHERE id = ? AND is_deleted = 0 "
+			"LIMIT 1;";
+
+		sqlite3_stmt* stmt = nullptr;
+
+		if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+			return std::nullopt;
+
+		sqlite3_bind_int64(stmt, 1, id);
+
+		AssetRecord record;
+		bool found = false;
+
+		if (sqlite3_step(stmt) == SQLITE_ROW)
+		{
+			found = true;
+
+			record.id = sqlite3_column_int64(stmt, 0);
+
+			record.uuid = commons::PUUID::fromString(
+				std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)))
+			);
+
+			record.name =
+				reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+
+			record.assetType = static_cast<AssetType>(
+				sqlite3_column_int(stmt, 3)
+			);
+
+			record.representation = static_cast<AssetRepresentation>(
+				sqlite3_column_int(stmt, 4)
+			);
+
+			record.metaPath = std::filesystem::path(
+				reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5))
+			);
+
+			const unsigned char* src = sqlite3_column_text(stmt, 6);
+			record.sourcePath = src
+				? std::optional<std::filesystem::path>(reinterpret_cast<const char*>(src))
+				: std::nullopt;
+
+			const unsigned char* bin = sqlite3_column_text(stmt, 7);
+			record.binaryPath = bin
+				? std::optional<std::filesystem::path>(reinterpret_cast<const char*>(bin))
+				: std::nullopt;
+
+			record.isDirty   = sqlite3_column_int(stmt, 8) != 0;
+			record.isDeleted = sqlite3_column_int(stmt, 9) != 0;
+
+			record.createdAt  = sqlite3_column_int64(stmt, 10);
+			record.modifiedAt = sqlite3_column_int64(stmt, 11);
+		}
+
+		sqlite3_finalize(stmt);
+
+		if (!found)
+			return std::nullopt;
+
+		return record;
+	}
+
+	bool ContentIndex::updateAsset(const AssetRecord& record) const
+	{
+		if (record.id < 0)
+			return false; // must already exist
+
+		const char* sql =
+			"UPDATE assets SET "
+			"name = ?, "
+			"asset_type = ?, "
+			"representation = ?, "
+			"meta_path = ?, "
+			"source_path = ?, "
+			"binary_path = ?, "
+			"is_dirty = ?, "
+			"modified_at = ? "
+			"WHERE id = ?;";
+
+		sqlite3_stmt* stmt = nullptr;
+
+		if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+			return false;
+
+		sqlite3_bind_text(stmt, 1, record.name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt, 2, static_cast<int>(record.assetType));
+		sqlite3_bind_int(stmt, 3, static_cast<int>(record.representation));
+		sqlite3_bind_text(stmt, 4, record.metaPath.string().c_str(), -1, SQLITE_TRANSIENT);
+
+		if (record.sourcePath)
+			sqlite3_bind_text(stmt, 5, record.sourcePath->string().c_str(), -1, SQLITE_TRANSIENT);
+		else
+			sqlite3_bind_null(stmt, 5);
+
+		if (record.binaryPath)
+			sqlite3_bind_text(stmt, 6, record.binaryPath->string().c_str(), -1, SQLITE_TRANSIENT);
+		else
+			sqlite3_bind_null(stmt, 6);
+
+		sqlite3_bind_int(stmt, 7, record.isDirty ? 1 : 0);
+		sqlite3_bind_int64(stmt, 8, record.modifiedAt);
+		sqlite3_bind_int64(stmt, 9, record.id);
+
+		const bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+		sqlite3_finalize(stmt);
+		return success;
+	}
+
+	bool ContentIndex::deleteAsset(const int64_t id) const
+	{
+		const char* sql =
+			"UPDATE assets SET "
+			"is_deleted = 1, "
+			"modified_at = ? "
+			"WHERE id = ?;";
+
+		sqlite3_stmt* stmt = nullptr;
+
+		if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+			return false;
+
+		sqlite3_bind_int64(stmt, 1, TimeManager::now_seconds());
+		sqlite3_bind_int64(stmt, 2, id);
+
+		bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+		sqlite3_finalize(stmt);
+		return success;
+	}
+
 
 
 	void ContentIndex::close_db() const

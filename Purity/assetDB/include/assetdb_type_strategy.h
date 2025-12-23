@@ -3,10 +3,11 @@
 //
 
 #pragma once
+#include "assetdb_query_specs.h"
 #include "handle_base.h"
 #include "core_macros.h"
-#include "ref_counted.h"
 #include "assets_types.h"
+#include "papplication.h"
 
 using namespace purity::fileIO;
 
@@ -16,147 +17,268 @@ namespace purity::assetDB
     class PURITY_API AssetOperationStrategy
     {
     public:
-        virtual ~AssetOperationStrategy() = default;
-        virtual Ref<AssetTypeRef> ReadOperation() = 0;
-        virtual Ref<AssetTypeRef> WriteOperation() = 0;
-        virtual Ref<AssetTypeRef> UpdateOperation() = 0;
-        virtual Ref<AssetTypeRef> DeleteOperation() = 0;
+        explicit AssetOperationStrategy(const QuerySpec<AssetTypeRef> _spec): spec(_spec)
+        {
+        }
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<AssetTypeRef> ReadOperation() { return {}; }
+        std::shared_ptr<AssetTypeRef> WriteOperation() { return {}; }
+        std::shared_ptr<AssetTypeRef> UpdateOperation() { return {}; }
+        std::shared_ptr<AssetTypeRef> DeleteOperation() { return {}; }
+        QuerySpec<AssetTypeRef> spec;
     };
 
-    class PURITY_API TextureAssetOperationStrategy final : public AssetOperationStrategy<PTextureAsset>
+
+    template<>
+    class PURITY_API AssetOperationStrategy<PTextureAsset>
     {
     public:
-        ~TextureAssetOperationStrategy() override;
-        Ref<PTextureAsset> ReadOperation() override;
-        Ref<PTextureAsset> WriteOperation() override;
-        Ref<PTextureAsset> UpdateOperation() override;
-        Ref<PTextureAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PTextureAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PTextureAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PTextureAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PTextureAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PTextureAsset> DeleteOperation() { return {}; }
+        QuerySpec<PTextureAsset> spec;
     };
 
-    class PURITY_API SpriteAssetOperationStrategy final : public AssetOperationStrategy<PSpriteAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PSpriteAsset>
     {
     public:
-        ~SpriteAssetOperationStrategy() override;
-        Ref<PSpriteAsset> ReadOperation() override;
-        Ref<PSpriteAsset> WriteOperation() override;
-        Ref<PSpriteAsset> UpdateOperation() override;
-        Ref<PSpriteAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PSpriteAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PSpriteAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PSpriteAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PSpriteAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PSpriteAsset> DeleteOperation() { return {}; }
+        QuerySpec<PSpriteAsset> spec;
     };
 
-    class PURITY_API ShaderAssetOperationStrategy final : public AssetOperationStrategy<PShaderAsset>
-    {
-        ~ShaderAssetOperationStrategy() override;
-        Ref<PShaderAsset> ReadOperation() override;
-        Ref<PShaderAsset> WriteOperation() override;
-        Ref<PShaderAsset> UpdateOperation() override;
-        Ref<PShaderAsset> DeleteOperation() override;
-    };
-
-    class PURITY_API MeshAssetOperationStrategy final : public AssetOperationStrategy<PMeshAsset>
-    {
-        ~MeshAssetOperationStrategy() override;
-        Ref<PMeshAsset> ReadOperation() override;
-        Ref<PMeshAsset> WriteOperation() override;
-        Ref<PMeshAsset> UpdateOperation() override;
-        Ref<PMeshAsset> DeleteOperation() override;
-    };
-
-    class PURITY_API SkeletonAssetOperationStrategy final : public AssetOperationStrategy<PSkeletonAsset>
-    {
-        ~SkeletonAssetOperationStrategy() override;
-        Ref<PSkeletonAsset> ReadOperation() override;
-        Ref<PSkeletonAsset> WriteOperation() override;
-        Ref<PSkeletonAsset> UpdateOperation() override;
-        Ref<PSkeletonAsset> DeleteOperation() override;
-    };
-
-    class PURITY_API StaticMeshAssetOperationStrategy final : public AssetOperationStrategy<PStaticMeshAsset>
-    {
-        ~StaticMeshAssetOperationStrategy() override;
-        Ref<PStaticMeshAsset> ReadOperation() override;
-        Ref<PStaticMeshAsset> WriteOperation() override;
-        Ref<PStaticMeshAsset> UpdateOperation() override;
-        Ref<PStaticMeshAsset> DeleteOperation() override;
-    };
-
-    class PURITY_API MaterialAssetOperationStrategy final : public AssetOperationStrategy<PMaterialAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PShaderAsset>
     {
     public:
-        ~MaterialAssetOperationStrategy() override;
-        Ref<PMaterialAsset> ReadOperation() override;
-        Ref<PMaterialAsset> WriteOperation() override;
-        Ref<PMaterialAsset> UpdateOperation() override;
-        Ref<PMaterialAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PShaderAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PShaderAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PShaderAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PShaderAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PShaderAsset> DeleteOperation() { return {}; }
+        QuerySpec<PShaderAsset> spec;
     };
 
-    class PURITY_API SplineAssetOperationStrategy final : public AssetOperationStrategy<PSplineAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PMeshAsset>
     {
     public:
-        ~SplineAssetOperationStrategy() override;
-        Ref<PSplineAsset> ReadOperation() override;
-        Ref<PSplineAsset> WriteOperation() override;
-        Ref<PSplineAsset> UpdateOperation() override;
-        Ref<PSplineAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PMeshAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PMeshAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PMeshAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PMeshAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PMeshAsset> DeleteOperation() { return {}; }
+        QuerySpec<PMeshAsset> spec;
     };
 
-    class PURITY_API P2DPolygonMeshAssetOperationStrategy final : public AssetOperationStrategy<PP2DPolygonMeshAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PSkeletonAsset>
     {
     public:
-        ~P2DPolygonMeshAssetOperationStrategy() override;
-        Ref<PP2DPolygonMeshAsset> ReadOperation() override;
-        Ref<PP2DPolygonMeshAsset> WriteOperation() override;
-        Ref<PP2DPolygonMeshAsset> UpdateOperation() override;
-        Ref<PP2DPolygonMeshAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PSkeletonAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PSkeletonAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PSkeletonAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PSkeletonAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PSkeletonAsset> DeleteOperation() { return {}; }
+        QuerySpec<PSkeletonAsset> spec;
     };
 
-    class PURITY_API SoundSourceAssetOperationStrategy final : public AssetOperationStrategy<PSoundSourceAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PStaticMeshAsset>
     {
     public:
-        ~SoundSourceAssetOperationStrategy() override;
-        Ref<PSoundSourceAsset> ReadOperation() override;
-        Ref<PSoundSourceAsset> WriteOperation() override;
-        Ref<PSoundSourceAsset> UpdateOperation() override;
-        Ref<PSoundSourceAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PStaticMeshAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PStaticMeshAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PStaticMeshAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PStaticMeshAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PStaticMeshAsset> DeleteOperation() { return {}; }
+        QuerySpec<PStaticMeshAsset> spec;
     };
 
-     class PURITY_API P3DSoundSourceAssetOperationStrategy final : public AssetOperationStrategy<PP3DSoundSourceAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PMaterialAsset>
+    {
+    public:
+        explicit AssetOperationStrategy(const QuerySpec<PMaterialAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PMaterialAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PMaterialAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PMaterialAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PMaterialAsset> DeleteOperation() { return {}; }
+        QuerySpec<PMaterialAsset> spec;
+    };
+
+    template<>
+    class PURITY_API AssetOperationStrategy<PSplineAsset>
+    {
+    public:
+        explicit AssetOperationStrategy(const QuerySpec<PSplineAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PSplineAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PSplineAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PSplineAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PSplineAsset> DeleteOperation() { return {}; }
+        QuerySpec<PSplineAsset> spec;
+    };
+
+    template<>
+    class PURITY_API AssetOperationStrategy<PP2DPolygonMeshAsset>
+    {
+    public:
+        explicit AssetOperationStrategy(const QuerySpec<PP2DPolygonMeshAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PP2DPolygonMeshAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PP2DPolygonMeshAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PP2DPolygonMeshAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PP2DPolygonMeshAsset> DeleteOperation() { return {}; }
+        QuerySpec<PP2DPolygonMeshAsset> spec;
+    };
+
+    template<>
+    class PURITY_API AssetOperationStrategy<PSoundSourceAsset>
+    {
+    public:
+        explicit AssetOperationStrategy(const QuerySpec<PSoundSourceAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PSoundSourceAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PSoundSourceAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PSoundSourceAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PSoundSourceAsset> DeleteOperation() { return {}; }
+        QuerySpec<PSoundSourceAsset> spec;
+    };
+
+    template<>
+     class PURITY_API AssetOperationStrategy<PP3DSoundSourceAsset>
      {
      public:
-         ~P3DSoundSourceAssetOperationStrategy() override;
-         Ref<PP3DSoundSourceAsset> ReadOperation() override;
-         Ref<PP3DSoundSourceAsset> WriteOperation() override;
-         Ref<PP3DSoundSourceAsset> UpdateOperation() override;
-         Ref<PP3DSoundSourceAsset> DeleteOperation() override;
+         explicit AssetOperationStrategy(const QuerySpec<PP3DSoundSourceAsset>& _spec)
+             : spec(_spec)
+         {
+         }
+
+        ~AssetOperationStrategy() = default;
+         std::shared_ptr<PP3DSoundSourceAsset> ReadOperation() { return {}; }
+         std::shared_ptr<PP3DSoundSourceAsset> WriteOperation() { return {}; }
+         std::shared_ptr<PP3DSoundSourceAsset> UpdateOperation() { return {}; }
+         std::shared_ptr<PP3DSoundSourceAsset> DeleteOperation() { return {}; }
+         QuerySpec<PP3DSoundSourceAsset> spec;
      };
 
-    class PURITY_API LevelAssetOperationStrategy final : public AssetOperationStrategy<PLevelAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PLevelAsset>
     {
     public:
-        ~LevelAssetOperationStrategy() override;
-        Ref<PLevelAsset> ReadOperation() override;
-        Ref<PLevelAsset> WriteOperation() override;
-        Ref<PLevelAsset> UpdateOperation() override;
-        Ref<PLevelAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PLevelAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PLevelAsset> ReadOperation() { return {}; }
+
+        std::shared_ptr<PLevelAsset> WriteOperation()
+        {
+            auto scene = PSystemFinder::GetScene();
+            if (scene == nullptr) { throw std::runtime_error("Scene is null"); }
+
+            auto levelAsset = assetDB::PLevelAsset::create();
+            levelAsset->setID(this->spec.assetRecord.uuid);
+            levelAsset->SetScene(scene);
+
+            // Serialize to disk
+            Serializer::save(levelAsset, spec.assetRecord.metaPath.string());
+
+            return levelAsset;
+        }
+
+        std::shared_ptr<PLevelAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PLevelAsset> DeleteOperation() { return {}; }
+        QuerySpec<PLevelAsset> spec;
     };
 
-    class PURITY_API ParticleAssetOperationStrategy final : public AssetOperationStrategy<PParticleAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PParticleAsset>
     {
     public:
-        ~ParticleAssetOperationStrategy() override;
-        Ref<PParticleAsset> ReadOperation() override;
-        Ref<PParticleAsset> WriteOperation() override;
-        Ref<PParticleAsset> UpdateOperation() override;
-        Ref<PParticleAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PParticleAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PParticleAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PParticleAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PParticleAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PParticleAsset> DeleteOperation() { return {}; }
+        QuerySpec<PParticleAsset> spec;
     };
 
-    class PURITY_API RenderMapAssetOperationStrategy final : public AssetOperationStrategy<PRenderMapAsset>
+    template<>
+    class PURITY_API AssetOperationStrategy<PRenderMapAsset>
     {
     public:
-        ~RenderMapAssetOperationStrategy() override;
-        Ref<PRenderMapAsset> ReadOperation() override;
-        Ref<PRenderMapAsset> WriteOperation() override;
-        Ref<PRenderMapAsset> UpdateOperation() override;
-        Ref<PRenderMapAsset> DeleteOperation() override;
+        explicit AssetOperationStrategy(const QuerySpec<PRenderMapAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PRenderMapAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PRenderMapAsset> WriteOperation() { return {}; }
+        std::shared_ptr<PRenderMapAsset> UpdateOperation() { return {}; }
+        std::shared_ptr<PRenderMapAsset> DeleteOperation() { return {}; }
+        QuerySpec<PRenderMapAsset> spec;
     };
 
 }

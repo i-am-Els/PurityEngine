@@ -5,6 +5,8 @@
 #pragma once
 
 
+#include <format>
+
 #include "core_macros.h"
 
 
@@ -88,6 +90,18 @@ namespace purity::exceptions
         operator int() { return -1; }
         PURE_NODISCARD const char* what() const noexcept override {
             return "The maximum array size is reached, the array/vector is not allowed to take in more values, this can be a cap placed on the container for masking reasons.";
+        }
+    };
+
+    class PURITY_API EmptyPathString final : public std::exception
+    {
+        std::string _path;
+        public:
+        EmptyPathString() = default;
+        explicit EmptyPathString(const std::string& path) : _path(path) {}
+        PURE_NODISCARD const char* what() const noexcept override
+        {
+            return std::format("The string {} to be used as a file path is Empty!!!", _path.c_str()).c_str();
         }
     };
 }

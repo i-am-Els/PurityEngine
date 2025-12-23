@@ -33,37 +33,6 @@ namespace commons{
 		"required": ["project_name", "projectDB"]
 	})"_json;
 
-	const json pDatabaseSchema = R"(
-	{
-		"$schema": "http://json-schema.org/draft-07/schema#",
-		"type": "object",
-		"properties": {
-		  "id": {
-			"type": "string"
-		  },
-		  "assets": {
-			"type": "array",
-			"items": {
-			  "$ref": "#/definitions/Asset"
-			}
-		  }
-		},
-		"required": ["id", "assets"],
-		"definitions": {
-		  "Asset": {
-			"type": "object",
-			"properties": {
-			  "id": {
-				"type": "string"
-			  },
-			  "path": {
-				"type": "string"
-			  }
-			}
-		  }
-		}
-	})"_json;
-
 	const json pAssetSchema = R"(
 	{
 	  "$schema": "http://json-schema.org/draft-07/schema#",
@@ -129,4 +98,7 @@ namespace commons{
 		std::optional<json> COMMON_API extractSourceFromJSON(const char *path);
 
 	}
+
+
+	// Create Scene File from default template.
 }
