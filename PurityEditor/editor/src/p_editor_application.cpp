@@ -81,7 +81,7 @@ namespace editor {
     {
         if (!id) { return false; }
         std::filesystem::path assetfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / assetPath;
-        if (!commons::_validateFileExistence(assetfilePath) || !commons::_validateSchemaAdherence(assetfilePath.string(), commons::pAssetSchema)) { return false; }
+        if (!commons::_validateFileExistence(assetfilePath) || !commons::_validateSchemaAdherence((assetfilePath.string()), commons::pAssetSchema)) { return false; }
         return true;
     }
 

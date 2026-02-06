@@ -22,6 +22,7 @@ public:
     void render() override;
 
     void update() override;
+    void make_new_scene_asset(std::shared_ptr<assetDB::PLevelAsset>& scene_asset, std::string relScenePathString);
     void attached() override;
     void detached() override;
     void eventFired(Event& event) override;

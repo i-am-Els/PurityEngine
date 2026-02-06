@@ -35,7 +35,9 @@ namespace commons::database {
 		[[maybe_unused]] bool insertAsset(AssetRecord record) const;
 		[[nodiscard]] AssetRecordMap readAllAssets(const AssetFilter& filter) const;
 		[[nodiscard]] std::optional<AssetRecord> readAssetByUUID(const commons::PUUID& uuid) const;
+		std::optional<AssetRecord> construct_single_asset_record_and_finalize(sqlite3_stmt* stmt) const;
 		[[nodiscard]] std::optional<AssetRecord> readAssetById(int64_t id) const;
+		[[nodiscard]] std::optional<AssetRecord> readAssetByRelPathUnique(const std::string& rel_path) const;
 		[[nodiscard]] bool updateAsset(const AssetRecord& record) const;
 		[[nodiscard]] bool deleteAsset(int64_t id) const;
 

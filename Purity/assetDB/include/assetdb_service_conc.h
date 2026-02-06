@@ -15,10 +15,6 @@ using QueryOperation = commons::QueryOperation;
 
 namespace purity::assetDB{
 
-    // TODO - Fill all the Derived Query Spec with their personalized information...
-    // TODO - Implement the Specs GetAssetHandle methods...
-
-
     class PURITY_API PAssetDatabase final : public AAssetDBService{
     public:
         ~PAssetDatabase() override{
@@ -33,6 +29,8 @@ namespace purity::assetDB{
 
         template<typename T>
         static std::shared_ptr<T> queryDBForAsset(const QuerySpec<T>& spec, QueryOperation operation);
+
+        PURE_NODISCARD AssetRecord getAssetRecordFromRelPath(const std::string& relPath) const;
 
         /*void setupAsset();*/
 
@@ -54,7 +52,7 @@ namespace purity::assetDB{
     private:
         // Switch on QueryType...
         std::map<PUUID, AssetRecord> m_AssetContainer;
-        // std::map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer;
+        // std::map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer; // Substitute for Objecy Registry
 
     };
 

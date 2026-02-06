@@ -87,6 +87,11 @@ CREATE INDEX IF NOT EXISTS idx_dependencies_asset
 CREATE INDEX IF NOT EXISTS idx_dependencies_depends
     ON asset_dependencies(depends_on_asset_id);
 
+CREATE UNIQUE INDEX IF NOT EXISTS idx_assets_meta_path
+    ON assets(meta_path)
+    WHERE is_deleted = 0;
+
+
 -- =========================================================
 -- Asset Tags (Optional but useful)
 -- =========================================================

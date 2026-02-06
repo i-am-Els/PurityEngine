@@ -47,6 +47,11 @@ namespace purity::assetDB{
         m_Database.close_db();
     }
 
+    AssetRecord PAssetDatabase::getAssetRecordFromRelPath(const std::string& relPath) const
+    {
+        return m_Database.readAssetByRelPathUnique(relPath).value();
+    }
+
     void PAssetDatabase::exit()
     {
     }

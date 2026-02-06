@@ -11,7 +11,7 @@
 
 namespace commons
 {
-	struct COMMON_API AssetRecord
+	struct COMMON_API AssetRecord final
 	{
 		int64_t id = -1; // DB assigned
 
@@ -22,6 +22,7 @@ namespace commons
 		commons::AssetType assetType;
 		commons::AssetRepresentation representation;
 
+		// Paths (ALWAYS RELATIVE, ALWAYS NORMALISED)
 		std::filesystem::path metaPath;
 		std::optional<std::filesystem::path> sourcePath;
 		std::optional<std::filesystem::path> binaryPath;

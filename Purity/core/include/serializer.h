@@ -39,7 +39,7 @@ namespace purity
         template<typename T>
         static void save(const std::shared_ptr<T>& obj, const std::string& path)
         {
-            std::filesystem::path f_path = assetDB::PAssetDBUtility::buildAbsolutePathFromRel(path);
+            std::filesystem::path f_path = assetDB::PAssetDBUtility::resolveProjectPath(path);
             std::ofstream file(f_path.string());
             cereal::JSONOutputArchive ar(file);
             obj->Serialize(ar);

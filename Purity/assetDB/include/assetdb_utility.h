@@ -13,7 +13,7 @@ namespace purity::assetDB
         PAssetDBUtility() = default;
         ~PAssetDBUtility() = default;
 
-        static std::filesystem::path buildAbsolutePathFromRel(const std::string& relPath);
+        static std::filesystem::path resolveProjectPath(const std::string& relPath);
 
         static PAssetDBUtility* instance;
     };
