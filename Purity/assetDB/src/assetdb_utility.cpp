@@ -10,7 +10,7 @@
 
 namespace purity::assetDB{
     /// @brief This method builds the indexed relative paths into absolute paths that is reliable for runtime use.
-    /// @note Your path must folloe the constraints of the Project's Canonical form "Asset/Scene/DefaultProjectScene.pscene" instead of
+    /// @note Your path must follow the constraints of the Project's Canonical form "Asset/Scene/DefaultProjectScene.pscene" instead of
     /// forms like:
     /// - "/Asset/Scene/DefaultProjectScene.pscene"
     /// - "./Asset/Scene/DefaultProjectScene.pscene"
@@ -30,6 +30,6 @@ namespace purity::assetDB{
             PSystemFinder::GetApplication()->m_projectEditorInfo.projectDir;
 
         return std::filesystem::path(projectDir)
-            / std::filesystem::path(relPath);
+            / std::filesystem::path(relPath).lexically_normal();
     }
 }

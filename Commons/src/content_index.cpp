@@ -195,7 +195,7 @@ namespace commons::database {
 
 	    sqlite3_bind_text(stmt, 1, static_cast<std::string>(uuid).c_str(), -1, SQLITE_TRANSIENT);
 
-	    construct_single_asset_record_and_finalize(stmt);
+	    return construct_single_asset_record_and_finalize(stmt);
 	}
 
 	std::optional<AssetRecord> ContentIndex::construct_single_asset_record_and_finalize(sqlite3_stmt* stmt) const
@@ -367,9 +367,11 @@ namespace commons::database {
 
 
 
-	void ContentIndex::close_db() const
+	void ContentIndex::close_db()
 	{
+		if (!db) return;
 		sqlite3_close(db);
+		db = nullptr;
 	}
 } // database
 // commons

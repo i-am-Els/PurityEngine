@@ -41,7 +41,7 @@ namespace commons::database {
 		[[nodiscard]] bool updateAsset(const AssetRecord& record) const;
 		[[nodiscard]] bool deleteAsset(int64_t id) const;
 
-		void close_db() const;
+		void close_db();
 
 	};
 
