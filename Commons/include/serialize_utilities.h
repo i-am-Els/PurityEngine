@@ -24,7 +24,7 @@ namespace commons{
 			},
 			"start_up_scene" : {
 				"type": "string",
-				"default": "Assets/Scenes/DefaultScene.pscene"
+				"default": ""
 			},
 			"projectDB" : {
 				"type": "string"
@@ -91,6 +91,16 @@ namespace commons{
 	bool COMMON_API _validateFileExistence(const std::string& path);
 	bool COMMON_API _validateFileExistence(const std::filesystem::path& path);
 	bool COMMON_API _validateSchemaAdherence(const std::string& path, const json& schema);
+
+	bool COMMON_API is_project_file(const std::filesystem::path& path);
+
+	std::optional<std::filesystem::path> COMMON_API to_project_relative(
+	const std::filesystem::path& absPath,
+	const std::filesystem::path& projectRoot);
+
+	std::optional<std::filesystem::path> COMMON_API to_project_relative(
+	const std::string& absPath,
+	const std::string& projectRoot);
 
 	namespace fileIO
 	{

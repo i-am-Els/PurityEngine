@@ -15,9 +15,17 @@ namespace commons::database {
 
 	bool ContentIndex::create_or_open_db(const std::filesystem::path& file_path)
 	{
-		if (const int obj = sqlite3_open(file_path.string().c_str(), &db); obj != SQLITE_OK)
+		close_db();
+
+		const int rc = sqlite3_open(file_path.string().c_str(), &db);
+		if (rc != SQLITE_OK)
 		{
-			std::cerr << "Error Loading/Creating Database" << sqlite3_errmsg(db) << std::endl;
+			std::cerr << "Error Loading/Creating Database" << (db ? sqlite3_errmsg(db) : "unknown error") << std::endl;
+			if (db)
+			{
+				sqlite3_close_v2(db);
+				db = nullptr;
+			}
 			return false;
 		}
 		std::cout << "Opening/Creating Database is successful..." << std::endl;
@@ -32,20 +40,22 @@ namespace commons::database {
 
 	bool ContentIndex::execute(const std::string& sql_query) const
 	{
-		char* err_msg = nullptr;
 		if (!db) return false;
+		char* err_msg = nullptr;
 		if(sqlite3_exec(db, sql_query.c_str(), nullptr, nullptr, &err_msg) != SQLITE_OK)
 		{
-			std::cerr << "SQL Error" << err_msg << std::endl;
+			std::cerr << "SQL Error" << (err_msg ? err_msg : sqlite3_errmsg(db)) << std::endl;
 			sqlite3_free(err_msg);
 			return false;
 		}
-		std::cout << "Table Created successfully..." << std::endl;
+		std::cout << "SQL Executed successfully..." << std::endl;
 		return true;
 	}
 
-	bool ContentIndex::insertAsset(AssetRecord record) const
+	bool ContentIndex::insertAsset(AssetRecord& record) const
 	{
+		if (!db) return false;
+
 		const char* sql =
 			"INSERT INTO assets ("
 			"uuid, name, asset_type, representation, "
@@ -56,7 +66,10 @@ namespace commons::database {
 		sqlite3_stmt* stmt = nullptr;
 
 		if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+		{
+			std::cerr << "SQLite prepare failed: " << sqlite3_errmsg(db) << std::endl;
 			return false;
+		}
 
 		sqlite3_bind_text(stmt, 1, static_cast<std::string>(record.uuid).c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(stmt, 2, record.name.c_str(), -1, SQLITE_TRANSIENT);
@@ -79,10 +92,16 @@ namespace commons::database {
 		sqlite3_bind_int64(stmt, 10, record.createdAt);
 		sqlite3_bind_int64(stmt, 11, record.modifiedAt);
 
-		bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+		const bool success = (sqlite3_step(stmt) == SQLITE_DONE);
 
 		if (success)
+		{
 			record.id = sqlite3_last_insert_rowid(db);
+		}
+		else
+		{
+			std::cerr << "SQLite insert failed: " << sqlite3_errmsg(db) << std::endl;
+		}
 
 		sqlite3_finalize(stmt);
 		return success;
@@ -91,6 +110,7 @@ namespace commons::database {
 	AssetRecordMap ContentIndex::readAllAssets(const AssetFilter& filter) const
 	{
 	    AssetRecordMap records;
+		if (!db) return records;
 
 	    const char* sql =
 	        "SELECT "
@@ -103,27 +123,30 @@ namespace commons::database {
 	    sqlite3_stmt* stmt = nullptr;
 
 	    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-	        return records;
+	    {
+	    	std::cerr << "SQLite prepare failed: " << sqlite3_errmsg(db) << std::endl;
+	    	return records;
+	    }
 
 	    while (sqlite3_step(stmt) == SQLITE_ROW)
 	    {
 	        AssetRecord record;
+			if (!db) return records;
 
 	        record.id = sqlite3_column_int64(stmt, 0);
 
+	    	const unsigned char* uuidText = sqlite3_column_text(stmt, 1);
+	    	const unsigned char* nameText = sqlite3_column_text(stmt, 2);
+	    	const unsigned char* metaText = sqlite3_column_text(stmt, 5);
+
 	        // UUID (TEXT → std::string → PUUID)
-	        {
-	            const unsigned char* uuidText = sqlite3_column_text(stmt, 1);
-	            if (!uuidText)
-	                continue; // corrupted row, skip
+	    	if (!uuidText || !nameText || !metaText)
+	            continue; // corrupted row, skip
 
-	            record.uuid = commons::PUUID::fromString(
-	                std::string(reinterpret_cast<const char*>(uuidText))
-	            );
-	        }
+	    	record.uuid = commons::PUUID::fromString(std::string(reinterpret_cast<const char*>(uuidText)));
+	        record.name = reinterpret_cast<const char*>(nameText);
+	        record.metaPath = std::filesystem::path(reinterpret_cast<const char*>(metaText));
 
-	        record.name =
-	            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
 
 	        record.assetType = static_cast<AssetType>(
 	            sqlite3_column_int(stmt, 3)
@@ -133,9 +156,6 @@ namespace commons::database {
 	            sqlite3_column_int(stmt, 4)
 	        );
 
-	        record.metaPath = std::filesystem::path(
-	            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5))
-	        );
 
 	        // source_path (nullable)
 	        {
@@ -207,14 +227,20 @@ namespace commons::database {
 		{
 			found = true;
 
+			const unsigned char* uuidText = sqlite3_column_text(stmt, 1);
+			const unsigned char* nameText = sqlite3_column_text(stmt, 2);
+			const unsigned char* metaText = sqlite3_column_text(stmt, 5);
+
+			if (!uuidText || !nameText || !metaText)
+			{
+				sqlite3_finalize(stmt);
+				return std::nullopt;
+			}
+
 			record.id = sqlite3_column_int64(stmt, 0);
-
-			record.uuid = commons::PUUID::fromString(
-				std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)))
-			);
-
-			record.name =
-				reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+			record.uuid = commons::PUUID::fromString(std::string(reinterpret_cast<const char*>(uuidText)));
+			record.name = reinterpret_cast<const char*>(nameText);
+			record.metaPath = std::filesystem::path(reinterpret_cast<const char*>(metaText));
 
 			record.assetType = static_cast<AssetType>(
 				sqlite3_column_int(stmt, 3)
@@ -222,10 +248,6 @@ namespace commons::database {
 
 			record.representation = static_cast<AssetRepresentation>(
 				sqlite3_column_int(stmt, 4)
-			);
-
-			record.metaPath = std::filesystem::path(
-				reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5))
 			);
 
 			const unsigned char* src = sqlite3_column_text(stmt, 6);
@@ -298,7 +320,7 @@ namespace commons::database {
 
 	bool ContentIndex::updateAsset(const AssetRecord& record) const
 	{
-		if (record.id < 0)
+		if (!db || record.id < 0)
 			return false; // must already exist
 
 		const char* sql =
@@ -316,7 +338,10 @@ namespace commons::database {
 		sqlite3_stmt* stmt = nullptr;
 
 		if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+		{
+			std::cerr << "SQLite prepare failed: " << sqlite3_errmsg(db) << std::endl;
 			return false;
+		}
 
 		sqlite3_bind_text(stmt, 1, record.name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt, 2, static_cast<int>(record.assetType));
@@ -338,13 +363,18 @@ namespace commons::database {
 		sqlite3_bind_int64(stmt, 9, record.id);
 
 		const bool success = (sqlite3_step(stmt) == SQLITE_DONE);
-
+		if (!success)
+		{
+			std::cerr << "SQLite update failed: " << sqlite3_errmsg(db) << std::endl;
+		}
 		sqlite3_finalize(stmt);
 		return success;
 	}
 
 	bool ContentIndex::deleteAsset(const int64_t id) const
 	{
+		if (!db) return false;
+
 		const char* sql =
 			"UPDATE assets SET "
 			"is_deleted = 1, "
@@ -354,13 +384,19 @@ namespace commons::database {
 		sqlite3_stmt* stmt = nullptr;
 
 		if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+		{
+			std::cerr << "SQLite prepare failed: " << sqlite3_errmsg(db) << std::endl;
 			return false;
+		}
 
 		sqlite3_bind_int64(stmt, 1, TimeManager::now_seconds());
 		sqlite3_bind_int64(stmt, 2, id);
 
 		bool success = (sqlite3_step(stmt) == SQLITE_DONE);
-
+		if (!success)
+		{
+			std::cerr << "SQLite delete failed: " << sqlite3_errmsg(db) << std::endl;
+		}
 		sqlite3_finalize(stmt);
 		return success;
 	}
@@ -370,7 +406,7 @@ namespace commons::database {
 	void ContentIndex::close_db()
 	{
 		if (!db) return;
-		sqlite3_close(db);
+		sqlite3_close_v2(db);
 		db = nullptr;
 	}
 } // database

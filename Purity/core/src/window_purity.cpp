@@ -8,6 +8,8 @@
 #include <keyboard_events.h>
 #include <mouse_events.h>
 
+using namespace commons;
+
 namespace purity {
 
     // PWindow

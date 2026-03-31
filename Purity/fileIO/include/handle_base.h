@@ -7,12 +7,13 @@
 #include "core_macros.h"
 #include "uuid.h"
 #include "log.h"
+using namespace commons;
 
 namespace purity::fileIO{
     struct PURITY_API PHandleBase{
         commons::PUUID m_handleId;
         PHandleBase() {
-            purity::PLog::echoValue(m_handleId);
+            commons::PLog::echoMessage(LogLevel::Info, "Handle Base ID m_HandleID is %s", static_cast<std::string>(m_handleId).c_str());
         }
 
         PHandleBase(const PHandleBase& handle) = default;
@@ -22,7 +23,7 @@ namespace purity::fileIO{
 
 
         virtual ~PHandleBase() {
-            purity::PLog::echoMessage("Destroying Handle Base.");
+            commons::PLog::echoMessage("Destroying Handle Base.");
         }
 
     private:

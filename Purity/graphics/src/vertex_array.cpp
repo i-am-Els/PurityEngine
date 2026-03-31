@@ -5,6 +5,7 @@
 #include "vertex_array.h"
 #include "glad/glad.h"
 #include "log.h"
+using namespace commons;
 
 namespace purity::graphics{
     unsigned int VertexArray::vaoCount = 0;

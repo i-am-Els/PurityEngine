@@ -34,14 +34,16 @@ find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-#find_dependency(kubazip CONFIG)
-find_dependency(unofficial-minizip CONFIG)
+#find_dependency(unofficial-minizip CONFIG)
+find_package(zip CONFIG REQUIRED)
 find_dependency(pugixml CONFIG REQUIRED)
 find_dependency(poly2tri CONFIG)
 find_dependency(polyclipping CONFIG)
 find_dependency(RapidJSON CONFIG)
 find_dependency(utf8cpp CONFIG)
+find_dependency(poly2tri CONFIG)
 find_dependency(ZLIB REQUIRED)
+
 
 # TO ensure that targets are exported and included in Purity install
 set(GLAD_INSTALL ON)
@@ -81,7 +83,6 @@ add_library(Purity
         core/include/layer_service.h
         core/include/layer_service_conc.h
         core/include/layerMask.h
-        core/include/log.h
         core/include/papplication.h
         core/include/purity_core_pch.h
         core/include/purity_exceptions.h
@@ -146,7 +147,6 @@ add_library(Purity
         core/src/layer.cpp
         core/src/layer_service_conc.cpp
         core/src/layerMask.cpp
-        core/src/log.cpp
         core/src/papplication.cpp
         core/src/pobject.cpp
         core/src/system_finder.cpp

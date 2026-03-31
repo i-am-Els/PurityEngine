@@ -4,7 +4,7 @@
 
 #include "log.h"
 
-namespace purity {
+namespace commons {
 
     void PLog::echoMessage(const char *message, LogLevel _level) {
 

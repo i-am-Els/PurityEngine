@@ -5,6 +5,7 @@
 #pragma once
 #include "log.h"
 #include "input_def.h"
+using namespace commons;
 
 namespace purity {
 

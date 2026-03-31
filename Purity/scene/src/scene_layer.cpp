@@ -22,7 +22,7 @@ namespace purity::scene {
 
     void SceneLayer::make_new_scene_asset(std::shared_ptr<PLevelAsset>& scene_asset, std::string relScenePathString)
     {
-        // No default Scene was found, this is most likely(99%) a new project, Create one(A default scene file).
+        // No default Scene was found, this is most likely(99%) a new project, Create one (A default scene file).
         auto _scene =  PScene::CreateDefaultScene();
         if (!switchScene(std::move(_scene))) { throw exceptions::NullPointerError("Scene::CreateDefaultScene() returned nullptr."); }
 
@@ -40,7 +40,7 @@ namespace purity::scene {
         sceneRecord.createdAt = TimeManager::now_seconds();
         sceneRecord.modifiedAt = sceneRecord.createdAt;
 
-        scene_asset = assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord), QueryOperation::Write);
+        scene_asset = PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord), QueryOperation::Write);
     }
 
     void SceneLayer::attached()
@@ -67,11 +67,20 @@ namespace purity::scene {
                                                                    QueryOperation::Read);
             if (scene_asset == nullptr)
             {
-                // GO over the creation sub-routine
+                // GO over the creation subroutine
                 make_new_scene_asset(scene_asset, editorInfo.startUpSceneRelPath);
             }
         }
+        if (scene_asset == nullptr)
+        {
+            throw exceptions::NullPointerError("Failed to resolve a scene asset.");
+        }
 
+        // auto loaded_scene = scene_asset->loadScene();
+        // if (!switchScene(std::move(loaded_scene)))
+        // {
+        //     throw exceptions::NullPointerError("Failed to attach scene.");
+        // }
     }
 
     void SceneLayer::detached()

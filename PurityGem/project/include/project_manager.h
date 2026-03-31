@@ -20,11 +20,13 @@
 #include <nlohmann/json-schema.hpp>
 
 #include "content_index.h"
+#include "serialize_utilities.h"
 #include "../../../Purity/core/include/core_macros.h"
+#include "../../../Purity/fileIO/include/fileio.h"
 
 
 using fs_path = std::filesystem::path;
-
+using Database = commons::database::ContentIndex;
 
 namespace project {
 
@@ -84,8 +86,10 @@ namespace project {
 		PURE_NODISCARD bool _validateDBFile() const;
 		PURE_NODISCARD bool _createProjectFile() const;
 		PURE_NODISCARD fs_path _getDatabaseFilepath(const fs_path& assets_dir) const;
-		PURE_NODISCARD bool _createDBFile(const fs_path& assets_dir) const;
+		PURE_NODISCARD bool _createDBFile(const fs_path& assets_dir, Database& database, const std::string& query) const;
 		// commons::PUUID _createDefaultSceneFile(fs_path scenes_dir);
+		static std::string create_new_asset_map_table_query;
+
 	};
 }
 

@@ -1,11 +1,11 @@
 {
   "name": "purity-engine",
   "version-string": "1.0.0",
-  "builtin-baseline": "3efb786658a76002e78ac17ea1079585531b9638",
+  "builtin-baseline": "b5d1a94fb7f88fd835e360fd23a45a09ceedbf48",
   "dependencies": [
     {
       "name": "assimp",
-      "version>=": "5.4.3"
+      "version>=": "6.0.4"
     },
     {
       "name": "cereal",

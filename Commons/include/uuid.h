@@ -13,13 +13,19 @@ namespace commons{
     public:
         PUUID();
         explicit PUUID(uint64_t id);
-        PUUID(const PUUID& uuid);
 
         operator uint64_t() const { return m_UUID;}
         operator std::string() const {
             std::ostringstream stream;
             stream << m_UUID;
 //            stream << std::hex << std::setfill('0') << std::setw(16) << m_UUID;
+            return stream.str();
+        }
+
+        static std::string to_string(PUUID uuid)  {
+            std::ostringstream stream;
+            stream << uuid.m_UUID;
+            //            stream << std::hex << std::setfill('0') << std::setw(16) << uuid.m_UUID;
             return stream.str();
         }
 

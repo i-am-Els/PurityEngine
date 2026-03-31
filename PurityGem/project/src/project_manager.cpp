@@ -15,14 +15,17 @@
 #include <unordered_map>
 
 #include "time_manager.h"
+#include "log.h"
 
 using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 using Database = commons::database::ContentIndex;
+using namespace commons;
 
 
 namespace project {
+	std::string ProjectManager::create_new_asset_map_table_query = "";
 	ProjectManager::ProjectManager() : m_window{ nullptr }
 	{
 		m_pms = new ProjectManagerState{ ProjectSelectionChoice::SelectFromTemplate, { false, "", "", "", "", "" }, {} };
@@ -89,20 +92,20 @@ namespace project {
 		return pDBfilePath;
 	}
 
-	bool ProjectManager::_createDBFile(const fs_path& assets_dir) const
+	bool ProjectManager::_createDBFile(const fs_path& assets_dir, Database& database, const std::string& query) const
 	{
-		Database database;
-		database.create_or_open_db(_getDatabaseFilepath(assets_dir));
 
-		const std::string database_query_rel_path_name = m_pms->pDS.projectDir + "/Resources/query/create_new_asset_map_table.sql";
-		std::cout << "database_query_path: " << database_query_rel_path_name << std::endl;
-		const std::filesystem::path database_create_query = database_query_rel_path_name;
-		if (!database.execute(database_create_query))
+		if (!database.create_or_open_db(_getDatabaseFilepath(assets_dir)))
 		{
 			return false;
 		}
 
-		database.close_db();
+		if (!database.execute(query))
+		{
+			database.close_db();
+			return false;
+		}
+
 		return true;
 	}
 
@@ -231,42 +234,45 @@ namespace project {
 		std::filesystem::create_directory(script_dir);
 		std::filesystem::create_directory(config_dir);
 
-		// write pproject file, pedb and pscene files.
+		// write pproject file, pedb files.
 		if (!_createProjectFile())
 		{
 			failureReport("Failed to create project.");
 			return false;
 		}
-		// auto id = _createDefaultSceneFile(scene_dir);
-		// if (!id) {
-		// 	m_pms->pDS.successfulValidation = false;
-		// 	m_pms->pDS.statusMessage = "Scene ID is invalid";
-		//
-		// 	return false;
-		// }
-		// set startup scene in struct to default name 'Assets/Scenes/DefaultScene.pscene'
-		// m_pms->pDS.startupScene = "Assets/Scenes/DefaultScene.pscene"; // TODO : Remove these lines...
 
-		if (!_createDBFile(asset_dir))
+		create_new_asset_map_table_query = commons::fileIO::extractSourceFromFile("Resources/query/create_new_asset_map_table.sql");
+
+		Database database;
+		if (!_createDBFile(asset_dir, database, create_new_asset_map_table_query))
 		{
 			failureReport("Failed to create database file.");
 			return false;
 		}
-
-		// index project file
-		Database database;
-		database.create_or_open_db(_getDatabaseFilepath(asset_dir));
 
 		commons::AssetRecord projectAsset;
 		projectAsset.uuid = commons::PUUID();
 		projectAsset.name = m_pms->pDS.projectName;
 		projectAsset.assetType = commons::AssetType::ProjectAsset;
 		projectAsset.representation = commons::AssetRepresentation::Native;
-		projectAsset.metaPath = m_pms->pDS.filePath;
+		if (auto obj = to_project_relative(m_pms->pDS.filePath, m_pms->pDS.projectDir); obj.has_value())
+		{
+			projectAsset.metaPath = obj.value();
+		}
+		else
+		{
+			commons::PLog::echoMessage(commons::LogLevel::Error, "file %s cannot be converted to a relative path", m_pms->pDS.filePath.c_str());
+			return false;
+		}
 		projectAsset.createdAt = commons::TimeManager::now_seconds();
 		projectAsset.modifiedAt = commons::TimeManager::now_seconds();
 
-		database.insertAsset(projectAsset);
+		if(!database.insertAsset(projectAsset))
+		{
+			database.close_db();
+			failureReport("Failed to insert project asset.");
+			return false;
+		}
 		database.close_db();
 
 		m_pms->pDS.Log();
@@ -328,7 +334,7 @@ namespace project {
 
 	bool ProjectManager::_validateProjectFile() const
 	{
-		if (!commons::_validateFileExistence(m_pms->pDS.filePath) && !commons::_validateSchemaAdherence(m_pms->pDS.filePath, commons::pProjectSchema))
+		if (!commons::_validateFileExistence(m_pms->pDS.filePath) || !commons::_validateSchemaAdherence(m_pms->pDS.filePath, commons::pProjectSchema))
 		{ 
 			failureReport("Project File Validation Failed!, Ensure the file path exists and the '.pproject' file adheres to its schema specifications.");
 			return false; 

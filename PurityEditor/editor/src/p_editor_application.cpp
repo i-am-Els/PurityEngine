@@ -39,7 +39,10 @@ namespace editor {
         try {
             // Open database file.
             Database db;
-            db.create_or_open_db(pDBfilePath);
+            if (!db.create_or_open_db(pDBfilePath))
+            {
+                return false;
+            }
 
             DatabaseData dbData = db.readAllAssets(
                 [&](const AssetRecord& asset)
@@ -60,7 +63,10 @@ namespace editor {
                     storeValidAssets(asset.uuid, asset);
                     return true;
                 });
-            if (!dbData.empty()) { return false; }
+            if (dbData.empty())
+            {
+                return false;
+            }
             return true;
         }
         catch(const std::exception& e){
@@ -81,6 +87,13 @@ namespace editor {
     {
         if (!id) { return false; }
         std::filesystem::path assetfilePath = std::filesystem::path(m_projectEditorInfo.projectDir) / assetPath;
+        // figure out if asset is a pproject and use a different schema
+        if (commons::is_project_file(assetfilePath))
+        {
+            if (!commons::_validateFileExistence(assetfilePath) || !commons::_validateSchemaAdherence((assetfilePath.string()), commons::pProjectSchema)) { return false; }
+            return true;
+        }
+
         if (!commons::_validateFileExistence(assetfilePath) || !commons::_validateSchemaAdherence((assetfilePath.string()), commons::pAssetSchema)) { return false; }
         return true;
     }
@@ -92,7 +105,9 @@ namespace editor {
 
     void PEditorApplication::storeValidAssets(const PUUID& asset_id, const AssetRecord& asset_record)
     {
-        PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(asset_id).c_str(), "and path:", asset_record.metaPath.c_str(), "to the queue going to the asset database.");
+        // Do not add the Project file into the assetDBData map... that map represents the
+        if (asset_record.assetType == AssetType::ProjectAsset){ return; }
+        PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(asset_id).c_str(), "and path:", asset_record.metaPath.string().c_str(), "to the queue going to the asset database.");
         assetdbData[asset_id] = asset_record;
     }
 

@@ -26,6 +26,8 @@ add_library(Commons SHARED
         include/asset_record.h
         include/asset_enums.h
         include/time_manager.h
+        include/log.h
+        src/log.cpp
 )
 
 target_link_libraries(Commons PRIVATE nlohmann_json::nlohmann_json nlohmann_json_schema_validator::validator unofficial::sqlite3::sqlite3)

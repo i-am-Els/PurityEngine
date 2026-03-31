@@ -6,6 +6,7 @@
 #include "fileio.h"
 #include "log.h"
 
+using namespace commons;
 
 using namespace purity::fileIO;
 
