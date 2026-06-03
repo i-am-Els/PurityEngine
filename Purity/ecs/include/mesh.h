@@ -35,7 +35,7 @@ namespace purity::ecs{
         SMeshProfile m_MeshProfile;
 
     private:
-        assetDB::Ref<assetDB::PStaticMeshAsset>* meshHandle;
+        std::shared_ptr<assetDB::PStaticMeshAsset> meshHandle;
         static unsigned int s_count; // All components must have this
 
     protected:

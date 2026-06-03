@@ -5,6 +5,8 @@
 #include "mesh_importer.h"
 #include "log.h"
 
+using namespace commons;
+
 namespace purity::fileIO{
 
 
@@ -20,7 +22,7 @@ namespace purity::fileIO{
                                                    | aiProcess_MakeLeftHanded);
 
         if (nullptr == aiScene){
-            PLog::echoMessage(purity::LogLevel::Error, "%s %s", "Mesh Importer initialization failed", importer.GetErrorString());
+            PLog::echoMessage(commons::LogLevel::Error, "%s %s", "Mesh Importer initialization failed", importer.GetErrorString());
             return false;
         }
 

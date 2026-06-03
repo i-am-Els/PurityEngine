@@ -24,7 +24,7 @@ namespace purity::graphics
         PRendererService::exit();
     }
 
-    void PRendererService::preInit(const std::any& data)
+    void PRendererService::preInit(std::any& data)
     {
     }
 
@@ -146,7 +146,7 @@ namespace purity::graphics
 
     bool PRendererService::hasSomethingToRender() const noexcept
     {
-        return false;
+        // return false;
         auto scene = PSystemFinder::GetScene();
         if (scene == nullptr)
         {

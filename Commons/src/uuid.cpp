@@ -19,8 +19,4 @@ namespace commons{
     PUUID::PUUID(uint64_t id) : m_UUID(id){
 
     }
-
-    PUUID::PUUID(const PUUID& uuid) : m_UUID(uuid.m_UUID) {
-
-    }
 }

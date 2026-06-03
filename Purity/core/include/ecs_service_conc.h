@@ -4,9 +4,11 @@
 
 #pragma once
 
+#include <complex.h>
 #include <map>
 #include <utility>
 
+#include "content_index.h"
 #include "ecs_service.h"
 #include "id_comp.h"
 #include "mesh_system_conc.h"
@@ -138,7 +140,7 @@ namespace purity{
             return system_map;
         }
 
-        void preInit(const std::any& data) override;
+        void preInit(std::any& data) override;
         void postInit() override;
         void preRender() override;
         void postRender() override;

@@ -46,7 +46,6 @@ add_subdirectory(vendors/isle_math)
 add_subdirectory(vendors/ImGuiFileDialog)
 add_subdirectory(Commons)
 add_subdirectory(Purity)
-add_subdirectory(Game)
 add_subdirectory(PurityEditor)
 add_subdirectory(PurityGem)
 

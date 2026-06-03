@@ -8,6 +8,7 @@
 #include <memory>
 
 using namespace purity::graphics;
+using namespace commons;
 
 PShader::PShader() = default;
 

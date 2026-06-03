@@ -88,7 +88,7 @@ namespace purity
         PLayerService::exit();
     }
 
-    void PLayerService::preInit(const std::any& data)
+    void PLayerService::preInit(std::any& data)
     {
     }
 

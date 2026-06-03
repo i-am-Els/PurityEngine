@@ -95,7 +95,7 @@ The layout and key-value pair looks like so:
 - `"projectDB"`points to the asset database file in the project. 
 
 ### Purity Asset DB file `*.peDB`
-This DB file represents assets that need to be present in the assetDatabase at runtime and they are loaded on launch.
+> ~~This DB file represents assets that need to be present in the assetDatabase at runtime and they are loaded on launch.~~
 ```json
 {
   "id": "1234567890123456",
@@ -111,9 +111,13 @@ This DB file represents assets that need to be present in the assetDatabase at r
   ]
 }
 ```
-- `"assets"`is a list of pairs of asset `id` (_key_) and their relative `path`s(_value_). These assets are the `.puritya` files in the project directory.
+> - ~~`"assets"`is a list of pairs of asset `id` (_key_) and their relative `path`s(_value_). These assets are the `.puritya` files in the project directory.~~
 
-Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative `path`s(_value_).
+> ~~Note: In memory, assetDB is resolved to a map of `id` (_key_) to asset relative `path`s(_value_).~~
+
+All the above regarding AssetDB is scrapped.
+We have resorted to an SQLite3 database instead. 
+
 
 ### Purity scene description files `*.pscene`
 The structure of the scene file describes the hierarchical tree of entity transforms.

@@ -10,16 +10,22 @@
 #include <filesystem>
 #include <windows.h>
 
+#include <fstream>
 #include <iostream>
 #include <unordered_map>
-#include <fstream>
+
+#include "time_manager.h"
+#include "log.h"
 
 using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
+using Database = commons::database::ContentIndex;
+using namespace commons;
 
 
 namespace project {
+	std::string ProjectManager::create_new_asset_map_table_query = "";
 	ProjectManager::ProjectManager() : m_window{ nullptr }
 	{
 		m_pms = new ProjectManagerState{ ProjectSelectionChoice::SelectFromTemplate, { false, "", "", "", "", "" }, {} };
@@ -30,7 +36,7 @@ namespace project {
 		delete m_pms;
 	}
 
-	bool ProjectManager::extractProjectInformation(std::string projectDir, std::string projectName)
+	bool ProjectManager::extractProjectInformation(std::string projectDir, const std::string& projectName) const
 	{
 		fs_path projectPath = { projectDir };
 		if (!std::filesystem::is_directory(projectPath)) 
@@ -39,12 +45,12 @@ namespace project {
 			return false; 
 		}
 		projectDir = projectDir + "\\" + projectName;
-		std::string projectFilePath = projectDir + "\\" + projectName + ".pproject";
+		const std::string projectFilePath = projectDir + "\\" + projectName + ".pproject";
 		m_pms->pDS = { true, projectFilePath, projectName, projectDir, "Okay", "" };
 		return true;
 	}
 
-	bool ProjectManager::extractProjectInformation(std::string filePath) const
+	bool ProjectManager::extractProjectInformation(const std::string& filePath) const
 	{
 		fs_path _filepath = { filePath };
 		if (!std::filesystem::exists(_filepath)) 
@@ -58,12 +64,12 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::_createProjectFile() 
+	bool ProjectManager::_createProjectFile() const
 	{
 		// Define the default project JSON structure
 		json project_json = {
 			{"project_name", m_pms->pDS.projectName},
-			{"start_up_scene", "Assets/Scenes/DefaultScene.pscene"},
+			{"start_up_scene", ""},
 			{"projectDB", "Assets/" + m_pms->pDS.projectName + ".peDB"}
 		};
 		
@@ -79,74 +85,66 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::_createDBFile(fs_path assets_dir, commons::PUUID id)
+	fs_path ProjectManager::_getDatabaseFilepath(const fs_path& assets_dir) const
 	{
-		// Define the default database JSON structure
-		// Create the database JSON object with a unique id
-		json db_json = {
-			{"id", commons::PUUID()},  // Replace with your UUID generation function
-			{"assets", json::array()}  // Initialize assets as an empty array
-		};
-
-		// Add an asset to the assets array
-		db_json["assets"].push_back({
-			{"id", id},  // Replace with your asset's unique id
-			{"path", "Assets/Scenes/DefaultScene.pscene"}
-			});
-
-		// Output the JSON object
-		std::cout << db_json.dump(4) << std::endl;
-
-		std::string dbFileName = m_pms->pDS.projectName + ".peDB";
+		const std::string dbFileName = m_pms->pDS.projectName + ".peDB";
 		fs_path pDBfilePath = assets_dir / dbFileName;
-		std::fstream peDB_file(pDBfilePath.string(), std::ios::out | std::ios::trunc);
-		if (peDB_file.is_open()) {
-			peDB_file << db_json.dump(4); // Example placeholder
-			peDB_file.close();
-		}
-		else {
-			std::cerr << "Failed to create .peDB file!" << std::endl;
+		return pDBfilePath;
+	}
+
+	bool ProjectManager::_createDBFile(const fs_path& assets_dir, Database& database, const std::string& query) const
+	{
+
+		if (!database.create_or_open_db(_getDatabaseFilepath(assets_dir)))
+		{
 			return false;
 		}
+
+		if (!database.execute(query))
+		{
+			database.close_db();
+			return false;
+		}
+
 		return true;
 	}
 
-	commons::PUUID ProjectManager::_createDefaultSceneFile(fs_path scenes_dir)
-	{
-		// Define the scene database JSON structure
-		commons::PUUID id{};
-		json scene_json = {
-			{"id", id},
-			{"source", "scene"},
-			{"type_", "LevelAsset"},
-			{"data_", json::object()},
-			{"ref_assets", json::array() }
-		};
+	// commons::PUUID ProjectManager::_createDefaultSceneFile(fs_path scenes_dir)
+	// {
+	// 	// Define the scene database JSON structure
+	// 	commons::PUUID id{};
+	// 	json scene_json = {
+	// 		{"id", id},
+	// 		{"source", "scene"},
+	// 		{"type_", "LevelAsset"},
+	// 		{"data_", json::object()},
+	// 		{"ref_assets", json::array() }
+	// 	};
+	//
+	// 	fs_path psceneFilePath = scenes_dir / "DefaultScene.pscene";
+	// 	std::fstream pscene_file(psceneFilePath.string(), std::ios::out | std::ios::trunc);
+	// 	if (pscene_file.is_open()) {
+	// 		pscene_file << scene_json.dump(4); // Example placeholder
+	// 		pscene_file.close();
+	// 	}
+	// 	else {
+	// 		std::cerr << "Failed to create .pscene file!" << std::endl;
+	// 		return commons::PUUID(0);
+	// 	}
+	//
+	// 	return id;
+	// }
 
-		fs_path psceneFilePath = scenes_dir / "DefaultScene.pscene";
-		std::fstream pscene_file(psceneFilePath.string(), std::ios::out | std::ios::trunc);
-		if (pscene_file.is_open()) {
-			pscene_file << scene_json.dump(4); // Example placeholder
-			pscene_file.close();
-		}
-		else {
-			std::cerr << "Failed to create .pscene file!" << std::endl;
-			return commons::PUUID(0);
-		}
-
-		return id;
-	}
-
-	bool ProjectManager::_createEditorProcess()
+	bool ProjectManager::_createEditorProcess() const
 	{
 		char path[MAX_PATH];
-		GetModuleFileName(NULL, path, MAX_PATH);
+		GetModuleFileName(nullptr, path, MAX_PATH);
 
-		std::filesystem::path exeDir = std::filesystem::path(std::string(path)).parent_path();
+		const std::filesystem::path exeDir = std::filesystem::path(std::string(path)).parent_path();
 
-		std::string editorName = "PurityEditor.exe";
+		const std::string editorName = "PurityEditor.exe";
 
-		auto editorPath = (exeDir / editorName).string();
+		const auto editorPath = (exeDir / editorName).string();
 
 		if (!std::filesystem::exists(editorPath)) {
 			std::cerr << "Editor not found at: " << editorPath << std::endl;
@@ -177,14 +175,14 @@ namespace project {
 		PROCESS_INFORMATION pi;
 
 		if (CreateProcess(
-			NULL,
+			nullptr,
 			&commandLine[0],
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			FALSE,
 			0,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			&si,
 			&pi
 		)) {
@@ -198,7 +196,7 @@ namespace project {
 		return true;
 	}
 
-	bool ProjectManager::createProject(std::string projectDir, std::string fileName)
+	bool ProjectManager::createProject(const std::string& projectDir, const std::string& fileName) const
 	{
 		if (!extractProjectInformation(projectDir, fileName)) 
 		{ 
@@ -206,21 +204,17 @@ namespace project {
 			return false; 
 		}
 		bool skipDirCreation = false;
-		auto project_dir_path = fs_path(m_pms->pDS.projectDir);
+		const auto project_dir_path = fs_path(m_pms->pDS.projectDir);
 		// Project Dir Path may or may not already exist
 		// If it exists, then it must be an empty directory.
 		if (std::filesystem::exists(project_dir_path))
 		{
 			if (!std::filesystem::is_directory(project_dir_path)) {
-				m_pms->pDS.successfulValidation = false;
-				m_pms->pDS.statusMessage = "Path is probably not a directory.";
-				m_pms->pDS.Log();
+				failureReport("Path is probably not a directory.");
 				return false;
 			}
 			if (!std::filesystem::is_empty(project_dir_path)) {
-				m_pms->pDS.successfulValidation = false;
-				m_pms->pDS.statusMessage = "Path is not empty!, it is fine that the folder already exists, just keep it empty.";
-				m_pms->pDS.Log();
+				failureReport("Path is not empty!, it is fine that the folder already exists, just keep it empty.");
 				return false;
 			}
 			skipDirCreation = true;
@@ -228,11 +222,11 @@ namespace project {
 
 		if (!skipDirCreation) { std::filesystem::create_directory(project_dir_path); }
 		// create asset folder and inner folders
-		auto asset_dir = project_dir_path / "Assets";
-		auto prefabs_dir = asset_dir / "Prefabs";
-		auto scene_dir = asset_dir / "Scenes";
-		auto script_dir = project_dir_path / "Scripts";
-		auto config_dir = project_dir_path / "Config";
+		const auto asset_dir = project_dir_path / "Assets";
+		const auto prefabs_dir = asset_dir / "Prefabs";
+		const auto scene_dir = asset_dir / "Scenes";
+		const auto script_dir = project_dir_path / "Scripts";
+		const auto config_dir = project_dir_path / "Config";
 
 		std::filesystem::create_directory(asset_dir);
 		std::filesystem::create_directory(prefabs_dir);
@@ -240,78 +234,121 @@ namespace project {
 		std::filesystem::create_directory(script_dir);
 		std::filesystem::create_directory(config_dir);
 
-		// write pproject file, pedb and pscene files.
-		_createProjectFile();
-		auto id = _createDefaultSceneFile(scene_dir);
-		if (!id) { 
-			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Scene ID is invalid";
-			
-			return false; 
+		// write pproject file, pedb files.
+		if (!_createProjectFile())
+		{
+			failureReport("Failed to create project.");
+			return false;
 		}
-		_createDBFile(asset_dir, id);
 
-		// set startup scene in struct to default name 'Assets/Scenes/DefaultScene.pscene'
-		m_pms->pDS.startupScene = "Assets/Scenes/DefaultScene.pscene";
+		create_new_asset_map_table_query = commons::fileIO::extractSourceFromFile("Resources/query/create_new_asset_map_table.sql");
+
+		Database database;
+		if (!_createDBFile(asset_dir, database, create_new_asset_map_table_query))
+		{
+			failureReport("Failed to create database file.");
+			return false;
+		}
+
+		commons::AssetRecord projectAsset;
+		projectAsset.uuid = commons::PUUID();
+		projectAsset.name = m_pms->pDS.projectName;
+		projectAsset.assetType = commons::AssetType::ProjectAsset;
+		projectAsset.representation = commons::AssetRepresentation::Native;
+		if (auto obj = to_project_relative(m_pms->pDS.filePath, m_pms->pDS.projectDir); obj.has_value())
+		{
+			projectAsset.metaPath = obj.value();
+		}
+		else
+		{
+			commons::PLog::echoMessage(commons::LogLevel::Error, "file %s cannot be converted to a relative path", m_pms->pDS.filePath.c_str());
+			return false;
+		}
+		projectAsset.createdAt = commons::TimeManager::now_seconds();
+		projectAsset.modifiedAt = commons::TimeManager::now_seconds();
+
+		if(!database.insertAsset(projectAsset))
+		{
+			database.close_db();
+			failureReport("Failed to insert project asset.");
+			return false;
+		}
+		database.close_db();
 
 		m_pms->pDS.Log();
 		return true;
 	}
 
-	bool ProjectManager::launchProject(std::string filePath)
+	void ProjectManager::failureReport(const char* message) const
+	{
+		m_pms->pDS.successfulValidation = false;
+		m_pms->pDS.statusMessage = message;
+		m_pms->pDS.Log();
+	}
+
+	bool ProjectManager::launchProject(const std::string& filePath) const
 	{
 		if (!extractProjectInformation(filePath))
 		{
-			m_pms->pDS.Log();
+			failureReport("Failed to Extract project information from file");
 			return false;
 		}
 		if (!_validateProjectFile()) { return false; }
 
-		std::ifstream data(m_pms->pDS.filePath);
-		json data_json = json::parse(data);
+		std::ifstream data(m_pms->pDS.filePath.c_str());
+		if (!data.is_open()) {
+			return false;
+		}
+		json data_json;
+		try {
+			// data >> data_json;
+			data_json = json::parse(data);
+		} catch (const json::parse_error& e) {
+			auto errmsg = std::format("JSON parse failed: {}", e.what());
+			failureReport(errmsg.c_str());
+			return false;
+		}
+
 		if (data_json["project_name"] != m_pms->pDS.projectName) 
 		{
-			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Project Name Mismatch!, Ensure that '.pproject' file, project folder and the internally stored projoct name share the same name.";
-			m_pms->pDS.Log();
+			failureReport("Project Name Mismatch!, Ensure that '.pproject' file, project folder and the internally stored projoct name share the same name.");
 			return false;
 		}
 
 		std::string pDBfilePath = "Assets/" + m_pms->pDS.projectName + ".peDB";
 		if (data_json["projectDB"] != pDBfilePath)
 		{
-			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Project DataBase File Path Mismatch!, Ensure that '.peDB' file's relative path is correct.";
-			m_pms->pDS.Log();
+			failureReport("Project DataBase File Path Mismatch!, Ensure that '.peDB' file's relative path is correct.");
 			return false;
 		}
-		if (!_validateDBFile()) { return false; }
+		if (!_validateDBFile())
+		{
+			failureReport("Database Validation failed.");
+			return false;
+		}
 		m_pms->pDS.startupScene = data_json["start_up_scene"];
+
 		m_pms->pDS.Log();
 		return true;
 	}
 
-	bool ProjectManager::_validateProjectFile()
+	bool ProjectManager::_validateProjectFile() const
 	{
-		if (!commons::_validateFileExistence(m_pms->pDS.filePath) && !commons::_validateSchemaAdherence(m_pms->pDS.filePath, commons::pProjectSchema))
+		if (!commons::_validateFileExistence(m_pms->pDS.filePath) || !commons::_validateSchemaAdherence(m_pms->pDS.filePath, commons::pProjectSchema))
 		{ 
-			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Project File Validation Failed!, Ensure the file path exists and the '.pproject' file adheres to its schema specifications.";
-			m_pms->pDS.Log();
+			failureReport("Project File Validation Failed!, Ensure the file path exists and the '.pproject' file adheres to its schema specifications.");
 			return false; 
 		}
 		return true;
 	}
 
-	bool ProjectManager::_validateDBFile()
+	bool ProjectManager::_validateDBFile() const
 	{
-		std::string pDBfilePath = m_pms->pDS.projectDir + "/Assets/" + m_pms->pDS.projectName + ".peDB";
+		const std::string pDBfilePath = m_pms->pDS.projectDir + "/Assets/" + m_pms->pDS.projectName + ".peDB";
 		std::cout << pDBfilePath << std::endl;
-		if (!commons::_validateFileExistence(pDBfilePath) || !commons::_validateSchemaAdherence(pDBfilePath, commons::pDatabaseSchema))
+		if (!commons::_validateFileExistence(pDBfilePath))
 		{
-			m_pms->pDS.successfulValidation = false;
-			m_pms->pDS.statusMessage = "Project Database File Validation Failed!, Ensure the database file path exists in '/Assets/' and that the '.peDB' file adheres to its schema specifications.";
-			m_pms->pDS.Log();
+			failureReport("Project Database File Validation Failed!, Ensure the database file path exists in '/Assets/' and that the '.peDB' file adheres to its schema specifications.");
 			return false; 
 		}
 		return true;
@@ -319,7 +356,7 @@ namespace project {
 }
 
 // Call this function inside your ImGui render loop
-void RaiseErrorMessageBox(project::ProjectManager* projectManager) {
+void RaiseErrorMessageBox(const project::ProjectManager* projectManager) {
 	ImGui::OpenPopup("Error");
 
 	// Center the pop-up in the application window
@@ -342,13 +379,13 @@ void RaiseErrorMessageBox(project::ProjectManager* projectManager) {
 			ImGui::CloseCurrentPopup();
 		}
 
-		ImGui::SetItemDefaultFocus(); // Auto-focus on the OK button
+		ImGui::SetItemDefaultFocus(); // Autofocus on the OK button
 
 		ImGui::EndPopup();
 	}
 }
 
-void ShowNewProjectTab(project::ProjectManager* projectManager) {
+void ShowNewProjectTab(const project::ProjectManager* projectManager) {
 	if (ImGui::BeginTabItem("New Project"))
 	{
 		projectManager->m_pms->selectionChoice = project::ProjectSelectionChoice::SelectFromTemplate;
@@ -515,12 +552,22 @@ int main(int argc, char* argv[]) {
 	}
 	if (argc >= 3) {
 		if ((std::string(argv[1]) == "--create" || std::string(argv[1]) == "-c") && argc == 4) {
-			projectManager.createProject(std::string(argv[2]), std::string(argv[3]));
+			if (!projectManager.createProject(std::string(argv[2]), std::string(argv[3])))
+			{
+				if (projectManager.m_pms->pmp.show_error_popup){
+					RaiseErrorMessageBox(&projectManager);
+				}
+			}
 			std::cout << "Project Created Successfully!" << std::endl; 
 			return 0;
 		}
 		else if ((std::string(argv[1]) == "--launch" || std::string(argv[1]) == "-l") && argc == 3) {
-			projectManager.launchProject(std::string(argv[2]));
+			if (!projectManager.launchProject(std::string(argv[2])))
+			{
+				if (projectManager.m_pms->pmp.show_error_popup){
+					RaiseErrorMessageBox(&projectManager);
+				}
+			}
 			std::cout << "Project Launched Successfully!" << std::endl;
 			return 0;
 		}
@@ -536,7 +583,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	const char* glsl_version = "#version 330";
+	auto glsl_version = "#version 330";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -607,7 +654,10 @@ int main(int argc, char* argv[]) {
 				// Open Recent Tab
 				ShowOpenExistingProjectTab(&projectManager);
 
-				if (showTemplate = projectManager.m_pms->selectionChoice == project::ProjectSelectionChoice::SelectFromTemplate ? true : false)
+				if ((showTemplate = projectManager.m_pms->selectionChoice ==
+				                    project::ProjectSelectionChoice::SelectFromTemplate
+					                    ? true
+					                    : false))
 				{
 					ShowTemplateWindow(&projectManager);
 				}

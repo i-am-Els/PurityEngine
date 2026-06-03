@@ -13,7 +13,7 @@ namespace purity
 {
     // if serializable should have an id, then implement identifable alongside this.
     class PURITY_API ISerializable //: public std::enable_shared_from_this<ISerializable>
-    {
+    {// TODO: We expect that serialisables should be created by the create() function call
     public:
         commons::PUUID id;
 

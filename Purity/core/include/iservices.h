@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <complex.h>
+
+#include "content_index.h"
 #include "purity_core_pch.h"
 
 #define PNT_TYPE_INDEX_DEF() template<typename T>\
@@ -25,7 +28,7 @@ namespace purity{
 
     class PURITY_API IInitializableService {
     public:
-        virtual void preInit(const std::any& data) = 0;
+        virtual void preInit(std::any& data) = 0;
         virtual void init() = 0;
         virtual void postInit() = 0;
         virtual ~IInitializableService() = default;

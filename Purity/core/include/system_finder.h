@@ -15,6 +15,10 @@ namespace purity{
     class PWindow;
     class PServiceLocator;
     class PECSService;
+    namespace assetDB
+    {
+        class PAssetDatabase;
+    }
 
     namespace graphics
     {
@@ -41,13 +45,12 @@ namespace purity{
 
         static std::shared_ptr<PServiceLocator> GetServiceLocator();
 
+        static assetDB::PAssetDatabase* GetAssetDatabase();
+
     private:
         static PApplication* application;
 
         static std::shared_ptr<PWindow> window;
-        static scene::PScene* scene;
-        static PECSService* ecsService;
-        static graphics::PRendererService* rendererService;
         static std::shared_ptr<PServiceLocator> serviceLocator;
     };
 

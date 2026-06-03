@@ -8,6 +8,7 @@
 #include <functional>
 #include <vector>
 #include <cereal/archives/json.hpp>
+#include "assetdb_utility.h"
 #include "object_registry.h"
 
 namespace purity
@@ -38,7 +39,8 @@ namespace purity
         template<typename T>
         static void save(const std::shared_ptr<T>& obj, const std::string& path)
         {
-            std::ofstream file(path);
+            std::filesystem::path f_path = assetDB::PAssetDBUtility::resolveProjectPath(path);
+            std::ofstream file(f_path.string());
             cereal::JSONOutputArchive ar(file);
             obj->Serialize(ar);
         }

@@ -50,3 +50,5 @@
 #ifdef PURITY_SYSTEM_FINDER
 #include "system_finder.h"
 #endif
+
+using fs_path = std::filesystem::path;

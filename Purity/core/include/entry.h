@@ -5,6 +5,7 @@
 #pragma once
 
 #include "papplication.h"
+using namespace commons;
 
 constexpr int WIN_WIDTH = 1024;
 constexpr int WIN_HEIGHT = 512;
@@ -29,8 +30,8 @@ PURITY_API int main(int argc, const char* argv[]){
                 std::string(argv[3]) != "--startUpScene"
                 && std::string(argv[3]) != "-s"
             ) 
-            || 
-                std::string(argv[4]).empty()
+            // ||
+            //     std::string(argv[4]).empty()
             )
         {
             std::cout << "Unknown token" << std::endl;
@@ -39,7 +40,20 @@ PURITY_API int main(int argc, const char* argv[]){
         }
 
         auto projectFilePath = std::string(argv[2]);
-        auto startUpScene = std::string(argv[4]);
+
+        // plug in the value into
+        std::string scene_path = std::string(argv[4]);
+        if (std::string(argv[4]).empty())
+        {
+            PLog::echoMessage("No StartUp Scene Specified");
+            // FInd default scene and use it instead
+            scene_path = "Assets/Scenes/DefaultScene.pscene";
+            if(!commons::_validateFileExistence(scene_path))
+            {
+                PLog::echoMessage("Default Scene Does Not Exist");
+            }
+        }
+        auto startUpScene = scene_path;
         purity::PApplication::ProjectEditorInfo peInfo(projectFilePath, startUpScene);
         purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), WIN_WIDTH, WIN_HEIGHT);
         std::cout << "Project Name: " << appInfo.title << std::endl;
@@ -53,7 +67,7 @@ PURITY_API int main(int argc, const char* argv[]){
         return 1;
     }
 #else
-    purity::PApplication::ProjectEditorInfo peInfo("C:\\Dev\\PurityEngine\\TestGame\\TestGame.pproject", "Assets/Scenes/DefaultScene.pscene");
+    purity::PApplication::ProjectEditorInfo peInfo("C:\\Dev\\PurityEngine\\TestGame\\TestGame.pproject", "");
     purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), WIN_WIDTH, WIN_HEIGHT);
     std::cout << "Project Name: " << appInfo.title << std::endl;
     application = purity::CreateApplication();
@@ -62,7 +76,7 @@ PURITY_API int main(int argc, const char* argv[]){
 #endif
 
     if (!application->verify()) {
-        purity::PLog::echoMessage("Verification Process Failed", purity::LogLevel::Error);
+        commons::PLog::echoMessage("Verification Process Failed", commons::LogLevel::Error);
         return 1;
     }
 

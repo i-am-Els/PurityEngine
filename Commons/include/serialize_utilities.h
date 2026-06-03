@@ -24,44 +24,13 @@ namespace commons{
 			},
 			"start_up_scene" : {
 				"type": "string",
-				"default": "Assets/Scenes/DefaultScene.pscene"
+				"default": ""
 			},
 			"projectDB" : {
 				"type": "string"
 			}
 		},
 		"required": ["project_name", "projectDB"]
-	})"_json;
-
-	const json pDatabaseSchema = R"(
-	{
-		"$schema": "http://json-schema.org/draft-07/schema#",
-		"type": "object",
-		"properties": {
-		  "id": {
-			"type": "string"
-		  },
-		  "assets": {
-			"type": "array",
-			"items": {
-			  "$ref": "#/definitions/Asset"
-			}
-		  }
-		},
-		"required": ["id", "assets"],
-		"definitions": {
-		  "Asset": {
-			"type": "object",
-			"properties": {
-			  "id": {
-				"type": "string"
-			  },
-			  "path": {
-				"type": "string"
-			  }
-			}
-		  }
-		}
 	})"_json;
 
 	const json pAssetSchema = R"(
@@ -123,9 +92,23 @@ namespace commons{
 	bool COMMON_API _validateFileExistence(const std::filesystem::path& path);
 	bool COMMON_API _validateSchemaAdherence(const std::string& path, const json& schema);
 
+	bool COMMON_API is_project_file(const std::filesystem::path& path);
+
+	std::optional<std::filesystem::path> COMMON_API to_project_relative(
+	const std::filesystem::path& absPath,
+	const std::filesystem::path& projectRoot);
+
+	std::optional<std::filesystem::path> COMMON_API to_project_relative(
+	const std::string& absPath,
+	const std::string& projectRoot);
+
 	namespace fileIO
 	{
 		std::string COMMON_API extractSourceFromFile(const char *path);
 		std::optional<json> COMMON_API extractSourceFromJSON(const char *path);
+
 	}
+
+
+	// Create Scene File from default template.
 }

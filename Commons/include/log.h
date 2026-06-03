@@ -4,22 +4,22 @@
 
 #pragma once
 
-#include "core_macros.h"
+#include "common_macros.h"
 #include <iostream>
 #include <cstdarg>
 
-namespace purity {
-    enum class PURITY_API LogLevel{
+namespace commons {
+    enum class COMMON_API LogLevel{
         Error = 0, Warning, Info
     };
 
-    class PURITY_API PLog {
+    class COMMON_API PLog {
     private:
         PLog();
         static std::string stringifyLogLevel(LogLevel x);
     public:
         static LogLevel level;
-        PURE_NODISCARD static PLog& getInstance();
+        [[nodiscard]] static PLog& getInstance();
         static void echoMessage(const char* message, LogLevel _level = LogLevel::Info);
         static void echoMessage(LogLevel _level = LogLevel::Info, const char* message = "", ...);
 

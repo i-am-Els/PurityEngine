@@ -6,6 +6,8 @@
 #include "fileio.h"
 #include "log.h"
 
+using namespace commons;
+
 namespace purity::fileIO{
 
     /// @brief Extract Source code from file.

@@ -13,15 +13,20 @@
 
 #include "ImGuiFileDialog.h"
 #include <iostream>
-#include <string.h>
+#include <cstring>
 
 
 #include <nlohmann/json.hpp>
 #include <nlohmann/json-schema.hpp>
 
+#include "content_index.h"
+#include "serialize_utilities.h"
+#include "../../../Purity/core/include/core_macros.h"
+#include "../../../Purity/fileIO/include/fileio.h"
+
 
 using fs_path = std::filesystem::path;
-
+using Database = commons::database::ContentIndex;
 
 namespace project {
 
@@ -41,18 +46,18 @@ namespace project {
 	struct ProjectDataStructure
 	{
 		bool successfulValidation = false;
-		std::string filePath = "";
-		std::string projectName = "";
-		std::string projectDir = "";
-		std::string statusMessage = "";
-		std::string startupScene = "";
+		std::string filePath;
+		std::string projectName;
+		std::string projectDir;
+		std::string statusMessage;
+		std::string startupScene;
 
 		void Log() const {
 			std::cout << "Status: " << statusMessage << std::endl;
 		}
 	};
 
-	std::ostream& operator<<(std::ostream& os, const ProjectDataStructure& pDS) {
+	inline std::ostream& operator<<(std::ostream& os, const ProjectDataStructure& pDS) {
 		os << "Project Data Structure \n{ \n\tValidated: " << pDS.successfulValidation << ", \n\tFile Path: \"" << pDS.filePath << "\", \n\tProject Name: \"" << pDS.projectName << "\", \n\tProject Dir: \"" << pDS.projectDir << "\", \n\tStartup Scene: \"" << pDS.startupScene << "\", \n\tStatus Message: \"" << pDS.statusMessage << "\"\n}" << std::endl;
 		return os;  // Return the stream to allow chaining
 	}
@@ -68,19 +73,23 @@ namespace project {
 	public:
 		ProjectManager();
 		~ProjectManager();
-		bool extractProjectInformation(std::string projectDir, std::string fileName);
-		bool extractProjectInformation(std::string filePath) const;
-		bool createProject(std::string projectDir, std::string fileName);
-		bool launchProject(std::string filePath);
+		PURE_NODISCARD bool extractProjectInformation(std::string projectDir, const std::string& fileName) const;
+		PURE_NODISCARD bool extractProjectInformation(const std::string& filePath) const;
+		PURE_NODISCARD bool createProject(const std::string& projectDir, const std::string& fileName) const;
+		void failureReport(const char* message) const;
+		PURE_NODISCARD bool launchProject(const std::string& filePath) const;
 		GLFWwindow* m_window;
 		ProjectManagerState* m_pms;
-		bool _createEditorProcess();
+		PURE_NODISCARD bool _createEditorProcess() const;
 	private:
-		bool _validateProjectFile();
-		bool _validateDBFile();
-		bool _createProjectFile();
-		bool _createDBFile(fs_path assets_dir, commons::PUUID id);
-		commons::PUUID _createDefaultSceneFile(fs_path scenes_dir);
+		PURE_NODISCARD bool _validateProjectFile() const;
+		PURE_NODISCARD bool _validateDBFile() const;
+		PURE_NODISCARD bool _createProjectFile() const;
+		PURE_NODISCARD fs_path _getDatabaseFilepath(const fs_path& assets_dir) const;
+		PURE_NODISCARD bool _createDBFile(const fs_path& assets_dir, Database& database, const std::string& query) const;
+		// commons::PUUID _createDefaultSceneFile(fs_path scenes_dir);
+		static std::string create_new_asset_map_table_query;
+
 	};
 }
 

@@ -8,7 +8,7 @@ project(PurityEngine:Purity VERSION 0.1.2 LANGUAGES CXX)
 #project(PurityEngine VERSION 0.1.2 LANGUAGES CXX)
 
 # Set the C++ standard/version that should be used
-#set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 
 set(BUILD_SHARED_LIBS ON)
 
@@ -34,14 +34,16 @@ find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-find_dependency(kubazip CONFIG)
-find_dependency(unofficial-minizip CONFIG)
+#find_dependency(unofficial-minizip CONFIG)
+find_package(zip CONFIG REQUIRED)
 find_dependency(pugixml CONFIG REQUIRED)
 find_dependency(poly2tri CONFIG)
 find_dependency(polyclipping CONFIG)
 find_dependency(RapidJSON CONFIG)
 find_dependency(utf8cpp CONFIG)
+find_dependency(poly2tri CONFIG)
 find_dependency(ZLIB REQUIRED)
+
 
 # TO ensure that targets are exported and included in Purity install
 set(GLAD_INSTALL ON)
@@ -62,13 +64,11 @@ add_library(Purity
         artifacts/data_hash_table.h
         artifacts/tags.h
         #--------------------------------
-        assetDB/include/assetdb_enums.h
         assetDB/include/assetdb_query_specs.h
         assetDB/include/assetdb_service_conc.h
         assetDB/include/assetdb_type_strategy.h
         assetDB/include/assetdb_utility.h
         assetDB/include/assets_types.h
-        assetDB/include/ref_counted.h
         #--------------------------------
         core/include/assetdb_service.h
         core/include/core_macros.h
@@ -83,7 +83,6 @@ add_library(Purity
         core/include/layer_service.h
         core/include/layer_service_conc.h
         core/include/layerMask.h
-        core/include/log.h
         core/include/papplication.h
         core/include/purity_core_pch.h
         core/include/purity_exceptions.h
@@ -148,7 +147,6 @@ add_library(Purity
         core/src/layer.cpp
         core/src/layer_service_conc.cpp
         core/src/layerMask.cpp
-        core/src/log.cpp
         core/src/papplication.cpp
         core/src/pobject.cpp
         core/src/system_finder.cpp
@@ -187,14 +185,16 @@ add_library(Purity
         #--------------------------------
         scene/include/scene_layer.h
         core/include/ISerializable.h
-#        core/include/object_registry.h
-#        core/include/serializer.h
+        core/include/object_registry.h
+        core/include/serializer.h
         core/include/serialization_macros.h
         ecs/include/weak_ptr_utility.h
-#        core/src/object_registry.cpp
+        core/src/object_registry.cpp
+        core/src/serializer.cpp
         scene/src/scene.cpp
         scene/src/scene_layer.cpp
-#        core/src/serializer.cpp
+        assetDB/src/asset_registry.cpp
+        assetDB/include/asset_registry.h
 )
 
 target_sources(

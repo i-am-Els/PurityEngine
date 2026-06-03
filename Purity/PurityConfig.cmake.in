@@ -14,7 +14,7 @@ find_dependency(glfw3 REQUIRED)
 find_dependency(cereal REQUIRED)
 find_dependency(assimp REQUIRED)
 
-find_dependency(kubazip CONFIG)
+# find_dependency(kubazip CONFIG)
 find_dependency(unofficial-minizip CONFIG)
 find_dependency(pugixml CONFIG REQUIRED)
 find_dependency(poly2tri CONFIG)

@@ -4,6 +4,8 @@
 
 #include "assets_types.h"
 
+#include "scene.h"
+
 namespace purity::assetDB
 {
 	void PTextureAsset::Serialize(cereal::JSONOutputArchive& ar) const
@@ -96,10 +98,42 @@ namespace purity::assetDB
 
 	void PLevelAsset::Serialize(cereal::JSONOutputArchive& ar) const
 	{
+		// if (!m_scene) return;
+		//
+		// ar(cereal::make_nvp("SceneName", m_scene->getName()));
+		// ar(cereal::make_nvp("Version", m_scene->getVersion()));
+		// ar(cereal::make_nvp("NodeCount", m_scene->GetNodeCount()));
+		//
+		// for (size_t i = 0; i < m_scene->GetNodeCount(); ++i)
+		// {
+		// 	const auto& node = m_scene->GetNode(i);
+		// 	ar(cereal::make_nvp("Node_" + std::to_string(i), node));
+		// }
 	}
 
 	void PLevelAsset::Deserialize(cereal::JSONInputArchive& ar)
 	{
+		// if (!m_scene)
+		// 	return; // Scene should exist
+		//
+		// std::string sceneName;
+		// int version;
+		// size_t nodeCount;
+		//
+		// ar(cereal::make_nvp("SceneName", sceneName));
+		// ar(cereal::make_nvp("Version", version));
+		// ar(cereal::make_nvp("NodeCount", nodeCount));
+		//
+		// m_scene->setName(sceneName);
+		// m_scene->SetVersion(version);
+		// m_scene->ResizeNodeContainer(nodeCount);
+		//
+		// for (size_t i = 0; i < nodeCount; ++i)
+		// {
+		// 	SceneNode node;
+		// 	ar(cereal::make_nvp("Node_" + std::to_string(i), node));
+		// 	m_scene->SetNode(i, std::move(node));
+		// }
 	}
 
 	void PParticleAsset::Serialize(cereal::JSONOutputArchive& ar) const
