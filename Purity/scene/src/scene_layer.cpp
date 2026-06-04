@@ -28,8 +28,8 @@ namespace purity::scene {
 
         // Better still rely on AssetDatabase to achieve this. Hoping it writes to DB on your behalf
         AssetRecord sceneRecord;
-        sceneRecord.uuid = _scene->getID();
-        sceneRecord.name = _scene->getName();
+        sceneRecord.uuid = attached_scene->getID();
+        sceneRecord.name = attached_scene->getName();
         sceneRecord.assetType = AssetType::LevelAsset;
         sceneRecord.representation = AssetRepresentation::Native;
         sceneRecord.metaPath = relScenePathString;   // points to the serialized scene file
