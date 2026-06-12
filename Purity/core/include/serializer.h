@@ -25,7 +25,8 @@ namespace purity
         template <typename T>
         static std::shared_ptr<T> load(const std::string& path)
         {
-            std::ifstream file(path);
+            std::filesystem::path f_path = assetDB::PAssetDBUtility::resolveProjectPath(path); 
+            std::ifstream file(f_path);
             cereal::JSONInputArchive ar(file);
 
             static_assert(std::is_base_of_v<ISerializable, T>);

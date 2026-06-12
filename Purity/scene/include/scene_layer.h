@@ -8,7 +8,7 @@
 
 namespace purity::scene {
 
-class PURITY_API SceneLayer final : public purity::PLayer{
+class PURITY_API SceneLayer final : public PLayer{
 
     friend class PLayerService;
 public:

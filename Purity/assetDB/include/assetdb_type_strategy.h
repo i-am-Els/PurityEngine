@@ -9,7 +9,7 @@
 #include "assets_types.h"
 #include "papplication.h"
 
-using namespace purity::fileIO;
+//using namespace purity::fileIO;
 
 namespace purity::assetDB
 {
@@ -225,7 +225,32 @@ namespace purity::assetDB
         }
 
         ~AssetOperationStrategy() = default;
-        std::shared_ptr<PLevelAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PLevelAsset> ReadOperation() 
+        { 
+            std::shared_ptr<PLevelAsset> levelAsset;
+            try
+            {
+                auto levelAsset_obj = ObjectRegistry::findObject(this->spec.assetRecord.uuid);
+                if (levelAsset_obj == nullptr) { 
+                    throw exceptions::NullPointerError("Asset Pointer is null, you might need to load it into runtime environment... \nLoading...");
+                    /// TODO : Assumption is that this fella below will pull the fully serialised data into proper struct.
+                    levelAsset = Serializer::load<PLevelAsset>(spec.assetRecord.metaPath.string());
+                    //levelAsset->setID(this->spec.assetRecord.uuid);
+
+                }
+                levelAsset = dynamic_pointer_cast<PLevelAsset>(levelAsset_obj);
+                if (levelAsset == nullptr) {
+                    throw exceptions::NullPointerError("Type Mismatch");
+                }
+
+            }
+            catch (const std::exception& e) {
+                PLog::echoMessage(e.what(), LogLevel::Error);
+                return nullptr;
+            }
+
+            return levelAsset; 
+        }
 
         std::shared_ptr<PLevelAsset> WriteOperation()
         {
@@ -281,4 +306,36 @@ namespace purity::assetDB
         QuerySpec<PRenderMapAsset> spec;
     };
 
+
+    template<>
+    class PURITY_API AssetOperationStrategy<PProjectAsset>
+    {
+    public:
+        explicit AssetOperationStrategy(const QuerySpec<PProjectAsset>& _spec)
+            : spec(_spec)
+        {
+        }
+
+        ~AssetOperationStrategy() = default;
+        std::shared_ptr<PProjectAsset> ReadOperation() { return {}; }
+        std::shared_ptr<PProjectAsset> WriteOperation() { return {}; }
+
+        std::shared_ptr<PProjectAsset> UpdateOperation() { 
+            // Define the default project JSON structure 
+
+            auto projectAsset = assetDB::PProjectAsset::create();
+            projectAsset->setID(this->spec.assetRecord.uuid);
+
+            projectAsset->project_name = spec.assetRecord.name;
+            projectAsset->start_up_scene = spec.startup_scene_path;
+            projectAsset->projectDB = "Assets/" + spec.assetRecord.name + ".peDB";
+            // Serialize to disk
+            Serializer::save(projectAsset, spec.assetRecord.metaPath.string());
+
+            return projectAsset;
+        }
+
+        std::shared_ptr<PProjectAsset> DeleteOperation() { return {}; }
+        QuerySpec<PProjectAsset> spec;
+    };
 }

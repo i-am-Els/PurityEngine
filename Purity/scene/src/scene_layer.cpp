@@ -4,7 +4,7 @@
 
 #include "scene_layer.h"
 
-#include "papplication.h"
+//#include "papplication.h"
 #include "assetdb_service_conc.h"
 #include "time_manager.h"
 
@@ -37,10 +37,20 @@ namespace purity::scene {
         sceneRecord.binaryPath.reset();         // no separate binary
         sceneRecord.isDirty = false;
         sceneRecord.isDeleted = false;
-        sceneRecord.createdAt = TimeManager::now_seconds();
+        sceneRecord.createdAt = commons::TimeManager::now_seconds();
         sceneRecord.modifiedAt = sceneRecord.createdAt;
 
         scene_asset = PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord), QueryOperation::Write);
+    }
+
+    void RegisterProjectUpdate(const purity::PApplication::ProjectEditorInfo& editorInfo)
+    {
+        auto project_rel_path = commons::to_project_relative(editorInfo.projectFilePath, editorInfo.projectDir);
+        if (!project_rel_path.has_value()) {
+            throw exceptions::EmptyPathString();
+        }
+        auto project_record = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(project_rel_path.value().string());
+        auto project_file = assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PProjectAsset>(project_record, editorInfo.startUpSceneRelPath), QueryOperation::Update);
     }
 
     void SceneLayer::attached()
@@ -55,6 +65,11 @@ namespace purity::scene {
             // CREATE SUBROUTINE
             // scenePathString = editorInfo.projectDir + "/" + default_rel_scene_path;
             make_new_scene_asset(scene_asset, default_rel_scene_path);
+            // Register New scene as default start up scene.
+            // This is a project file modification step
+            PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
+            // therefore we have to update and save the project file.
+            RegisterProjectUpdate(editorInfo);
         }
         else
         {
@@ -69,6 +84,11 @@ namespace purity::scene {
             {
                 // GO over the creation subroutine
                 make_new_scene_asset(scene_asset, editorInfo.startUpSceneRelPath);
+                // Register New scene as default start up scene.
+                // This is a project file modification step
+                PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
+                // therefore we have to update and save the project file.
+                RegisterProjectUpdate(editorInfo);
             }
         }
         if (scene_asset == nullptr)

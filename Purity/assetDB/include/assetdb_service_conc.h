@@ -52,7 +52,7 @@ namespace purity::assetDB{
     private:
         // Switch on QueryType...
         std::map<PUUID, AssetRecord> m_AssetContainer;
-        // std::map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer; // Substitute for Objecy Registry
+        // std::map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer; // Substitute for Object Registry
 
     };
 
@@ -79,7 +79,41 @@ namespace purity::assetDB{
     template<typename T>
     std::shared_ptr<T> PAssetDatabase::performGetOperation(AssetOperationStrategy<T>& strategy)
     {
-        return strategy.ReadOperation();
+        std::shared_ptr<T> asset;
+        /// if asset id is found get the asset tied to it.
+        /// else if it is not found return nullptr
+        try
+        {
+            if (!strategy.spec.assetRecord) {
+                throw exceptions::NullPointerError("This is an invalid object");
+            }
+
+            // Get Database Instance
+            const auto assetDB = PSystemFinder::GetAssetDatabase();
+            if (!assetDB) { throw exceptions::NullPointerError("AssetDB is null"); }
+
+            if (!assetDB->m_AssetContainer.contains(strategy.spec.assetRecord.uuid)) {
+                PLog::echoMessage("The queried asset is not found in the runtime asset container, checking the database...", commons::LogLevel::Warning);
+
+                auto assetRecordOpt = assetDB->m_Database.readAssetByUUID(strategy.spec.assetRecord.uuid);
+                if (assetRecordOpt.has_value()) {
+                    assetDB->m_AssetContainer[strategy.spec.assetRecord.uuid] = assetRecordOpt.value();
+                    strategy.spec.assetRecord = assetRecordOpt.value();
+                }
+            }
+
+            if (!assetDB->m_AssetContainer[strategy.spec.assetRecord.uuid]) { throw exceptions::NullPointerError("AssetRecord is invalid object"); }
+
+            // get the asset obj
+            asset = strategy.ReadOperation();
+            if (asset == nullptr) { throw exceptions::NullPointerError("The queried asset returns null"); }
+        }
+        catch (const std::exception& e) {
+            PLog::echoMessage(e.what(), commons::LogLevel::Error);
+            return nullptr;
+        }
+
+        return asset;
     }
 
     template<typename T>

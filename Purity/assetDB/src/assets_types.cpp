@@ -3,13 +3,13 @@
 //
 
 #include "assets_types.h"
-
 #include "scene.h"
 
 namespace purity::assetDB
 {
 	void PTextureAsset::Serialize(cereal::JSONOutputArchive& ar) const
 	{
+		ar(cereal::make_nvp("tex_type", type));
 	}
 
 	void PTextureAsset::Deserialize(cereal::JSONInputArchive& ar)
@@ -152,4 +152,31 @@ namespace purity::assetDB
 	{
 	}
 
+	void PProjectAsset::Serialize(cereal::JSONOutputArchive& ar) const 
+	{
+		ar(CEREAL_NVP(projectDB), CEREAL_NVP(project_name), CEREAL_NVP(start_up_scene));
+	}
+
+	void PProjectAsset::Deserialize(cereal::JSONInputArchive& ar)
+	{
+		ar(CEREAL_NVP(projectDB), CEREAL_NVP(project_name), CEREAL_NVP(start_up_scene));
+	}
 }
+
+CEREAL_REGISTER_TYPE(purity::assetDB::PTextureAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PSpriteAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PShaderAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PMeshAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PSkeletonAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PStaticMeshAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PMaterialAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PSplineAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PP2DPolygonMeshAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PSoundSourceAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PP3DSoundSourceAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PLevelAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PParticleAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PRenderMapAsset)
+CEREAL_REGISTER_TYPE(purity::assetDB::PProjectAsset)
+
+//CEREAL_REGISTER_POLYMORPHIC_RELATION(purity::assetDB::PAsset, purity::assetDB::PTextureAsset)

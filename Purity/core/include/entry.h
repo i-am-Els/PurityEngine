@@ -10,7 +10,7 @@ using namespace commons;
 constexpr int WIN_WIDTH = 1024;
 constexpr int WIN_HEIGHT = 512;
 
-#define PURITY_MODE_DEBUG
+//#define PURITY_MODE_DEBUG
 //extern purity::PApplication * purity::CreateApplication();
 
 #ifdef PURITY_PLATFORM_WINDOWS
@@ -67,7 +67,7 @@ PURITY_API int main(int argc, const char* argv[]){
         return 1;
     }
 #else
-    purity::PApplication::ProjectEditorInfo peInfo("C:\\Elsrael\\Dev\\PurityEngine\\TestGame\\TestGame.pproject", "");
+    purity::PApplication::ProjectEditorInfo peInfo("C:\\Elsrael\\Dev\\PurityEngine\\Games\\TestGame\\TestGame.pproject", "");
     purity::PApplication::ApplicationInfo appInfo(peInfo.getProjectName(), WIN_WIDTH, WIN_HEIGHT);
     std::cout << "Project Name: " << appInfo.title << std::endl;
     application = purity::CreateApplication();

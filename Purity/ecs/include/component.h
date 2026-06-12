@@ -31,8 +31,8 @@ namespace purity::ecs {
         PCameraComponent
     };
 
-    class PURITY_API PComponent: public ISerializable
-    // PURITY_SERIALIZABLE_CLASS(PComponent)
+    //class PURITY_API PComponent: public ISerializable
+     PURITY_SERIALIZABLE_CLASS(PComponent)
     {
     public:
         explicit PComponent(std::weak_ptr<PEntity> entity);

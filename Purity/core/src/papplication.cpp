@@ -114,12 +114,6 @@ namespace purity{
 
         std::any wrappedData = std::move(assetdbData);
         assetService->preInit(wrappedData);
-        // call all pre-init
-        // for (const auto initializable : serviceLocator->getInitializables())
-        // {
-        //     if (dynamic_cast<assetDB::PAssetDatabase*>(initializable) == nullptr) { continue; }
-        //     initializable->preInit();
-        // }
 
         // Register Services
         serviceLocator->registerService<AECSService, PECSService>(ecsService);
@@ -127,6 +121,12 @@ namespace purity{
         serviceLocator->registerService<ALayerService, PLayerService>(layerService);
         serviceLocator->registerService<ARendererService, PRendererService>(rendererService);
 
+        /// TODO : call all pre-init
+        // for (const auto initializable : serviceLocator->getInitializables())
+        // {
+        //     if (dynamic_cast<assetDB::PAssetDatabase*>(initializable) == nullptr) { continue; }
+        //     initializable->preInit();
+        // }
     }
 
     void PApplication::init() {
@@ -165,6 +165,7 @@ namespace purity{
         serviceLocator->unregisterService<ALayerService>();
         serviceLocator->unregisterService<AAssetDBService>();
         serviceLocator->unregisterService<AECSService>();
+
     }
 
     void PApplication::start() {
@@ -174,8 +175,7 @@ namespace purity{
         }
     }
 
-    PApplication::PApplication()
-    : serviceLocator(std::make_shared<PServiceLocator>())
+    PApplication::PApplication() : serviceLocator(std::make_shared<PServiceLocator>())
     {
         window = std::make_shared<PWindow>();
     }

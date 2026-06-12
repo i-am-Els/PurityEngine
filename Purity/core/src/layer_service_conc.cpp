@@ -94,7 +94,7 @@ namespace purity
 
     void PLayerService::postInit()
     {
-        // TODO : Have your Scene Layer initialize the Project default scene.
+        /// TODO : Have your Scene Layer initialize the Project default scene.
 
         // dynamic_cast<scene::SceneLayer*>(getLayerByPUUID(m_sceneLayerID))->switchScene();
     }

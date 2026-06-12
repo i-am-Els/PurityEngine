@@ -31,3 +31,4 @@ namespace purity::ecs{
 
 }
 
+CEREAL_REGISTER_TYPE(purity::ecs::PEntity)

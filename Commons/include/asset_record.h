@@ -32,6 +32,10 @@ namespace commons
 
 		int64_t createdAt = 0;
 		int64_t modifiedAt = 0;
+
+		operator bool() {
+			return (uuid != 0) && (!metaPath.empty());
+		}
 	};
 }
 

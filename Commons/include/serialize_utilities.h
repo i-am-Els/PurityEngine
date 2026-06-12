@@ -106,7 +106,7 @@ namespace commons{
 	{
 		std::string COMMON_API extractSourceFromFile(const char *path);
 		std::optional<json> COMMON_API extractSourceFromJSON(const char *path);
-
+		void COMMON_API write_file(json file_json, std::string rel_path);
 	}
 
 

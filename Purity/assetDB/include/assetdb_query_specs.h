@@ -41,4 +41,30 @@ namespace purity::assetDB
     private:
         AssetType m_type;
     }; // BaseClass for the different AssetType
+
+
+    template <>
+    class PURITY_API QuerySpec<PProjectAsset> {
+    public:
+        QuerySpec(const AssetRecord& record, std::string startup_scene_rel_path) : assetRecord(record)
+        {
+            m_type = record.assetType;
+            startup_scene_path = startup_scene_rel_path;
+        }
+
+        PURE_NODISCARD virtual AssetType getAssetType() const
+        {
+            return m_type;
+        }
+
+        virtual ~QuerySpec()
+        {
+            PLog::echoMessage("Destroying PProject query spec.");
+        }
+
+        AssetRecord assetRecord;
+        std::string startup_scene_path;
+    private:
+        AssetType m_type;
+    };
 }

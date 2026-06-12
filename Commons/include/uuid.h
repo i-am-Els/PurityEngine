@@ -45,6 +45,10 @@ namespace commons{
             return m_UUID == static_cast<uint64_t>(id);
         }
 
+        bool operator!=(PUUID id) const {
+            return m_UUID != static_cast<uint64_t>(id);
+        }
+
 //        bool operator==(const PUUID id) const{
 //            return m_UUID == static_cast<uint64_t>(id);
 //        }

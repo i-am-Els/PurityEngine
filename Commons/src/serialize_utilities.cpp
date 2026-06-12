@@ -121,5 +121,14 @@ namespace commons {
 				return std::nullopt;
 			}
 		}
+
+		// An example use case of this method is when creating or updating project files.
+		void write_file(json file_json, std::string rel_path) {
+			std::fstream project_file(rel_path, std::ios::out | std::ios::trunc);
+			if (project_file.is_open()) {
+				project_file << file_json.dump(4); // Example placeholder
+				project_file.close();
+			}
+		}
 	}
 }

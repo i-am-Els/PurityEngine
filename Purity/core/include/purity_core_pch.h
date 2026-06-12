@@ -4,6 +4,11 @@
 
 #pragma once
 
+// External Stuff
+//cereal
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/memory.hpp>
+
 // Common stuffs
 #include <algorithm>
 #include <cmath>
@@ -29,6 +34,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
 
 
 // Windows Specific Includes

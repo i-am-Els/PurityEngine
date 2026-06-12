@@ -106,7 +106,10 @@ namespace editor {
     void PEditorApplication::storeValidAssets(const PUUID& asset_id, const AssetRecord& asset_record)
     {
         // Do not add the Project file into the assetDBData map... that map represents the
-        if (asset_record.assetType == AssetType::ProjectAsset){ return; }
+        if (asset_record.assetType == AssetType::ProjectAsset){ 
+
+            return; 
+        }
         PLog::echoMessage(LogLevel::Info, "%s %s %s %s %s", "Adding asset of id", static_cast<std::string>(asset_id).c_str(), "and path:", asset_record.metaPath.string().c_str(), "to the queue going to the asset database.");
         assetdbData[asset_id] = asset_record;
     }
