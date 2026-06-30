@@ -11,7 +11,7 @@
 #include <map>
 
 #include "asset_record.h"
-using AssetRecordMap = std::map<commons::PUUID, commons::AssetRecord>;
+using AssetRecordMap = std::unordered_map<commons::PUUID, commons::AssetRecord>;
 using AssetFilter = std::function<bool(const commons::AssetRecord&)>;
 
 

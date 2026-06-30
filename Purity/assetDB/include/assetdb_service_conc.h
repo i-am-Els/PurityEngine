@@ -49,10 +49,13 @@ namespace purity::assetDB{
 
         PNT_TYPE_INDEX_DEF()
 
+        static void RegisterProjectUpdate(const purity::PApplication::ProjectEditorInfo& editorInfo);
     private:
         // Switch on QueryType...
-        std::map<PUUID, AssetRecord> m_AssetContainer;
-        // std::map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer; // Substitute for Object Registry
+        std::unordered_map<PUUID, AssetRecord> m_AssetContainer;
+        ObjectRegistry* registry = ObjectRegistry::GetObjectRegistry();
+        // std::unordered_map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer; // Substitute for Object Registry
+
 
     };
 
@@ -149,6 +152,16 @@ namespace purity::assetDB{
     std::shared_ptr<T> PAssetDatabase::performDeleteOperation(AssetOperationStrategy<T>& strategy)
     {
         return strategy.DeleteOperation();
+    }
+
+    inline void PAssetDatabase::RegisterProjectUpdate(const purity::PApplication::ProjectEditorInfo& editorInfo)
+    {
+        auto project_rel_path = commons::to_project_relative(editorInfo.projectFilePath, editorInfo.projectDir);
+        if (!project_rel_path.has_value()) {
+            throw exceptions::EmptyPathString();
+        }
+        auto project_record = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(project_rel_path.value().string());
+        assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PProjectAsset>(project_record, editorInfo.startUpSceneRelPath), QueryOperation::Update);
     }
 }
 

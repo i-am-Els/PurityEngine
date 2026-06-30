@@ -184,23 +184,21 @@ add_library(Purity
         platform/src/imgui_opengl3_renderer.cpp
         #--------------------------------
         scene/include/scene_layer.h
-        core/include/ISerializable.h
-        core/include/object_registry.h
+        core/include/iserializable.h
+        assetDB/include/object_registry.h
+        assetDB/src/object_registry.cpp
         core/include/serializer.h
         core/include/serialization_macros.h
-        ecs/include/weak_ptr_utility.h
-        core/src/object_registry.cpp
+        core/include/weak_ptr_utility.h
         core/src/serializer.cpp
         scene/src/scene.cpp
         scene/src/scene_layer.cpp
-        assetDB/src/asset_registry.cpp
-        assetDB/include/asset_registry.h
 )
 
 target_sources(
         Purity PRIVATE
-        core/src/object_registry.cpp
-        core/include/object_registry.h
+        assetDB/src/object_registry.cpp
+        assetDB/include/object_registry.h
         core/src/serializer.cpp
         core/include/serializer.h
 )

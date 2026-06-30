@@ -43,20 +43,10 @@ namespace purity::scene {
         scene_asset = PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord), QueryOperation::Write);
     }
 
-    void RegisterProjectUpdate(const purity::PApplication::ProjectEditorInfo& editorInfo)
-    {
-        auto project_rel_path = commons::to_project_relative(editorInfo.projectFilePath, editorInfo.projectDir);
-        if (!project_rel_path.has_value()) {
-            throw exceptions::EmptyPathString();
-        }
-        auto project_record = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(project_rel_path.value().string());
-        auto project_file = assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PProjectAsset>(project_record, editorInfo.startUpSceneRelPath), QueryOperation::Update);
-    }
-
     void SceneLayer::attached()
     {
         std::shared_ptr<PLevelAsset> scene_asset;
-        const auto editorInfo = PSystemFinder::GetApplication()->m_projectEditorInfo;
+        const auto& editorInfo = PSystemFinder::GetApplication()->m_projectEditorInfo;
         auto scenePathString = editorInfo.projectDir + "/" + editorInfo.startUpSceneRelPath;
         auto default_rel_scene_path = "Assets/Scenes/DefaultScene.pscene";
 
@@ -69,7 +59,7 @@ namespace purity::scene {
             // This is a project file modification step
             PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
             // therefore we have to update and save the project file.
-            RegisterProjectUpdate(editorInfo);
+            PAssetDatabase::RegisterProjectUpdate(editorInfo);
         }
         else
         {
@@ -88,7 +78,7 @@ namespace purity::scene {
                 // This is a project file modification step
                 PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
                 // therefore we have to update and save the project file.
-                RegisterProjectUpdate(editorInfo);
+                PAssetDatabase::RegisterProjectUpdate(editorInfo);
             }
         }
         if (scene_asset == nullptr)
@@ -114,7 +104,7 @@ namespace purity::scene {
     bool SceneLayer::switchScene(std::unique_ptr<scene::PScene> scene)
     {
         if(scene == nullptr) { return false;}
-        const auto temp = std::move(attached_scene);
+        const auto& temp = std::move(attached_scene);
         attached_scene = std::move(scene);
         return true;
     }

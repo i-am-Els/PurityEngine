@@ -88,3 +88,8 @@ namespace purity::ecs{
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 }
+
+
+/// TODO : I hope that serialising this guy and other components will not require other manual efforts since we are not using the
+/// ::create() method, however I think that is not even needed since the systems bear ownership of components.
+/// why then should authoring and ownership be separated?

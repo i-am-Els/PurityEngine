@@ -20,7 +20,7 @@ namespace purity{
     class PURITY_API PApplication {
     protected:
         PApplication();
-        std::map<PUUID, AssetRecord> assetdbData;
+        std::unordered_map<PUUID, AssetRecord> assetdbData;
 
     public:
         bool m_runningApp = true;

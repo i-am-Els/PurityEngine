@@ -15,14 +15,13 @@ namespace purity
     class PURITY_API ISerializable //: public std::enable_shared_from_this<ISerializable>
     {/// TODO: We expect that serialisables should be created by the create() function call
     public:
-        commons::PUUID id;
+        //commons::PUUID id;
 
-        ISerializable(): id(commons::PUUID()){}
-        explicit ISerializable(const commons::PUUID& existing_id): id(existing_id){}
-
-        PURE_NODISCARD virtual const commons::PUUID& getUUID() const { return id; }
+        ISerializable() = default;
 
         virtual ~ISerializable() = default;
+
+        virtual commons::PUUID getUUID() const = 0;
 
         virtual void Serialize(cereal::JSONOutputArchive& ar) const = 0;
         virtual void Deserialize(cereal::JSONInputArchive& ar) = 0;

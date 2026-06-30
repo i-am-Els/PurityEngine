@@ -10,7 +10,9 @@ namespace purity::ecs{
     PEntityHandle PEntityRegistry::Create(PUUID uuid) {
         auto entity = std::make_shared<PEntity>();
         m_entityMap.emplace(uuid, entity);
-        ObjectRegistry::registerObject(entity);
+        //ObjectRegistry::registerObject(entity);
+        // We are not treating entity as an onject in object registry, we leave that to assets
+        // entity registry is self sufficient for entities since they are not assets.
 
         return PEntityHandle(m_entityMap[uuid]);
     }
@@ -18,7 +20,7 @@ namespace purity::ecs{
     PEntityHandle PEntityRegistry::Create(PUUID uuid, const std::string &name) {
         const auto entity = std::make_shared<PEntity>();
         m_entityMap.emplace(uuid, std::make_unique<PEntity>(name));
-        ObjectRegistry::registerObject(entity);
+        //ObjectRegistry::registerObject(entity);
 
         return PEntityHandle(m_entityMap[uuid]);
     }
@@ -44,7 +46,7 @@ namespace purity::ecs{
     std::vector<PEntityHandle> PEntityRegistry::GetEntitiesWithTag(const ETags tag, const std::unordered_set<PEntityHandle>& entitiesToIgnore){
         std::vector<PEntityHandle> entitiesWithTag = {};
         for(const auto& entity : m_entityMap | std::views::values){
-            if(const auto tagComp = ecs::fetch_or_throw(entity->GetComponent<PTagComponent>())) {
+            if(const auto tagComp = fetch_or_throw(entity->GetComponent<PTagComponent>())) {
                 if (auto element = PEntityHandle(entity->weak_from_this()); tagComp->tag == tag && (!entitiesToIgnore.contains(element))) {
                     entitiesWithTag.push_back(element);
                 }

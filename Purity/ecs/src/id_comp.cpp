@@ -25,7 +25,7 @@ namespace purity::ecs{
     void PIDComponent::setID(PUUID id) {
         m_entityInstanceID = id;
         auto locked = m_entity.lock();
-        (locked)->id = id;
+        (locked)->m_id = id;
     }
 
     void PIDComponent::Serialize(cereal::JSONOutputArchive& ar) const
@@ -36,3 +36,6 @@ namespace purity::ecs{
     {
     }
 }
+
+CEREAL_REGISTER_TYPE(purity::ecs::PIDComponent)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(purity::ecs::PComponent, purity::ecs::PIDComponent)

@@ -15,7 +15,7 @@ namespace purity::assetDB{
         {
             throw std::runtime_error("std::any passed without any value!!!");
         }
-        if(const auto* map_ptr = std::any_cast<std::map<PUUID, AssetRecord>>(&data))
+        if(const auto* map_ptr = std::any_cast<std::unordered_map<PUUID, AssetRecord>>(&data))
         {
             if(!map_ptr->empty())
             {
@@ -25,7 +25,7 @@ namespace purity::assetDB{
             }
         }else
         {
-            throw std::runtime_error("Incorrect type in std::any. Expected std::map<PUUID, AssetRecord>.");
+            throw std::runtime_error("Incorrect type in std::any. Expected std::unordered_map<PUUID, AssetRecord>.");
         }
     }
 

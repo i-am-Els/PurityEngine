@@ -14,7 +14,10 @@
 namespace purity
 {
     class PURITY_API Serializer {
-    public:
+        friend class assetDB::PAssetDatabase;
+        template<class AssetTypeRef>
+        friend class assetDB::AssetOperationStrategy;
+    private:
         template <typename T>
         static void resolvePendingLinks()
         {
@@ -32,7 +35,7 @@ namespace purity
             static_assert(std::is_base_of_v<ISerializable, T>);
             auto obj = std::make_shared<T>();
             obj->Deserialize(ar);
-            ObjectRegistry::registerObject(obj);
+            assetDB::ObjectRegistry::registerObject(obj);
 
             return obj;
         }
@@ -53,6 +56,19 @@ namespace purity
 
     private:
         static inline std::vector<std::function<void()>> s_pendingLinks;
+
+    public:
+        class SerializerBehaviour {
+        public:
+            SerializerBehaviour() = default;
+
+            template <typename T>
+            static std::shared_ptr<T> createObjectT(){
+                auto obj = std::make_shared<T>(); 
+                assetDB::ObjectRegistry::registerObject(obj);
+                return obj;
+            }
+        };
     };
 }
 

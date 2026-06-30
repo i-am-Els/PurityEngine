@@ -21,7 +21,7 @@ using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
-using DatabaseData = std::map<PUUID, commons::AssetRecord>;
+using DatabaseData = std::unordered_map<PUUID, commons::AssetRecord>;
 using Database = commons::database::ContentIndex;
 using namespace purity;
 

@@ -32,3 +32,4 @@ namespace purity::ecs{
 }
 
 CEREAL_REGISTER_TYPE(purity::ecs::PEntity)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(purity::ecs::PEntityBase, purity::ecs::PEntity)

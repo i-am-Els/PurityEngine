@@ -23,13 +23,12 @@ namespace purity::ecs {
     public:
         std::shared_ptr<PEntity> getSharedPtr() { return shared_from_this(); }
         std::weak_ptr<PEntity> getWeakPtr() { return weak_from_this(); }
-        SERIALIZABLE(PEntity)
         PEntity();
         explicit PEntity(const std::string& name);
         explicit PEntity(PUUID uuid);
 //        PEntity(const PEntity& entity);
         ~PEntity() override{
-            for (auto comp : m_components) {
+            for (auto& comp : m_components) {
                 RemoveComponent(comp);
                 comp.reset();
             }

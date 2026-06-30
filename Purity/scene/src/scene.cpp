@@ -24,7 +24,7 @@ namespace purity::scene{
         // Add ID Component
         auto id = entity.AddComponent<PIDComponent>();
         // Set ID
-        auto sh_id = ecs::fetch_or_throw(id, "PIDComponent::setID");
+        auto sh_id = fetch_or_throw(id, "PIDComponent::setID");
         sh_id->setID(uuid);
 
         // Add Transform Component,
@@ -79,7 +79,7 @@ namespace purity::scene{
         auto mesh = bunny.AddComponent<PMeshComponent>();
         auto render = bunny.AddComponent<PRenderComponent>();
 
-        const auto bunny_transform = ecs::fetch_or_throw(bunny.GetComponent<PTransformComponent>());
+        const auto bunny_transform = fetch_or_throw(bunny.GetComponent<PTransformComponent>());
         PLog::echoValue(bunny_transform->m_position);
 
         return scene;
@@ -96,7 +96,7 @@ namespace purity::scene{
         auto mesh = bunny.AddComponent<PMeshComponent>();
         auto render = bunny.AddComponent<PRenderComponent>();
 
-        const auto bunny_transform = ecs::fetch_or_throw(bunny.GetComponent<PTransformComponent>());
+        const auto bunny_transform = fetch_or_throw(bunny.GetComponent<PTransformComponent>());
         PLog::echoValue(bunny_transform->m_position);
 
         return std::move(scene);

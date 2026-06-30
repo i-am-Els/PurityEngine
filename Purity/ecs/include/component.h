@@ -31,8 +31,8 @@ namespace purity::ecs {
         PCameraComponent
     };
 
-    //class PURITY_API PComponent: public ISerializable
-     PURITY_SERIALIZABLE_CLASS(PComponent)
+    class PURITY_API PComponent : public ISerializable
+     //PURITY_SERIALIZABLE_CLASS(PComponent)
     {
     public:
         explicit PComponent(std::weak_ptr<PEntity> entity);
@@ -42,11 +42,16 @@ namespace purity::ecs {
         virtual void start(){}
         virtual void destroy(){}
 
+
+
         virtual PComponentType getComponentType() const = 0;
 
         virtual const char* getName() const = 0;
 
         std::weak_ptr<PEntity> m_entity;
+        PUUID m_id;
+
+        virtual PUUID getUUID() const override { return m_id; }
     };
 
 }

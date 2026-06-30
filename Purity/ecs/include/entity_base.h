@@ -21,7 +21,11 @@ namespace purity::ecs{
 
         ~PEntityBase() override = default;
 
-        explicit PEntityBase(const PUUID& mInstanceId) : ISerializable(mInstanceId) {}
+        explicit PEntityBase(const PUUID& mInstanceId) : m_id(mInstanceId) {}
+
+        PUUID m_id;
+
+        virtual PUUID getUUID() const override { return m_id; }
 
     protected:
         std::vector<std::weak_ptr<PComponent>> m_components = {};

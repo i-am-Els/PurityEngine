@@ -13,7 +13,7 @@
 using namespace purity::graphics;
 
 namespace purity::ecs{
-    class P3DGeometricMeshSS;
+    //class P3DGeometricMeshSS;
 
     struct SMeshProfile{
         bool isVisible;
@@ -46,7 +46,7 @@ namespace purity::ecs{
         } m_vertex_data;
         std::vector<unsigned int> m_indices;
 
-        friend class P3DGeometricMeshSS;
+        //friend class P3DGeometricMeshSS;
 
     };
 }

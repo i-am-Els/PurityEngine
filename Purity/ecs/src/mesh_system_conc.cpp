@@ -46,8 +46,11 @@ namespace purity::ecs{
     }
 
     void P3DGeometricMeshSS::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PMeshComponent> component) {
-
+        auto ptr = component.lock();
+        if (!ptr) return;// already dead, there is nothing to do
+        auto& vec = meshComponents;
+        vec.erase(std::remove(vec.begin(), vec.end(), ptr), vec.end());
+        //refcount now 0 -> component destroyed
     }
 
 }
-

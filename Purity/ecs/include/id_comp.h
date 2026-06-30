@@ -14,7 +14,7 @@ namespace purity{
     }
 
     namespace  ecs{
-        class PIDManager;
+        //class PIDManager;
 
         class PURITY_API PIDComponent final: public PComponent, public std::enable_shared_from_this<PIDComponent>{
             friend class purity::scene::PScene;
@@ -43,8 +43,9 @@ namespace purity{
 
         private:
             // All components must have this comm
+            /// Years after I ask why?
 
-            friend class PIDManager;
+            //friend class PIDManager;
         };
 
     }

@@ -29,7 +29,7 @@ namespace purity::scene{
         static std::unique_ptr<PScene> LoadScene(const PUUID& scene_id);
         static std::unique_ptr<PScene> CreateDefaultScene();
         void UnloadScene();
-        PURE_INLINE PUUID getID() { return m_scene_id; }
+        PURE_INLINE PUUID getID() const { return m_scene_id; }
         PURE_INLINE std::string getName() { return m_scene_name; }
         PURE_INLINE void setName(const std::string& name) { m_scene_name = name; }
 

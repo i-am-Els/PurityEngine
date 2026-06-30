@@ -230,9 +230,9 @@ namespace purity::assetDB
             std::shared_ptr<PLevelAsset> levelAsset;
             try
             {
-                auto levelAsset_obj = ObjectRegistry::findObject(this->spec.assetRecord.uuid);
+                auto levelAsset_obj = ObjectRegistry::findObject(this->spec.assetRecord.uuid); // This is important and universally, all assets should be in object registry and pulled from there.
                 if (levelAsset_obj == nullptr) { 
-                    throw exceptions::NullPointerError("Asset Pointer is null, you might need to load it into runtime environment... \nLoading...");
+                    PLog::echoMessage("Asset Pointer is null, you might need to load it into runtime environment... \nWait while we do that for you... \nLoading...", LogLevel::Info);
                     /// TODO : Assumption is that this fella below will pull the fully serialised data into proper struct.
                     levelAsset = Serializer::load<PLevelAsset>(spec.assetRecord.metaPath.string());
                     //levelAsset->setID(this->spec.assetRecord.uuid);
@@ -257,7 +257,7 @@ namespace purity::assetDB
             auto scene = PSystemFinder::GetScene();
             if (scene == nullptr) { throw std::runtime_error("Scene is null"); }
 
-            auto levelAsset = assetDB::PLevelAsset::create();
+            auto levelAsset = assetDB::PLevelAsset::create(); // always do this, except for project asset
             levelAsset->setID(this->spec.assetRecord.uuid);
             levelAsset->SetScene(scene);
 
@@ -323,7 +323,11 @@ namespace purity::assetDB
         std::shared_ptr<PProjectAsset> UpdateOperation() { 
             // Define the default project JSON structure 
 
-            auto projectAsset = assetDB::PProjectAsset::create();
+            // auto projectAsset = assetDB::PProjectAsset::create();
+            // We refrain from the above line because the project asset is not one that must be/should 
+            // be flying around lying somewhere in the asset db or object registry.
+
+            auto projectAsset = std::make_shared<assetDB::PProjectAsset>();
             projectAsset->setID(this->spec.assetRecord.uuid);
 
             projectAsset->project_name = spec.assetRecord.name;
@@ -332,7 +336,7 @@ namespace purity::assetDB
             // Serialize to disk
             Serializer::save(projectAsset, spec.assetRecord.metaPath.string());
 
-            return projectAsset;
+            return nullptr; // this is desired... no need to keep the project asset object in registry for no reason.
         }
 
         std::shared_ptr<PProjectAsset> DeleteOperation() { return {}; }

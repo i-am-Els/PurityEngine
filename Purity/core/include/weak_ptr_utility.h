@@ -7,7 +7,7 @@
 
 #include "core_macros.h"
 
-namespace purity::ecs
+namespace purity
 {
         template<typename T>
         PURE_NODISCARD PURE_INLINE bool is_alive(const std::weak_ptr<T>& wp) noexcept { return !wp.expired(); }
@@ -41,7 +41,7 @@ namespace purity::ecs
         }
 
         // Optional macro for brevity
-#define ECS_FETCH_OR_THROW(var, wp) auto var = ecs::fetch_or_throw(wp, #var)
+#define FETCH_OR_THROW(var, wp) auto var = fetch_or_throw(wp, #var)
 
         /**
         auto id = entity.AddComponent<PIDComponent>();
@@ -51,7 +51,7 @@ namespace purity::ecs
         sh_id->setID (uuid);
 
         // Option 2: With macro
-        ECS_FETCH_OR_THROW(sh_id, id);
+        FETCH_OR_THROW(sh_id, id);
         sh_id->setID (uuid);
 
         // Option 3: Functional

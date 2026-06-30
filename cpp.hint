@@ -2,4 +2,12 @@
 // such as names of functions and macros.
 // For more information see https://go.microsoft.com/fwlink/?linkid=865984
 #define PNT_TYPE_INDEX_DEF() template<typename T>PURE_NODISCARD static std::type_index s_getTypeIndex(){ return std::type_index(typeid(T));}
-#define CEREAL_REGISTER_POLYMORPHIC_RELATION(Base, Derived) namespace cereal { namespace detail { template <> struct PolymorphicRelation<Base, Derived> { static void bind() { RegisterPolymorphicCaster<Base, Derived>::bind(); } }; } }
+#define P_GET_COMPONENT_TYPE(type) static PComponentType s_GetStaticType() { return type; } virtual PComponentType getComponentType() const override { return s_GetStaticType(); } virtual const char* getName() const override { return #type; }
+#define PURE_NODISCARD [[nodiscard]]
+#define PURE_INLINE __forceinline
+#define PURE_MAYBE_UNUSED [[maybe_unused]]
+
+#define SERIALIZABLE(ClassName) public: static std::shared_ptr<ClassName> create() { auto obj = std::make_shared<ClassName>(); ObjectRegistry::registerObject(obj); return obj; }
+#define PURITY_SERIALIZABLE_CLASS(name)
+#define PURITY_API __declspec(dllexport)
+#define CAN_CREATE_AS_SERIALIZABLE(ClassName) public: static std::shared_ptr<ClassName> create() { auto obj = std::make_shared<ClassName>(); ObjectRegistry::registerObject(obj); return obj; }

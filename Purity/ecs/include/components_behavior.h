@@ -139,7 +139,7 @@ namespace purity::ecs{
         const auto entityBase = getEntityBase(entity);
         try{
             for (auto& component : entityBase->m_components) {
-                auto derived = ecs::fetch(component);
+                auto derived = fetch(component);
                 if (derived == nullptr) continue;
 
                 return std::static_pointer_cast<T>(derived);

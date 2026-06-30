@@ -54,7 +54,11 @@ namespace purity::ecs {
     }
 
     void POpenGLRenderSS::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PRenderComponent> component) {
-
+        auto ptr = component.lock();
+        if (!ptr) return;// already dead, there is nothing to do
+        auto& vec = renderComponents;
+        vec.erase(std::remove(vec.begin(), vec.end(), ptr), vec.end());
+        //refcount now 0 -> component destroyed
     }
 
 }

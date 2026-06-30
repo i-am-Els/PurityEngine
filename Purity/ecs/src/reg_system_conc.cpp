@@ -42,7 +42,12 @@ namespace purity::ecs{
     }
 
     void PIDManager::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PIDComponent> component) {
-
+        /// TODO : Must delete the component so that no component outlives its entity
+        auto ptr = component.lock();
+        if (!ptr) return;// already dead, there is nothing to do
+        auto& vec = idComponents;
+        vec.erase(std::remove(vec.begin(), vec.end(), ptr), vec.end());
+        //refcount now 0 -> component destroyed
     }
 
     void PTagManager::init() {
@@ -73,7 +78,6 @@ namespace purity::ecs{
         try {
             auto tagComponent = std::make_shared<PTagComponent>(entity);
             tagComponents.emplace_back(tagComponent);
-            ObjectRegistry::registerObject(tagComponent);
             return tagComponents.back();
         } catch (...) {
             PLog::echoMessage(LogLevel::Error, "Add Transform Comp Generic Assertion failed");
@@ -82,7 +86,13 @@ namespace purity::ecs{
     }
 
     void PTagManager::RemoveComponent(std::weak_ptr<PEntity> entity, std::weak_ptr<PTagComponent> component) {
-
+        /// TODO : Must delete the component so that no component outlives its entity
+        /// DO this on all Systems
+        auto ptr = component.lock();
+        if (!ptr) return;// already dead, there is nothing to do
+        auto& vec = tagComponents;
+        vec.erase(std::remove(vec.begin(), vec.end(), ptr), vec.end());
+        //refcount now 0 -> component destroyed
     }
 
 }

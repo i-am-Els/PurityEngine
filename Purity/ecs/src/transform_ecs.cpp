@@ -50,3 +50,6 @@ namespace purity::ecs{
     }
 
 }
+
+CEREAL_REGISTER_TYPE(purity::ecs::PTransformComponent)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(purity::ecs::PComponent, purity::ecs::PTransformComponent)
