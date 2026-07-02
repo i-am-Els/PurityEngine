@@ -49,19 +49,23 @@ namespace purity::assetDB
         static std::shared_ptr<ISerializable> findObject(const commons::PUUID& id)
         {
             std::lock_guard<std::mutex> lock(s_mutex);
-            auto registry = GetObjectRegistry()->s_registry;
+            auto& registry = GetObjectRegistry()->s_registry;
             if (const auto it = registry.find(id); it != registry.end()) return fetch_or_throw(it->second);
             return nullptr;
         }
 
-        ~ObjectRegistry() {
+        static void Shutdown() {
+            std::lock_guard<std::mutex> lock(s_mutex);
             delete s_instance;
+            s_instance = nullptr;
         }
+        
 
     private:
+        static inline ObjectRegistry* s_instance = nullptr;
+        // no custom destructor at all
         std::unordered_map<commons::PUUID, std::weak_ptr<ISerializable>> s_registry;
         static inline std::mutex s_mutex;
-        static inline ObjectRegistry* s_instance;
         ObjectRegistry() = default;
     };
 }

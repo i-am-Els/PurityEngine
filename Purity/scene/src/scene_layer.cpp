@@ -50,41 +50,48 @@ namespace purity::scene {
         auto scenePathString = editorInfo.projectDir + "/" + editorInfo.startUpSceneRelPath;
         auto default_rel_scene_path = "Assets/Scenes/DefaultScene.pscene";
 
-        if (editorInfo.startUpSceneRelPath.empty())
-        {
-            // CREATE SUBROUTINE
-            // scenePathString = editorInfo.projectDir + "/" + default_rel_scene_path;
-            make_new_scene_asset(scene_asset, default_rel_scene_path);
-            // Register New scene as default start up scene.
-            // This is a project file modification step
-            PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
-            // therefore we have to update and save the project file.
-            PAssetDatabase::RegisterProjectUpdate(editorInfo);
-        }
-        else
-        {
-            fs_path scenePath(scenePathString);
-            if (!_validateFileExistence(scenePath)){ throw exceptions::FileReadError(scenePathString.c_str()); }
+		commons::PLog::echoMessage(LogLevel::Info, "SceneLayer::attached() - Scene File to attach: %s", scenePathString.c_str());
 
-            // File Exists Read it into Memory.
-            const auto sceneRecord = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(editorInfo.startUpSceneRelPath);
-            scene_asset = assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord),
-                                                                   QueryOperation::Read);
-            if (scene_asset == nullptr)
+        fs_path scenePath(scenePathString);
+        try
+        {
+			bool fileExists = commons::_validateFileExistence(scenePath);
+            if (!fileExists)
             {
-                // GO over the creation subroutine
-                make_new_scene_asset(scene_asset, editorInfo.startUpSceneRelPath);
+			    // CREATE NEW SCENE FILE SINCE STARTUP SCENE DOES NOT EXIST
+				commons::PLog::echoMessage(LogLevel::Info, "SceneLayer::attached() - Startup Scene does not exist, creating new scene file at: %s", default_rel_scene_path);
+                // scenePathString = editorInfo.projectDir + "/" + default_rel_scene_path;
+                make_new_scene_asset(scene_asset, default_rel_scene_path);
                 // Register New scene as default start up scene.
                 // This is a project file modification step
                 PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
                 // therefore we have to update and save the project file.
                 PAssetDatabase::RegisterProjectUpdate(editorInfo);
             }
+
+            // File Exists Read it into Memory.
+            const auto sceneRecord = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(editorInfo.startUpSceneRelPath);
+			if (!sceneRecord.has_value())
+			{
+				commons::PLog::echoMessage(LogLevel::Info, "SceneLayer::attached() - No Asset Record found for scene file: %s", editorInfo.startUpSceneRelPath.c_str());
+				throw exceptions::NullPointerError("No Asset Record found for scene file.");
+			}
+            
+            if(fileExists) 
+            {
+                scene_asset = assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord.value()),QueryOperation::Read);
+            }
+            if (scene_asset == nullptr)
+            {
+                throw exceptions::NullPointerError("Failed to resolve a scene asset.");
+            }
         }
-        if (scene_asset == nullptr)
-        {
-            throw exceptions::NullPointerError("Failed to resolve a scene asset.");
-        }
+		catch (std::exception& e)
+		{
+			commons::PLog::echoMessage(commons::LogLevel::Error, "SceneLayer::attached() - Exception: %s", e.what());
+			/*throw;*/
+		}
+
 
         // auto loaded_scene = scene_asset->loadScene();
         // if (!switchScene(std::move(loaded_scene)))

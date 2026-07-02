@@ -16,7 +16,7 @@ namespace purity
         PURE_NODISCARD PURE_INLINE std::shared_ptr<T> fetch(const std::weak_ptr<T>& wp) noexcept { return wp.lock(); }
 
 
-        // One-liner: lock or throw
+        // One-liner: lock or throw ... IMPORTANT - ALWAYS WRAP CALLING CODE IN TRY BLOCK
         template<typename T>
         std::shared_ptr<T> fetch_or_throw(const std::weak_ptr<T>& wp, const std::string& debugName = "")
         {

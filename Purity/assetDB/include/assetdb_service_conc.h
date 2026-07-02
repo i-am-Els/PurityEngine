@@ -30,7 +30,7 @@ namespace purity::assetDB{
         template<typename T>
         static std::shared_ptr<T> queryDBForAsset(const QuerySpec<T>& spec, QueryOperation operation);
 
-        PURE_NODISCARD AssetRecord getAssetRecordFromRelPath(const std::string& relPath) const;
+        std::optional<AssetRecord> getAssetRecordFromRelPath(const std::string& relPath) const;
 
         /*void setupAsset();*/
 
@@ -156,12 +156,21 @@ namespace purity::assetDB{
 
     inline void PAssetDatabase::RegisterProjectUpdate(const purity::PApplication::ProjectEditorInfo& editorInfo)
     {
-        auto project_rel_path = commons::to_project_relative(editorInfo.projectFilePath, editorInfo.projectDir);
-        if (!project_rel_path.has_value()) {
-            throw exceptions::EmptyPathString();
+        try {
+            auto project_rel_path = commons::to_project_relative(editorInfo.projectFilePath, editorInfo.projectDir);
+            if (!project_rel_path.has_value()) {
+                throw exceptions::EmptyPathString("Could not convert project file path to relative path");
+            }
+            auto project_record = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(project_rel_path.value().string());
+		    if (!project_record.has_value()) {
+			    throw exceptions::NullPointerError("Project AssetRecord is null");
+		    }
+            assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PProjectAsset>(project_record.value(), editorInfo.startUpSceneRelPath), QueryOperation::Update);
         }
-        auto project_record = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(project_rel_path.value().string());
-        assetDB::PAssetDatabase::queryDBForAsset(QuerySpec<PProjectAsset>(project_record, editorInfo.startUpSceneRelPath), QueryOperation::Update);
+		catch (const std::exception& e) {
+			PLog::echoMessage(e.what(), commons::LogLevel::Error);
+            /*throw;*/
+		}
     }
 }
 

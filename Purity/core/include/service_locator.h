@@ -10,7 +10,7 @@
 
 
 
-namespace purity{
+namespace purity {
     class PURITY_API PServiceLocator {
         std::vector<IInitializableService*> m_initializables;
         std::vector<IUpdatableService*> m_updatables;
@@ -56,7 +56,7 @@ namespace purity{
                     ),
                     list.end()
                 );
-            };
+                };
 
             removeFromList(m_initializables);
             removeFromList(m_updatables);
@@ -97,7 +97,15 @@ namespace purity{
         ~PServiceLocator()
         {
             PLog::echoMessage("Destroying Service Locator.");
-            // Clear all interface vectors
+
+            // Move all owned services out from under the lock before destroying them.
+            // services.clear() below would run every service's destructor, and if any
+            // of those destructors reentrantly calls back into this locator (getService,
+            // unregisterService, etc.), relocking a non-recursive std::mutex from the
+            // same thread is undefined behavior - MSVC's debug STL turns it into a
+            // std::system_error, thrown mid-unwind, which forces std::terminate/abort.
+            // Releasing the lock before the services actually destruct avoids that.
+            std::map<std::type_index, std::shared_ptr<IService>> servicesToDestroy;
             {
                 std::lock_guard<std::mutex> lock(mutex);
                 m_initializables.clear();
@@ -105,18 +113,19 @@ namespace purity{
                 m_updatables.clear();
                 m_renderables.clear();
                 m_terminables.clear();
-                services.clear();
+                servicesToDestroy = std::move(services);
             }
+            // servicesToDestroy destructs here, outside the lock.
         }
 
         template<typename Abstract, typename Concrete>
-        void registerService(std::shared_ptr<Concrete> service){
+        void registerService(std::shared_ptr<Concrete> service) {
             static_assert(std::is_base_of_v<IService, Abstract>, "Abstract must be a subclass of IService");
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             const auto typeIndex = std::type_index(typeid(Abstract)); //
             // PLog::echoValue(typeIndex.name());
 
-            if (services.find(typeIndex) != services.end()){
+            if (services.find(typeIndex) != services.end()) {
                 throw std::runtime_error("Service already registered!");
             }
 
@@ -125,13 +134,13 @@ namespace purity{
         }
 
         template<typename Abstract>
-        void unregisterService(){
+        void unregisterService() {
             std::lock_guard<std::mutex> lock(mutex); // 'lock' here is the lock_guard variable to lock the thread with.
             const auto typeIndex = std::type_index(typeid(Abstract));
             // PLog::echoValue(typeIndex.name());
 
             const auto it = services.find(typeIndex);
-            if (it == services.end()){
+            if (it == services.end()) {
                 throw std::runtime_error("Service not registered!");
             }
 
@@ -146,7 +155,7 @@ namespace purity{
             const auto it = services.find(typeIndex);
             // PLog::echoValue(typeIndex.name());
 
-            if (it == services.end()){
+            if (it == services.end()) {
                 throw std::runtime_error("Service not found!");
             }
 

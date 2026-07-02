@@ -1,0 +1,5 @@
+{
+    "projectDB": "Assets/TGames.peDB",
+    "project_name": "TGames",
+    "start_up_scene": "Assets/Scenes/DefaultScene.pscene"
+}

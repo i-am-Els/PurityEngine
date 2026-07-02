@@ -45,11 +45,12 @@ namespace purity::assetDB{
 
     void PAssetDatabase::destroy() {
         m_Database.close_db();
+		ObjectRegistry::Shutdown();
     }
 
-    AssetRecord PAssetDatabase::getAssetRecordFromRelPath(const std::string& relPath) const
+    std::optional<AssetRecord> purity::assetDB::PAssetDatabase::getAssetRecordFromRelPath(const std::string& relPath) const
     {
-        return m_Database.readAssetByRelPathUnique(relPath).value();
+        return m_Database.readAssetByRelPathUnique(relPath);
     }
 
     void PAssetDatabase::exit()
