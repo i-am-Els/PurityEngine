@@ -6,8 +6,5 @@
 #include "entity.h"
 
 namespace purity::ecs {
-
-    PComponent::PComponent(std::weak_ptr<PEntity> entity) : ISerializable(), m_entity(entity){
-    }
-
+	
 }

@@ -5,12 +5,11 @@
 #pragma once
 
 #include "component.h"
-#include "components_behavior.h"
 using namespace commons;
 
 namespace purity::ecs{
-    class PURITY_API PBehaviourScriptComponent : public PComponent, public ManipulativeBehaviour, public std::enable_shared_from_this<PBehaviourScriptComponent>{
-        explicit PBehaviourScriptComponent(std::weak_ptr<PEntity> entity);
+    class PURITY_API PBehaviourScriptComponent : public PComponent, public std::enable_shared_from_this<PBehaviourScriptComponent>{
+        explicit PBehaviourScriptComponent();
 
     public:
         ~PBehaviourScriptComponent() override { commons::PLog::echoMessage("Destroying Behaviour Script Component"); };

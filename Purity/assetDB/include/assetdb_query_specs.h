@@ -11,6 +11,10 @@
 
 using AssetType = commons::AssetType;
 
+namespace purity::scene {
+    class PScene;
+}
+
 
 namespace purity::assetDB
 {

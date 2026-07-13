@@ -53,7 +53,7 @@ namespace purity::assetDB{
     private:
         // Switch on QueryType...
         std::unordered_map<PUUID, AssetRecord> m_AssetContainer;
-        ObjectRegistry* registry = ObjectRegistry::GetObjectRegistry();
+        AssetRegistry* registry = AssetRegistry::GetAssetRegistry();
         // std::unordered_map<PUUID, std::shared_ptr<PAsset>> m_LoadedAssetContainer; // Substitute for Object Registry
 
 
@@ -63,20 +63,27 @@ namespace purity::assetDB{
     std::shared_ptr<T> PAssetDatabase::queryDBForAsset(const QuerySpec<T>& spec, QueryOperation operation) {
 
         AssetOperationStrategy<T> assetStrategy = AssetOperationStrategy<T>(spec);
-        switch (operation)
-        {
-        case QueryOperation::Read:
-            return performGetOperation(assetStrategy);
-        case QueryOperation::Write:
-            return performAddOperation(assetStrategy);
-        case QueryOperation::Update:
-            return performUpdateOperation(assetStrategy);
-        case QueryOperation::Delete:
-            return performDeleteOperation(assetStrategy);
-        default:
-            break;
+
+        try {
+            switch (operation)
+            {
+            case QueryOperation::Read:
+                return performGetOperation(assetStrategy);
+            case QueryOperation::Write:
+                return performAddOperation(assetStrategy);
+            case QueryOperation::Update:
+                return performUpdateOperation(assetStrategy);
+            case QueryOperation::Delete:
+                return performDeleteOperation(assetStrategy);
+            default:
+                break;
+            }
+			return nullptr;
         }
-        return nullptr;
+        catch (const std::exception& e) {
+            PLog::echoMessage(LogLevel::Error, "Asset Query Request threw an exception...\nException: %s, \ncheck the Console for more details.", e.what());
+            return nullptr;
+        }
     }
 
     template<typename T>
@@ -131,7 +138,7 @@ namespace purity::assetDB{
         assetDB->m_AssetContainer[strategy.spec.assetRecord.uuid] = strategy.spec.assetRecord;
         // assetDB->m_LoadedAssetContainer[strategy.spec.assetRecord.uuid] = asset;
         // It is perceived that objects/assets must be created using the create() method which in turn
-        // adds created asset to ObjectRegistry.
+        // adds created asset to AssetRegistry.
         // Index file in DB.
         if(!assetDB->m_Database.insertAsset(strategy.spec.assetRecord))
         {

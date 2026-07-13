@@ -55,6 +55,8 @@ target_compile_definitions(PurityEditor PUBLIC PURITY_PLATFORM_WINDOWS
         PURITY_SYSTEM_FINDER
 )
 
+target_compile_definitions(PurityEditor PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
+
 target_compile_features(PurityEditor PUBLIC cxx_std_20)
 
 

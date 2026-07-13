@@ -8,8 +8,9 @@
 #include "buffer.h"
 #include "handle_base.h"
 #include "purity_core_pch.h"
-#include "serialization_macros.h"
 #include "vertex_array.h"
+#include "iidentifiable.h"
+#include "scene_graph.h"
 //#include <cereal/types/base_class.hpp>
 //#include <cereal/types/memory.hpp>
 
@@ -20,25 +21,24 @@ using namespace purity::graphics;
 
 namespace purity::assetDB {
 
-    class PURITY_API PAsset : public ISerializable {
-    protected:
-        // void* m_data;
-        PUUID id;
+    class PURITY_API PAsset : public ISerializable, public IIdentifiable {
 
     public:
         PAsset() = default; /// TODO: We expect that serialisables should be created by the create() function call
         PURE_NODISCARD PAsset(void* data, const PUUID& id)
-            : id(id)
         {
+            m_id = id;
         }
 
         ~PAsset() = default;
 
-        void setID(const PUUID& _id) { this->id = _id; }
+
+        void setUUID(const PUUID& _id) { this->m_id = _id; }
+        PUUID getUUID() const { return m_id; }
     protected:
-        PUUID getUUID() const override { return id; }
     };
 
+    static_assert(std::derived_from<PAsset, IIdentifiable>);
 
     // ---------------------------------------------------------
     // ---------------------- Asset Types ----------------------
@@ -48,12 +48,10 @@ namespace purity::assetDB {
 
     class PURITY_API PTextureAsset final : public PAsset {
     public:
+        PTextureAsset() = default;
         void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
-
-        CAN_CREATE_AS_SERIALIZABLE(PTextureAsset)
-            PTextureAsset() = default;
-            void setType(std::string _type) { type = _type; }
+        void setType(std::string _type) { type = _type; }
         std::string getType() const { return type; }
         std::string type; // Diffuse or Normal
         //void setID(uint64_t uuid); 
@@ -61,41 +59,36 @@ namespace purity::assetDB {
 
     class PURITY_API PSpriteAsset final : public PAsset {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PSpriteAsset)
-            PSpriteAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PSpriteAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PShaderAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PShaderAsset)
-            PShaderAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PShaderAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PMeshAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PMeshAsset)
-            PMeshAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PMeshAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PSkeletonAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PSkeletonAsset)
-            PSkeletonAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PSkeletonAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PStaticMeshAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PStaticMeshAsset)
-            PStaticMeshAsset() = default;
-            std::vector<PVertex> vertices;
+        PStaticMeshAsset() = default;
+        std::vector<PVertex> vertices;
         std::vector<unsigned int> indices;
         PUUID getTextureAsset() const { return refTextureAssetID; }
         void Serialize(cereal::JSONOutputArchive& ar) const override;
@@ -111,70 +104,60 @@ namespace purity::assetDB {
 
     class PURITY_API PMaterialAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PMaterialAsset)
-            PMaterialAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PMaterialAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PSplineAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PSplineAsset)
-            PSplineAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PSplineAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PP2DPolygonMeshAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PP2DPolygonMeshAsset)
-            PP2DPolygonMeshAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PP2DPolygonMeshAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PSoundSourceAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PSoundSourceAsset)
-            PSoundSourceAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PSoundSourceAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PP3DSoundSourceAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PP3DSoundSourceAsset)
-            PP3DSoundSourceAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PP3DSoundSourceAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PLevelAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PLevelAsset)
-            PLevelAsset() = default;
-        explicit PLevelAsset(scene::PScene* scenePtr) : m_scene(scenePtr) {}
-        void SetScene(scene::PScene* scenePtr) { m_scene = scenePtr; }
-        scene::PScene* GetScene() const { return m_scene; }
+        PLevelAsset() = default;
+        void SetSceneGraph(scene::PSceneGraph sceneGraph) { m_sceneGraph = sceneGraph; }
         void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     private:
-        scene::PScene* m_scene = nullptr;
+        scene::PSceneGraph m_sceneGraph;
     };
 
     class PURITY_API PParticleAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PParticleAsset)
-            PParticleAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PParticleAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 
     class PURITY_API PRenderMapAsset final : public PAsset  {
     public:
-        CAN_CREATE_AS_SERIALIZABLE(PRenderMapAsset)
-            PRenderMapAsset() = default;
-            void Serialize(cereal::JSONOutputArchive& ar) const override;
+        PRenderMapAsset() = default;
+        void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
     };
 

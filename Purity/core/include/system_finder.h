@@ -5,7 +5,7 @@
 #pragma once
 
 #include "iservices.h"
-#include "isystems.h"
+#include "ipools.h"
 
 namespace purity{
     namespace scene {
@@ -14,7 +14,7 @@ namespace purity{
     class PApplication;
     class PWindow;
     class PServiceLocator;
-    class PECSService;
+
     namespace assetDB
     {
         class PAssetDatabase;
@@ -37,9 +37,7 @@ namespace purity{
 
         static std::shared_ptr<PWindow>& GetWindow();
 
-        static scene::PScene *GetScene();
-
-        static PECSService * GetECSService();
+        static scene::PScene* GetScene();
 
         static graphics::PRendererService * GetRendererService();
 

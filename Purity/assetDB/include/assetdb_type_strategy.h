@@ -8,7 +8,9 @@
 #include "core_macros.h"
 #include "assets_types.h"
 #include "papplication.h"
-
+#include "asset_registry.h"
+#include "serializer.h"
+#include "scene_graph.h"
 //using namespace purity::fileIO;
 
 namespace purity::assetDB
@@ -230,7 +232,7 @@ namespace purity::assetDB
             std::shared_ptr<PLevelAsset> levelAsset;
             try
             {
-                auto levelAsset_obj = ObjectRegistry::findObject(this->spec.assetRecord.uuid); // This is important and universally, all assets should be in object registry and pulled from there.
+                auto levelAsset_obj = AssetRegistry::findObject(this->spec.assetRecord.uuid); // This is important and universally, all assets should be in object registry and pulled from there.
                 if (levelAsset_obj == nullptr) { 
                     PLog::echoMessage("Asset Pointer is null, you might need to load it into runtime environment... \nWait while we do that for you... \nLoading...", LogLevel::Info);
                     /// TODO : Assumption is that this fella below will pull the fully serialised data into proper struct.
@@ -240,7 +242,7 @@ namespace purity::assetDB
                 }
                 levelAsset = dynamic_pointer_cast<PLevelAsset>(levelAsset_obj);
                 if (levelAsset == nullptr) {
-                    throw exceptions::NullPointerError("Type Mismatch");
+                    throw exceptions::NullPointerError("Expected to Load a Level Asset of type PLevelAsset but there was a Type Mismatch leading to an error.");
                 }
 
             }
@@ -257,9 +259,8 @@ namespace purity::assetDB
             auto scene = PSystemFinder::GetScene();
             if (scene == nullptr) { throw std::runtime_error("Scene is null"); }
 
-            auto levelAsset = assetDB::PLevelAsset::create(); // always do this, except for project asset
-            levelAsset->setID(this->spec.assetRecord.uuid);
-            levelAsset->SetScene(scene);
+            auto levelAsset = Serializer::createObject<PLevelAsset>(this->spec.assetRecord.uuid); // always do this, except for project asset
+            levelAsset->SetSceneGraph(scene->getSceneGraph());
 
             // Serialize to disk
             Serializer::save(levelAsset, spec.assetRecord.metaPath.string());
@@ -328,7 +329,7 @@ namespace purity::assetDB
             // be flying around lying somewhere in the asset db or object registry.
 
             auto projectAsset = std::make_shared<assetDB::PProjectAsset>();
-            projectAsset->setID(this->spec.assetRecord.uuid);
+            projectAsset->setUUID(this->spec.assetRecord.uuid);
 
             projectAsset->project_name = spec.assetRecord.name;
             projectAsset->start_up_scene = spec.startup_scene_path;

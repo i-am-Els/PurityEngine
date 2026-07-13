@@ -8,15 +8,15 @@ namespace purity::ecs
 {
     unsigned int PCameraComponent::s_count = 0;
 
-    PCameraComponent::PCameraComponent(std::weak_ptr<PEntity> entity) : PComponent(entity) {
+    PCameraComponent::PCameraComponent() : PComponent() {
     }
 
-    PCameraComponent::PCameraComponent(std::weak_ptr<PEntity> entity, unsigned int _width, unsigned int _height, int xPos, int yPos)
-            : PComponent(entity), width(_width), height(_height), position(Vector2i(xPos, yPos)) {
+    PCameraComponent::PCameraComponent(unsigned int _width, unsigned int _height, int xPos, int yPos)
+            : PComponent(), width(_width), height(_height), position(Vector2i(xPos, yPos)) {
 
     }
 
-    PCameraComponent::PCameraComponent(std::weak_ptr<PEntity> entity, const purity::ecs::SCameraProfile &prop) : PComponent(entity),
+    PCameraComponent::PCameraComponent(const purity::ecs::SCameraProfile &prop) : PComponent(),
                                                                                                   width(prop.width),
                                                                                                   height(prop.height),
                                                                                                   position(prop.position)

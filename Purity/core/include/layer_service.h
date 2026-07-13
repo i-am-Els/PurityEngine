@@ -7,6 +7,7 @@
 #include "iservices.h"
 
 namespace purity{
+    class PLayer; // forward decl
 
     class PURITY_API ALayerService : public IService, public IInitializableService, public IUpdatableService, public  IRenderableService, public ITerminableService{
     public:

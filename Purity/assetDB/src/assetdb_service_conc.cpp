@@ -45,7 +45,7 @@ namespace purity::assetDB{
 
     void PAssetDatabase::destroy() {
         m_Database.close_db();
-		ObjectRegistry::Shutdown();
+        AssetRegistry::Shutdown();
     }
 
     std::optional<AssetRecord> purity::assetDB::PAssetDatabase::getAssetRecordFromRelPath(const std::string& relPath) const

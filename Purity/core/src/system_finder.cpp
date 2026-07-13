@@ -5,7 +5,7 @@
 #include "system_finder.h"
 
 #include "assetdb_service.h"
-#include "ecs_service_conc.h"
+#include "ecs_conc.h"
 #include "layer_service.h"
 #include "layer_service_conc.h"
 #include "papplication.h"
@@ -22,10 +22,6 @@ namespace purity{
 
     PApplication *PSystemFinder::GetApplication() {
         return application;
-    }
-
-    PECSService *PSystemFinder::GetECSService() {
-        return GetApplication()->serviceLocator->getService<AECSService, PECSService>().get();
     }
 
     PRendererService* PSystemFinder::GetRendererService()

@@ -1,37 +1,46 @@
 //
-// Created by Eniola Olawale on 6/18/2024.
+// Created by Eniola Olawale on 5/8/2024.
 //
 
 #pragma once
 
+#include <vector>
+
 #include "component.h"
+#include "buffer.h"
+#include "assets_types.h"
 
-namespace purity::ecs{
+using namespace purity::graphics;
 
-    struct SRenderProfile{
-        bool CanBeRendered;
-//        PMaterial material;
-//        bool shouldSetUpLOD;
+namespace purity::ecs {
+    //class P3DGeometricMeshSS;
+
+    struct SRendererProfile {
+        bool isVisible;
     };
 
-//    class IRenderSystem;
-    class PURITY_API PRenderComponent final : public PComponent,  public std::enable_shared_from_this<PRenderComponent>{
+    class PURITY_API PRendererComponent final : public PComponent, public std::enable_shared_from_this<PRendererComponent> {
     public:
-        explicit PRenderComponent(std::weak_ptr<PEntity> entity, SRenderProfile profile);
-        ~PRenderComponent() override { PLog::echoMessage("Destroying renderComponent"); }
+        PRendererComponent();
+        explicit PRendererComponent(SRendererProfile profile);
+        ~PRendererComponent() override { PLog::echoMessage("Destroying mesh renderer"); }
 
         void update(float deltaTime) override;
         void start() override;
 
-        P_GET_COMPONENT_TYPE(PComponentType::PRenderComponent)
-        void Serialize(cereal::JSONOutputArchive& ar) const override;
+
+        P_GET_COMPONENT_TYPE(PComponentType::PRendererComponent)
+            void Serialize(cereal::JSONOutputArchive& ar) const override;
         void Deserialize(cereal::JSONInputArchive& ar) override;
-        SRenderProfile m_RenderProfile;
+        SRendererProfile m_RendererProfile;
 
     private:
         static unsigned int s_count; // All components must have this
 
     protected:
+        
+
+        //friend class P3DGeometricMeshSS;
 
     };
 }

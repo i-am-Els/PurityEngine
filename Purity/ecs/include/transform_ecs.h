@@ -19,7 +19,8 @@ namespace purity::ecs{
 
     class PURITY_API PTransformComponent final : public PComponent, public std::enable_shared_from_this<PTransformComponent> {
     public:
-        explicit PTransformComponent(std::weak_ptr<PEntity> entity, STransformProfile profile);
+        PTransformComponent();
+        explicit PTransformComponent(STransformProfile profile);
 
         ~PTransformComponent() override { PLog::echoMessage("Destroying transform"); };
 

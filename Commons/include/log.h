@@ -8,6 +8,9 @@
 #include <iostream>
 #include <cstdarg>
 
+// macro — this is what call sites actually use
+#define PLOG_ERROR(message, ...) commons::PLog::echoMessage(LogLevel::Error, __FILE__, __LINE__, message, ##__VA_ARGS__)
+
 namespace commons {
     enum class COMMON_API LogLevel{
         Error = 0, Warning, Info
@@ -22,7 +25,7 @@ namespace commons {
         [[nodiscard]] static PLog& getInstance();
         static void echoMessage(const char* message, LogLevel _level = LogLevel::Info);
         static void echoMessage(LogLevel _level = LogLevel::Info, const char* message = "", ...);
-
+        static void echoMessage(LogLevel _level, const char* file, int line, const char* message, ...);
         template<class T>
          static void echoValue(T value){
             std::cout << "[Value] \033[92m" << value << "\033[0m" << std::endl;

@@ -34,7 +34,7 @@ find_package(assimp CONFIG REQUIRED)
 find_package(cereal CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-#find_dependency(unofficial-minizip CONFIG)
+find_dependency(unofficial-minizip CONFIG)
 find_package(zip CONFIG REQUIRED)
 find_dependency(pugixml CONFIG REQUIRED)
 find_dependency(poly2tri CONFIG)
@@ -72,8 +72,8 @@ add_library(Purity
         #--------------------------------
         core/include/assetdb_service.h
         core/include/core_macros.h
-        core/include/ecs_service.h
-        core/include/ecs_service_conc.h
+        
+        core/include/ecs_conc.h
         core/include/entry.h
         core/include/events.h
         core/include/input.h
@@ -97,25 +97,20 @@ add_library(Purity
         #--------------------------------
         ecs/include/camera.h
         ecs/include/component.h
-        ecs/include/components_behavior.h
+        
         ecs/include/entity.h
-        ecs/include/entity_base.h
+        
         ecs/include/entity_handle.h
         ecs/include/entity_registry.h
-        ecs/include/id_comp.h
-        ecs/include/isystems.h
+        
+        ecs/include/ipools.h
         ecs/include/mesh.h
-        ecs/include/mesh_system_conc.h
-        ecs/include/reg_system.h
-        ecs/include/reg_system_conc.h
-        ecs/include/render_system.h
-        ecs/include/render_system_conc.h
-        ecs/include/renderer.h
+        
+        
         ecs/include/scripting.h
         ecs/include/tag_comp.h
         ecs/include/transform_ecs.h
-        ecs/include/transform_system.h
-        ecs/include/transform_system_conc.h
+        
         #--------------------------------
         fileIO/include/fileio.h
         fileIO/include/handle_base.h
@@ -142,7 +137,7 @@ add_library(Purity
         assetDB/src/assetdb_utility.cpp
         assetDB/src/assets_types.cpp
         #--------------------------------
-        core/src/ecs_service_conc.cpp
+        
         core/src/input.cpp
         core/src/layer.cpp
         core/src/layer_service_conc.cpp
@@ -154,20 +149,17 @@ add_library(Purity
         #--------------------------------
         ecs/src/camera.cpp
         ecs/src/component.cpp
-        ecs/src/components_behavior.cpp
+        
         ecs/src/entity.cpp
         ecs/src/entity_handle.cpp
         ecs/src/entity_registry.cpp
-        ecs/src/id_comp.cpp
         ecs/src/mesh.cpp
-        ecs/src/mesh_system_conc.cpp
-        ecs/src/reg_system_conc.cpp
-        ecs/src/render_system_conc.cpp
-        ecs/src/renderer.cpp
+        
+        
         ecs/src/scripting.cpp
         ecs/src/tag_comp.cpp
         ecs/src/transform_ecs.cpp
-        ecs/src/transform_system_conc.cpp
+        
         #--------------------------------
         fileIO/src/fileio.cpp
         fileIO/src/importer.cpp
@@ -185,20 +177,25 @@ add_library(Purity
         #--------------------------------
         scene/include/scene_layer.h
         core/include/iserializable.h
-        assetDB/include/object_registry.h
-        assetDB/src/object_registry.cpp
+        assetDB/include/asset_registry.h
+        assetDB/src/asset_registry.cpp
         core/include/serializer.h
         core/include/serialization_macros.h
         core/include/weak_ptr_utility.h
         core/src/serializer.cpp
         scene/src/scene.cpp
         scene/src/scene_layer.cpp
+        scene/include/scene_graph.h
+        ecs/include/renderer.h
+        ecs/src/renderer.cpp
+        core/include/iidentifiable.h
+        ecs/include/entity_index.h
 )
 
 target_sources(
         Purity PRIVATE
-        assetDB/src/object_registry.cpp
-        assetDB/include/object_registry.h
+        assetDB/src/asset_registry.cpp
+        assetDB/include/asset_registry.h
         core/src/serializer.cpp
         core/include/serializer.h
 )
@@ -209,6 +206,8 @@ target_compile_definitions(Purity PUBLIC PURITY_PLATFORM_WINDOWS
         ISLE_PLATFORM_WINDOWS
         GLFW_INCLUDE_NONE
         GLAD_DLL)
+
+target_compile_definitions(Purity PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
 
 # Add the core directories for your library and dependencies
 target_include_directories(Purity PUBLIC

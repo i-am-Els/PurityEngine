@@ -45,7 +45,6 @@
 
 #include "papplication.h"
 #include <window_events.h>
-#include "ecs_service_conc.h"
 #include "input.h"
 #include "layer_service_conc.h"
 #include "system_finder.h"
@@ -106,8 +105,7 @@ namespace purity{
         PWindow::EventCallbackFunction boundCallback = [this](auto&& placeholder1) { onEvent(std::forward<decltype(placeholder1)>(placeholder1)); };
         window->setWindowsEventCallbacks(boundCallback);
 
-        // Create all Services
-        const auto ecsService = std::make_shared<PECSService>(window.get());
+        // Create all Services;
         const auto assetService = std::make_shared<assetDB::PAssetDatabase>();
         const auto layerService = std::make_shared<PLayerService>();
         const auto rendererService = std::make_shared<PRendererService>(window->getGLFWwindow());
@@ -116,7 +114,6 @@ namespace purity{
         assetService->preInit(wrappedData);
 
         // Register Services
-        serviceLocator->registerService<AECSService, PECSService>(ecsService);
         serviceLocator->registerService<AAssetDBService, assetDB::PAssetDatabase>(assetService);
         serviceLocator->registerService<ALayerService, PLayerService>(layerService);
         serviceLocator->registerService<ARendererService, PRendererService>(rendererService);
@@ -164,7 +161,6 @@ namespace purity{
         serviceLocator->unregisterService<ARendererService>();
         serviceLocator->unregisterService<ALayerService>();
         serviceLocator->unregisterService<AAssetDBService>();
-        serviceLocator->unregisterService<AECSService>();
 
     }
 

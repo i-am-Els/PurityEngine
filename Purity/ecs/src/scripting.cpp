@@ -7,7 +7,7 @@
 namespace purity::ecs{
     unsigned int PBehaviourScriptComponent::s_count = 0;
 
-    PBehaviourScriptComponent::PBehaviourScriptComponent(std::weak_ptr<PEntity> entity) : PComponent(entity) {
+    PBehaviourScriptComponent::PBehaviourScriptComponent() : PComponent() {
     }
 
     void PBehaviourScriptComponent::update(float deltaTime) {

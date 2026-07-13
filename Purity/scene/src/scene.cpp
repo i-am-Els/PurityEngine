@@ -6,7 +6,6 @@
 #include "entity_handle.h"
 
 #include "assetdb_service_conc.h"
-#include "id_comp.h"
 #include "service_locator.h"
 #include "system_finder.h"
 #include "tag_comp.h"
@@ -20,39 +19,40 @@ namespace purity::scene{
 
     PEntityHandle PScene::CreateEntityWithUUID(commons::PUUID uuid, const std::string& name) {
         // Add entity to Entity Registry
-        auto entity = m_registry.Create(uuid, name);
-        // Add ID Component
-        auto id = entity.AddComponent<PIDComponent>();
-        // Set ID
-        auto sh_id = fetch_or_throw(id, "PIDComponent::setID");
-        sh_id->setID(uuid);
+        auto entityHandle = m_registry.Create(uuid, name);
 
         // Add Transform Component,
-        entity.AddComponent<PTransformComponent>();
+        entityHandle.AddComponent<PTransformComponent>();
         // Add Tag Component
-        auto tag = entity.AddComponent<PTagComponent>();
+        auto tag = entityHandle.AddComponent<PTagComponent>();
         // Add Entity to Entity Map
 
-        PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", static_cast<std::string>(sh_id->m_entityInstanceID).c_str());
-        return entity;
+        PLog::echoMessage(LogLevel::Info, "%s %s %s", "Entity", "in Scene with ID:", PUUID::to_string(entityHandle.getInstanceID()).c_str());
+        return entityHandle;
     }
 
-    void PScene::DestroyEntity(PEntityHandle entity) {
-        m_registry.Destroy(entity.getInstanceID());
+    void PScene::DestroyEntity(PEntityHandle entityHandle) {
+        m_registry.Destroy(entityHandle.getInstanceID());
+        /// TODO : Dont forget to remove from Sparse Set
     }
 
     void PScene::DestroyEntityWithUUID(commons::PUUID uuid) {
         m_registry.Destroy(uuid);
+        /// TODO : Dont forget to remove from Sparse Set
     }
 
-    PScene::PScene() : m_scene_id(PUUID()){}
+    PScene::PScene() : m_scene_id(PUUID()), m_registry(this), m_ecsService(this) {
+        m_ecsService.initialize();
+    }
 
-    PScene::PScene(const PUUID& id) : m_scene_id(id)
+    PScene::PScene(const PUUID& id) : m_scene_id(id), m_registry(this), m_ecsService(this)
     {
+        m_ecsService.initialize();
     }
 
     PScene::~PScene() {
-        // TODO - clear out all systems and there components during scene switch
+        // TODO - clear out all ecs services' pool managers and there components during scene switch
+        m_ecsService.destroy();
         PLog::echoMessage("Destroying Scene.");
     }
 
@@ -60,46 +60,67 @@ namespace purity::scene{
         return !m_registry.entityMapIsEmpty(); // TODO - Change this method to check if any object with an `enabled` render component is present in the scene
     }
 
-    std::unique_ptr<PScene> PScene::LoadScene(const PUUID& scene_id)
+    std::unique_ptr<PScene> PScene::LoadScene(const std::string& scene_asset_rel_path)
     {
-        std::unique_ptr<PScene> scene;
-        if (static_cast<int>(scene_id) != 0)
+        
+        std::unique_ptr<PScene> scene; 
+        std::shared_ptr<assetDB::PLevelAsset> scene_asset;
+
+        fs_path scenePath(scene_asset_rel_path);
+        try
         {
-            // TODO - Start Serializing from json using Cereal.
-            // auto scene_asset = PSystemFinder::GetServiceLocator()->getService<AAssetDBService, assetDB::PAssetDatabase>()->
-            // queryDBForAsset<assetDB::PLevelAsset>(assetDB::QueryLevelAssetSpec(scene_id), assetDB::QueryOperation::Read);
-            // scene = scene_asset.get();
-            // return scene;
+            bool fileExists = commons::_validateFileExistence(scenePath);
+            if (!fileExists)
+            {
+                throw exceptions::FileReadError("Scene file missing or simply does note exist!");
+            }
+
+            // File Exists Read it into Memory.
+            const auto sceneRecord = PSystemFinder::GetAssetDatabase()->getAssetRecordFromRelPath(scene_asset_rel_path);
+            if (!sceneRecord.has_value())
+            {
+                commons::PLog::echoMessage(LogLevel::Info, "Scene::LoadScene() - No Asset Record found for scene file: %s", scene_asset_rel_path.c_str());
+                throw exceptions::NullPointerError("No Asset Record found for scene file.");
+            }
+
+            scene_asset = assetDB::PAssetDatabase::queryDBForAsset(assetDB::QuerySpec<assetDB::PLevelAsset>(sceneRecord.value()), QueryOperation::Read);
+            
+            if (scene_asset == nullptr)
+            {
+                throw exceptions::NullPointerError("Failed to resolve a scene asset.");
+            }
+
+
+            /// TODO - BUILD SCENE FROM SCENE ASSET FILE
+            /*if (!switchScene(std::move(loaded_scene)))
+            {
+                throw exceptions::NullPointerError("Failed to attach scene.");
+            }*/
         }
-        // TODO - create a new asset file repressenting this asset in asset DB
-        // TODO - Never forget to set scene name
-        scene = std::move(std::make_unique<PScene>());
-        auto bunny = scene->CreateEntity("Bunny");
+        catch (std::exception& e)
+        {
+            commons::PLog::echoMessage(commons::LogLevel::Error, "Scene::LoadScene() - Exception: %s", e.what());
+            return nullptr;
+            /*throw;*/
+        }
+
+
+        return scene;
+    }
+
+    std::unique_ptr<PScene> PScene::CreateNewScene(const std::string& scene_name)
+    {
+        std::unique_ptr<PScene> scene = std::make_unique<PScene>();
+        scene->setName(scene_name);
+        PEntityHandle bunny = scene->CreateEntity("Bunny");
 
         auto mesh = bunny.AddComponent<PMeshComponent>();
-        auto render = bunny.AddComponent<PRenderComponent>();
+        auto render = bunny.AddComponent<PRendererComponent>();
 
         const auto bunny_transform = fetch_or_throw(bunny.GetComponent<PTransformComponent>());
         PLog::echoValue(bunny_transform->m_position);
 
         return scene;
-    }
-
-    std::unique_ptr<PScene> PScene::CreateDefaultScene()
-    {
-        // TODO - 1. create a new asset file repressenting this asset in asset DB
-        // TODO - 2. Never forget to set scene name
-        std::unique_ptr<PScene> scene = std::make_unique<PScene>();
-        PEntityHandle bunny = scene->CreateEntity("Bunny");
-        scene.get()->setName("DefaultScene");
-
-        auto mesh = bunny.AddComponent<PMeshComponent>();
-        auto render = bunny.AddComponent<PRenderComponent>();
-
-        const auto bunny_transform = fetch_or_throw(bunny.GetComponent<PTransformComponent>());
-        PLog::echoValue(bunny_transform->m_position);
-
-        return std::move(scene);
     }
 
     void PScene::UnloadScene()

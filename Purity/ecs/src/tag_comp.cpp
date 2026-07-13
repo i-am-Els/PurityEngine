@@ -5,7 +5,7 @@
 #include "tag_comp.h"
 
 namespace purity::ecs{
-    PTagComponent::PTagComponent(std::weak_ptr<PEntity> entity) : PComponent(entity) {
+    PTagComponent::PTagComponent() : PComponent() {
 
     }
 

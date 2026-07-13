@@ -10,7 +10,7 @@
 namespace purity::ecs{
     class PURITY_API PTagComponent final : public PComponent, public std::enable_shared_from_this<PTagComponent>{
     public:
-        explicit PTagComponent(std::weak_ptr<PEntity> entity);
+        PTagComponent();
         ~PTagComponent() override { PLog::echoMessage("Destroying Tag Component"); };
 
         void update(float deltaTime) override;

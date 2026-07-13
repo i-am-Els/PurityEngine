@@ -9,12 +9,16 @@
 // #include "scene.h"
 
 
-// namespace purity::scene {
-//     class PScene;
-// }
+ //namespace purity::scene {
+ //    class PScene;
+ //}
 
 
 namespace purity::ecs {
+
+
+	class PEntityRegistry;
+	class PECSService;
 
     /// @brief This class is an Entity Handle that exposes only operations that is expected of client code on the entity
     /// class without exposing the raw-pointer, giving the client less control over the lifetime of the actual object.
@@ -24,10 +28,13 @@ namespace purity::ecs {
     /// Handle itself. Therefore, 2 or more handles pointing to the same entity have the same hash.
     class PURITY_API PEntityHandle final : public fileIO::PHandleBase {
     public:
-        PEntityHandle() : PHandleBase(), m_data({}) {}
+        PEntityHandle(PEntityRegistry* registry) : PHandleBase(), m_data({}), m_registry(registry) {}
 
         // Constructor to initialize with an existing PEntity pointer
-        explicit PEntityHandle(std::weak_ptr<PEntity> entity) : PHandleBase(), m_data(entity) {}
+        explicit PEntityHandle(std::weak_ptr<PEntity> entity, PEntityRegistry* registry) : PHandleBase(), m_data(entity), m_registry(registry) {}
+
+        PURE_INLINE PEntityIndex& getEntityIndex() const { return m_data.lock()->m_index; }
+
 
         bool operator==(PEntityHandle & handle) const{
             auto entity = m_data.lock();
@@ -38,6 +45,12 @@ namespace purity::ecs {
 
 //        PEntityHandle(PEntityHandle&& handle) noexcept ;
 //        PEntityHandle& operator=(PEntityHandle&& handle) noexcept ;
+
+        bool isValidHandle() const {
+            auto entity = m_data.lock();
+            if (!entity) return false;
+            return true;
+        }
 
         // Destructor
         ~PEntityHandle() override {
@@ -53,14 +66,14 @@ namespace purity::ecs {
         std::weak_ptr<T> GetComponent() {
             const auto entity = m_data.lock();
             if (!entity) { return {}; }
-            return entity->GetComponent<T>();
+            return getECSService().GetComponent<T>(entity->m_index);
         }
 
         template<typename T>
-        void RemoveComponent(T* component) {
+        void RemoveComponent() {
             const auto entity = m_data.lock();
             if (!entity) { return; }
-            entity->RemoveComponent(component);
+            return getECSService().RemoveComponent<T>(entity->m_index);
         }
 
         template<typename T>
@@ -68,14 +81,14 @@ namespace purity::ecs {
         {
             const auto entity = m_data.lock();
             if (!entity) { return false; }
-            return entity->HasComponent<T>();
+            return getECSService().HasComponent<T>(entity->m_index);
         }
 
         template<typename T>
         std::weak_ptr<T> AddComponent() {
             const auto entity = m_data.lock();
             if (!entity) { return {}; }
-            return entity->AddComponent<T>();
+            return getECSService().AddComponent<T>(entity->m_index);
         }
 
         PURE_NODISCARD PURE_INLINE PUUID getInstanceID() const {
@@ -84,33 +97,18 @@ namespace purity::ecs {
             return entity->getUUID();
         }
 
+        PECSService& getECSService();
         // Optionally, provide access to the PEntity
 //        PEntity* getEntity() const { return m_data; }
 //        void setEntity(PEntity* entity) { m_data = entity; }
         friend bool operator==(const PEntityHandle & l_handle, const  PEntityHandle & r_handle);
     private:
         std::weak_ptr<PEntity> m_data; // Raw pointer; the handle does not own this data
-
-        // Other entity operations...
+        PEntityRegistry* m_registry;
+        
+        // Other entity operations..
 
     };
-
-    // Allow move constructor and move assignment operator
-//    PEntityHandle::PEntityHandle(PEntityHandle &&handle) noexcept {
-//        m_handleId = handle.m_handleId;
-//        m_data = handle.m_data;
-//        handle.m_data = nullptr;
-//        handle.m_handleId = PUUID(0);
-//    }
-//
-//    PEntityHandle &PEntityHandle::operator=(PEntityHandle &&handle) noexcept {
-//        m_handleId = handle.m_handleId;
-//        m_data = handle.m_data;
-//        handle.m_data = nullptr;
-//        handle.m_handleId = PUUID(0);
-//
-//        return *this;
-//    }
 
     inline bool operator==(const PEntityHandle & l_handle, const  PEntityHandle & r_handle){
         const auto l_entity = l_handle.m_data.lock();

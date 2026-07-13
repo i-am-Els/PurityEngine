@@ -12,6 +12,11 @@
 namespace purity::ecs
 {
     class PEntityHandle;
+    class PECSService;
+}
+
+namespace purity::scene {
+    class PScene;
 }
 
 using namespace commons;
@@ -20,7 +25,7 @@ using namespace purity::artifacts;
 namespace purity::ecs{
     class PURITY_API PEntityRegistry{
     public:
-        PEntityRegistry() = default;
+        explicit PEntityRegistry(scene::PScene* owner) : m_ownerScene(owner){}
         ~PEntityRegistry();
         PEntityRegistry(const PEntityRegistry& registry) = delete;
         PEntityRegistry operator=(const PEntityRegistry& registry) = delete; // Copy of a class with a unique ptr member iis not allowed
@@ -37,7 +42,17 @@ namespace purity::ecs{
             return m_entityMap.empty();
         }
 
+		//void SetOwningScene(scene::PScene* owner) { m_ownerScene = owner; }
+		PURE_INLINE scene::PScene* GetOwningScene() const { return m_ownerScene; }
+
+        PURE_NODISCARD PECSService& GetECSService() const;
     protected:
+        PEntityIndex createIndex(); 
+        void removeIndex(PEntityIndex index);
         std::unordered_map<PUUID, std::shared_ptr<PEntity>> m_entityMap;
+
+        std::queue<PEntityIndex> m_freeIndices;
+        static inline uint32_t s_indexCounter = 1;
+        scene::PScene* m_ownerScene;
     };
 }

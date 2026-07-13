@@ -7,7 +7,11 @@
 namespace purity::ecs{
     unsigned int PMeshComponent::s_count = 0;
 
-    PMeshComponent::PMeshComponent(std::weak_ptr<PEntity> entity, SMeshProfile profile) : PComponent(entity) {
+	PMeshComponent::PMeshComponent() : PComponent() {
+		m_MeshProfile = SMeshProfile();
+	}
+
+    PMeshComponent::PMeshComponent(SMeshProfile profile) : PComponent() {
         m_MeshProfile = profile;
     }
 

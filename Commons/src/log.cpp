@@ -74,6 +74,28 @@ namespace commons {
         printf("\n\033[0m");
     }
 
+    void PLog::echoMessage(LogLevel _level, const char* file, int line, const char* message, ...) {
+        va_list args;
+        va_start(args, message);
+        switch (_level) {
+        case LogLevel::Error:
+            printf("[%s] \033[91m", stringifyLogLevel(_level).c_str());
+            break;
+        case LogLevel::Warning:
+            printf("[%s] \033[93m", stringifyLogLevel(_level).c_str());
+            break;
+        case LogLevel::Info:
+            printf("[%s] \033[94m", stringifyLogLevel(_level).c_str());
+            break;
+        }
+        vprintf(message, args);
+        va_end(args);
+
+        if (_level == LogLevel::Error) {
+            printf(" (%s:%d)", file, line);
+        }
+        printf("\n\033[0m");
+    }
 
     PLog::~PLog() = default;
 } // purity

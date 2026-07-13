@@ -16,13 +16,13 @@ namespace purity::ecs{
     //class P3DGeometricMeshSS;
 
     struct SMeshProfile{
-        bool isVisible;
         std::string relAssetPath;
     };
 
     class PURITY_API PMeshComponent final : public PComponent,  public std::enable_shared_from_this<PMeshComponent>{
     public:
-        explicit PMeshComponent(std::weak_ptr<PEntity> entity, SMeshProfile profile);
+        PMeshComponent();
+        explicit PMeshComponent(SMeshProfile profile);
         ~PMeshComponent() override { PLog::echoMessage("Destroying mesh"); }
 
         void update(float deltaTime) override;

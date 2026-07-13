@@ -20,15 +20,24 @@ namespace purity::scene {
     {
     }
 
-    void SceneLayer::make_new_scene_asset(std::shared_ptr<PLevelAsset>& scene_asset, std::string relScenePathString)
+    /// <summary>
+    ///  This method makes a new scene obj, swaps it into the SceneLayer's attachedScene, and creates a record for this new scene which it pushes into persistent file storage and to the Database. 
+    /// <para>
+    ///   The method is marked "tc" meaning it should be used in a try-catch block since it throws an exception. 
+    /// </para>
+    /// </summary>
+    /// <param name="scene_asset"></param>
+    /// <param name="relScenePathString"></param>
+    void purity::scene::SceneLayer::MakeNewSceneAsset_TC(std::shared_ptr<PLevelAsset>& scene_asset, std::string relScenePathString)
     {
+        auto _scene = PScene::CreateNewScene("DefaultScene");
+        auto switched = switchScene(std::move(_scene));
         // No default Scene was found, this is most likely(99%) a new project, Create one (A default scene file).
-        auto _scene =  PScene::CreateDefaultScene();
-        if (!switchScene(std::move(_scene))) { throw exceptions::NullPointerError("Scene::CreateDefaultScene() returned nullptr."); }
+        if (!switched) { throw exceptions::NullPointerError("Scene::CreateNewScene() returned nullptr."); }
 
         // Better still rely on AssetDatabase to achieve this. Hoping it writes to DB on your behalf
         AssetRecord sceneRecord;
-        sceneRecord.uuid = attached_scene->getID();
+        sceneRecord.uuid = commons::PUUID();
         sceneRecord.name = attached_scene->getName();
         sceneRecord.assetType = AssetType::LevelAsset;
         sceneRecord.representation = AssetRepresentation::Native;
@@ -39,6 +48,8 @@ namespace purity::scene {
         sceneRecord.isDeleted = false;
         sceneRecord.createdAt = commons::TimeManager::now_seconds();
         sceneRecord.modifiedAt = sceneRecord.createdAt;
+
+        attached_scene->setSourceAssetUUID(sceneRecord.uuid);
 
         scene_asset = PAssetDatabase::queryDBForAsset(QuerySpec<PLevelAsset>(sceneRecord), QueryOperation::Write);
     }
@@ -61,7 +72,7 @@ namespace purity::scene {
 			    // CREATE NEW SCENE FILE SINCE STARTUP SCENE DOES NOT EXIST
 				commons::PLog::echoMessage(LogLevel::Info, "SceneLayer::attached() - Startup Scene does not exist, creating new scene file at: %s", default_rel_scene_path);
                 // scenePathString = editorInfo.projectDir + "/" + default_rel_scene_path;
-                make_new_scene_asset(scene_asset, default_rel_scene_path);
+                MakeNewSceneAsset_TC(scene_asset, default_rel_scene_path);
                 // Register New scene as default start up scene.
                 // This is a project file modification step
                 PSystemFinder::GetApplication()->m_projectEditorInfo.startUpSceneRelPath = default_rel_scene_path;
@@ -92,12 +103,10 @@ namespace purity::scene {
 			/*throw;*/
 		}
 
-
-        // auto loaded_scene = scene_asset->loadScene();
-        // if (!switchScene(std::move(loaded_scene)))
-        // {
-        //     throw exceptions::NullPointerError("Failed to attach scene.");
-        // }
+        /*if (!switchScene(std::move(loaded_scene)))
+        {
+            throw exceptions::NullPointerError("Failed to attach scene.");
+        }*/
     }
 
     void SceneLayer::detached()

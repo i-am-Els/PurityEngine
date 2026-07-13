@@ -9,11 +9,11 @@ namespace purity::ecs{
 
 //    unsigned int PEntity::s_count = 0;
 
-    PEntity::PEntity() : PEntityBase() {
+    PEntity::PEntity() : m_id(PUUID()) {
 
     }
 
-    PEntity::PEntity(PUUID uuid) : PEntityBase(uuid) {
+    PEntity::PEntity(PUUID uuid) : m_id(uuid) {
 
     }
 
@@ -25,11 +25,10 @@ namespace purity::ecs{
     {
     }
 
-    PEntity::PEntity(const std::string &name) : PEntityBase() {
+    PEntity::PEntity(const std::string &name, PUUID uuid): m_id(uuid) {
         m_name = name;
     }
 
 }
 
 CEREAL_REGISTER_TYPE(purity::ecs::PEntity)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(purity::ecs::PEntityBase, purity::ecs::PEntity)

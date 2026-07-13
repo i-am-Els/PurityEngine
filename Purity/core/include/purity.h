@@ -19,7 +19,6 @@
 #include "transform_ecs.h"
 #include "camera.h"
 #include "renderer.h"
-#include "id_comp.h"
 #include "tag_comp.h"
 #include "scripting.h"
 

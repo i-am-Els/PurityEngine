@@ -8,8 +8,10 @@
 
 namespace purity::ecs{
     unsigned int PTransformComponent::s_count = 0;
+	PTransformComponent::PTransformComponent() : PComponent(), m_TransformProfile(STransformProfile()) {
+	}
 
-    PTransformComponent::PTransformComponent(std::weak_ptr<PEntity> entity, STransformProfile profile) : PComponent(entity) ,
+    PTransformComponent::PTransformComponent(STransformProfile profile) : PComponent() ,
                                                                                            m_TransformProfile(std::move(profile)){
     }
 

@@ -15,7 +15,7 @@ namespace purity::assetDB{
     /// - "/Asset/Scene/DefaultProjectScene.pscene"
     /// - "./Asset/Scene/DefaultProjectScene.pscene"
     /// - "../Asset/Scene/DefaultProjectScene.pscene"
-    std::filesystem::path PAssetDBUtility::resolveProjectPath(const std::string& relPath)
+    std::filesystem::path PAssetDBUtility::ResolveProjectPath_TC(const std::string& relPath)
     {
 #ifdef PURITY_DEBUG
         if (std::filesystem::path(projectRelativePath).is_absolute())

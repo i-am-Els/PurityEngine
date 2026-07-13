@@ -7,7 +7,7 @@
 #define PURE_INLINE __forceinline
 #define PURE_MAYBE_UNUSED [[maybe_unused]]
 
-#define SERIALIZABLE(ClassName) public: static std::shared_ptr<ClassName> create() { auto obj = std::make_shared<ClassName>(); ObjectRegistry::registerObject(obj); return obj; }
+#define SERIALIZABLE(ClassName) public: static std::shared_ptr<ClassName> create() { auto obj = std::make_shared<ClassName>(); AssetRegistry::registerObject(obj); return obj; }
 #define PURITY_SERIALIZABLE_CLASS(name)
 #define PURITY_API __declspec(dllexport)
-#define CAN_CREATE_AS_SERIALIZABLE(ClassName) public: static std::shared_ptr<ClassName> create() { auto obj = std::make_shared<ClassName>(); ObjectRegistry::registerObject(obj); return obj; }
+#define CAN_CREATE_AS_SERIALIZABLE(ClassName) public: static std::shared_ptr<ClassName> create() { auto obj = std::make_shared<ClassName>(); AssetRegistry::registerObject(obj); return obj; }

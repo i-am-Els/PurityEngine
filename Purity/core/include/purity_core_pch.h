@@ -24,8 +24,10 @@
 #include <typeindex>
 #include <utility>
 #include <variant>
+#include <ranges>
 
 // Data structures
+#include <queue>
 #include <array>
 #include <iomanip>
 #include <map>

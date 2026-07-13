@@ -19,9 +19,9 @@ namespace purity::ecs{
 
     class PURITY_API PCameraComponent final : PComponent {
     public:
-        explicit PCameraComponent(std::weak_ptr<PEntity> entity);
-        PCameraComponent(std::weak_ptr<PEntity> entity, unsigned int _width, unsigned int _height, int xPos, int yPos);
-        PCameraComponent(std::weak_ptr<PEntity> entity, const purity::ecs::SCameraProfile &prop);
+        PCameraComponent();
+        PCameraComponent(unsigned int _width, unsigned int _height, int xPos, int yPos);
+        PCameraComponent(const purity::ecs::SCameraProfile &prop);
         PCameraComponent(const PCameraComponent & _camera) = default;
         PCameraComponent(const PCameraComponent && _camera) = delete;
         PCameraComponent& operator=(const PCameraComponent & _camera) = default;
