@@ -50,6 +50,10 @@ add_dependencies(PurityGem Commons)
 
 # Specify the installation directory for the Game executable
 install(TARGETS PurityGem DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/Resources/query"
+        DESTINATION ${CMAKE_INSTALL_BINDIR}/Resources)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/Resources/fonts"
+        DESTINATION ${CMAKE_INSTALL_BINDIR}/Resources)   
 
 add_custom_command(TARGET PurityGem POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy -t "${CMAKE_INSTALL_PREFIX}/bin" $<TARGET_RUNTIME_DLLS:PurityGem>

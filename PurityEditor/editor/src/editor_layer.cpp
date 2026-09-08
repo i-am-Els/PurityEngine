@@ -16,7 +16,8 @@
 namespace editor::gui
 {
 
-    EditorLayer::EditorLayer(const std::string &name) : PLayer(name){
+    EditorLayer::EditorLayer(const std::string &name) : PLayer(name)
+    {
     }
 
     EditorLayer::~EditorLayer()
@@ -27,9 +28,9 @@ namespace editor::gui
     void EditorLayer::update()
     {
         const auto window = PSystemFinder::GetWindow();
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
         io.DisplaySize = ImVec2(static_cast<float>(window->getWidth()),
-                               static_cast<float>(window->getHeight()));
+                                static_cast<float>(window->getHeight()));
 
         const auto time = static_cast<float>(glfwGetTime());
         io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
@@ -50,16 +51,17 @@ namespace editor::gui
     {
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow(); // Fixed typo
 
-        auto* renderSystem = PSystemFinder::GetRendererService();
+        auto *renderSystem = PSystemFinder::GetRendererService();
 
-        if (!renderSystem) {
+        if (!renderSystem)
+        {
             std::cerr << "[Error] Could not cast PRenderComponent to POpenGLRenderSS!\n";
             throw exceptions::NullPointerError();
         }
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
 
         // Enable docking and viewports
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -84,8 +86,19 @@ namespace editor::gui
 
         ImGui::StyleColorsDark();
 
+        // Change ImGui font
+        const auto fontPath = commons::resolve_engine_resource(
+            std::string("Resources/fonts/Consolas/CONSOLA.ttf"));
+        // std::string("Resources/fonts/Inter_18pt-Regular.ttf"));
+        ImFont *font = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 10.0f);
+        if (!font)
+        {
+            io.Fonts->AddFontDefault();
+            PLog::echoMessage(LogLevel::Warning, "Failed to load font: %s", fontPath.string().c_str());
+        }
+
         // Viewport style adjustment
-        ImGuiStyle& style = ImGui::GetStyle();
+        ImGuiStyle &style = ImGui::GetStyle();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             style.WindowRounding = 0.0f;
@@ -97,7 +110,7 @@ namespace editor::gui
         ImGui_ImplOpenGL3_Init("#version 430 core");
 
         // Attach all windows
-        for (auto& [name, window] : m_windows)
+        for (auto &[name, window] : m_windows)
         {
             window->onAttach();
         }
@@ -106,7 +119,7 @@ namespace editor::gui
     void EditorLayer::detached()
     {
         // Detach all windows
-        for (auto& [name, window] : m_windows)
+        for (auto &[name, window] : m_windows)
         {
             window->onDetach();
         }
@@ -118,12 +131,12 @@ namespace editor::gui
 
     void EditorLayer::render()
     {
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            GLFWwindow *backup_current_context = glfwGetCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backup_current_context);
@@ -135,7 +148,7 @@ namespace editor::gui
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGuiViewport *viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->Pos);
         ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
@@ -156,7 +169,7 @@ namespace editor::gui
         ImGui::PopStyleVar(2);
 
         // DockSpace
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
             m_dockspaceID = ImGui::GetID("MyDockSpace");
@@ -179,24 +192,36 @@ namespace editor::gui
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("New", "Ctrl+N")) {}
-                if (ImGui::MenuItem("Open", "Ctrl+O")) {}
-                if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+                if (ImGui::MenuItem("New", "Ctrl+N"))
+                {
+                }
+                if (ImGui::MenuItem("Open", "Ctrl+O"))
+                {
+                }
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                {
+                }
                 ImGui::Separator();
-                if (ImGui::MenuItem("Exit")) {}
+                if (ImGui::MenuItem("Exit"))
+                {
+                }
                 ImGui::EndMenu();
             }
 
             if (ImGui::BeginMenu("Edit"))
             {
-                if (ImGui::MenuItem("Undo", "Ctrl+Z")) {}
-                if (ImGui::MenuItem("Redo", "Ctrl+Y")) {}
+                if (ImGui::MenuItem("Undo", "Ctrl+Z"))
+                {
+                }
+                if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+                {
+                }
                 ImGui::EndMenu();
             }
 
             if (ImGui::BeginMenu("Windows"))
             {
-                for (auto& [name, window] : m_windows)
+                for (auto &[name, window] : m_windows)
                 {
                     bool visible = window->isVisible();
                     if (ImGui::MenuItem(name.c_str(), nullptr, &visible))
@@ -230,7 +255,7 @@ namespace editor::gui
 
     void EditorLayer::renderWindows()
     {
-        for (auto& [name, window] : m_windows)
+        for (auto &[name, window] : m_windows)
         {
             if (window->isVisible())
             {
@@ -267,7 +292,7 @@ namespace editor::gui
         ImGui::DockBuilderSplitNode(dock_right, ImGuiDir_Down, 0.3f, &dock_down, &dock_right);
 
         // Dock existing windows dynamically
-        for (const auto& [name, window] : m_windows)
+        for (const auto &[name, window] : m_windows)
         {
             // Default placement logic based on window type/name
             if (name.find("Hierarchy") != std::string::npos ||
@@ -303,21 +328,22 @@ namespace editor::gui
         ImGui::DockBuilderAddNode(m_dockspaceID, ImGuiDockNodeFlags_DockSpace);
         ImGui::DockBuilderSetNodeSize(m_dockspaceID, ImGui::GetMainViewport()->Size);
 
-        std::vector<ImGuiID> dockIds = { m_dockspaceID };
+        std::vector<ImGuiID> dockIds = {m_dockspaceID};
 
         // Create dock areas based on configuration
-        for (const auto& area : m_dockingConfig.areas)
+        for (const auto &area : m_dockingConfig.areas)
         {
-            if (dockIds.empty()) break;
+            if (dockIds.empty())
+                break;
 
             ImGuiID current = dockIds.back();
             ImGuiID newDock, remainingDock;
 
             ImGui::DockBuilderSplitNode(current, area.direction, area.splitRatio,
-                                       &newDock, &remainingDock);
+                                        &newDock, &remainingDock);
 
             // Dock windows to this area
-            for (const std::string& windowName : area.windows)
+            for (const std::string &windowName : area.windows)
             {
                 if (m_windows.find(windowName) != m_windows.end())
                 {
@@ -384,7 +410,6 @@ namespace editor::gui
             // config["areas"] = ...;
             file << config.dump(4);
         }
-
     }
 
     void EditorLayer::resetToDefaultLayout()
@@ -393,7 +418,7 @@ namespace editor::gui
         m_firstTime = true; // Force layout reset on next frame
     }
 
-    void EditorLayer::removeWindow(const std::string& name)
+    void EditorLayer::removeWindow(const std::string &name)
     {
         auto it = m_windows.find(name);
         if (it != m_windows.end())
@@ -403,13 +428,13 @@ namespace editor::gui
         }
     }
 
-    EditorWindow* EditorLayer::getWindow(const std::string& name)
+    EditorWindow *EditorLayer::getWindow(const std::string &name)
     {
         auto it = m_windows.find(name);
         return (it != m_windows.end()) ? it->second.get() : nullptr;
     }
 
-    void EditorLayer::setWindowVisible(const std::string& name, bool visible)
+    void EditorLayer::setWindowVisible(const std::string &name, bool visible)
     {
         auto it = m_windows.find(name);
         if (it != m_windows.end())
@@ -418,7 +443,7 @@ namespace editor::gui
         }
     }
 
-    void EditorLayer::setupEditor(EditorLayer* editor)
+    void EditorLayer::setupEditor(EditorLayer *editor)
     {
         // Add windows to the editor
         editor->addWindow<definitions::SceneHierarchyWindow>("Scene Hierarchy");
@@ -428,7 +453,7 @@ namespace editor::gui
         editor->addWindow<definitions::AssetsWindow>("Assets");
     }
 
-    void EditorLayer::eventFired(Event& event)
+    void EditorLayer::eventFired(Event &event)
     {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<MouseButtonPressedEvent>(PURITY_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressedEventCB));
@@ -443,9 +468,9 @@ namespace editor::gui
         dispatcher.dispatch<WindowCursorEnterEvent>(PURITY_BIND_EVENT_FN(EditorLayer::OnWindowCursorEnterEventCB));
     }
 
-    bool EditorLayer::OnMouseButtonPressedEventCB(const MouseButtonPressedEvent& e)
+    bool EditorLayer::OnMouseButtonPressedEventCB(const MouseButtonPressedEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward to ImGui using the backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -455,7 +480,8 @@ namespace editor::gui
 
         ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 
-        if (io.WantCaptureMouse) {
+        if (io.WantCaptureMouse)
+        {
             return true; // Event consumed by ImGui
         }
 
@@ -463,9 +489,9 @@ namespace editor::gui
         return false;
     }
 
-    bool EditorLayer::OnMouseButtonReleasedEventCB(const MouseButtonReleasedEvent& e)
+    bool EditorLayer::OnMouseButtonReleasedEventCB(const MouseButtonReleasedEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward to ImGui using the backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -478,9 +504,9 @@ namespace editor::gui
         return io.WantCaptureMouse;
     }
 
-    bool EditorLayer::OnMouseMovedEventCB(const MouseMovedEvent& e)
+    bool EditorLayer::OnMouseMovedEventCB(const MouseMovedEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward mouse position to ImGui using backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -492,9 +518,9 @@ namespace editor::gui
         return io.WantCaptureMouse;
     }
 
-    bool EditorLayer::OnMouseScrolledEventCB(const MouseScrolledEvent& e)
+    bool EditorLayer::OnMouseScrolledEventCB(const MouseScrolledEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward scroll to ImGui using backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -506,9 +532,9 @@ namespace editor::gui
         return io.WantCaptureMouse;
     }
 
-    bool EditorLayer::OnKeyPressedEventCB(const KeyPressedEvent& e)
+    bool EditorLayer::OnKeyPressedEventCB(const KeyPressedEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Use the modern ImGui GLFW backend function to forward key events
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -522,9 +548,9 @@ namespace editor::gui
         return io.WantCaptureKeyboard;
     }
 
-    bool EditorLayer::OnKeyReleasedEventCB(const KeyReleasedEvent& e)
+    bool EditorLayer::OnKeyReleasedEventCB(const KeyReleasedEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Use the modern ImGui GLFW backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -538,9 +564,9 @@ namespace editor::gui
         return io.WantCaptureKeyboard;
     }
 
-    bool EditorLayer::OnKeyTypedEventCB(const KeyTypedEvent& e)
+    bool EditorLayer::OnKeyTypedEventCB(const KeyTypedEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward character input to ImGui using backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -551,9 +577,9 @@ namespace editor::gui
         return io.WantCaptureKeyboard;
     }
 
-    bool EditorLayer::OnWindowFocusedEventCB(const WindowFocusEvent& e)
+    bool EditorLayer::OnWindowFocusedEventCB(const WindowFocusEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward character input to ImGui using backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();
@@ -564,9 +590,9 @@ namespace editor::gui
         return io.WantCaptureMouse;
     }
 
-    bool EditorLayer::OnWindowCursorEnterEventCB(const WindowCursorEnterEvent& e)
+    bool EditorLayer::OnWindowCursorEnterEventCB(const WindowCursorEnterEvent &e)
     {
-        const ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO &io = ImGui::GetIO();
 
         // Forward character input to ImGui using backend function
         const auto window = PSystemFinder::GetWindow()->getGLFWwindow();

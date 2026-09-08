@@ -1,38 +1,91 @@
 #include "serialize_utilities.h"
+#include "log.h"
 
 #include <optional>
 #include <sstream>
 
-namespace commons {
+#ifdef PURITY_PLATFORM_WINDOWS
+#include <windows.h>
+#endif
+
+namespace commons
+{
+	namespace
+	{
+		std::filesystem::path resolve_engine_resource_impl(const std::filesystem::path &relativePath)
+		{
+			if (relativePath.empty() || relativePath.is_absolute())
+			{
+				return relativePath;
+			}
+
+			if (std::filesystem::exists(relativePath))
+			{
+				return relativePath;
+			}
+
+#ifdef PURITY_PLATFORM_WINDOWS
+			char modulePath[MAX_PATH]{};
+			const DWORD pathLength = GetModuleFileNameA(nullptr, modulePath, MAX_PATH);
+			if (pathLength > 0 && pathLength < MAX_PATH)
+			{
+				const auto executableDirectory = std::filesystem::path(modulePath).parent_path();
+				const auto installedPath = executableDirectory / relativePath;
+				if (std::filesystem::exists(installedPath))
+				{
+					return installedPath;
+				}
+			}
+#endif
+
+			return relativePath;
+		}
+	}
+
+	std::filesystem::path resolve_engine_resource(const std::filesystem::path &relativePath)
+	{
+		return resolve_engine_resource_impl(relativePath);
+	}
+
+	std::filesystem::path resolve_engine_resource(const std::string &relativePath)
+	{
+		return resolve_engine_resource_impl(std::filesystem::path(relativePath));
+	}
+
 	json_schema_validator validator;
 
-	bool _validateFileExistence(const std::string& path)
+	bool _validateFileExistence(const std::string &path)
 	{
-		if (path.empty()) { return false; }
-		std::filesystem::path _filepath = { path };
+		if (path.empty())
+		{
+			return false;
+		}
+		std::filesystem::path _filepath = {path};
 		return std::filesystem::exists(_filepath);
 	}
 
-	bool _validateFileExistence(const std::filesystem::path& path)
+	bool _validateFileExistence(const std::filesystem::path &path)
 	{
 		return !path.empty() && std::filesystem::exists(path);
 	}
 
-	bool is_project_file(const std::filesystem::path& path)
+	bool is_project_file(const std::filesystem::path &path)
 	{
 		return path.extension() == ".pproject";
 	}
 
 	std::optional<std::filesystem::path> to_project_relative(
-	const std::filesystem::path& absPath,
-	const std::filesystem::path& projectRoot)
+		const std::filesystem::path &absPath,
+		const std::filesystem::path &projectRoot)
 	{
-		if (absPath.empty() || projectRoot.empty()) {
+		if (absPath.empty() || projectRoot.empty())
+		{
 			return std::nullopt;
 		}
 
 		auto rel = std::filesystem::relative(absPath, projectRoot);
-		if (rel.empty()) {
+		if (rel.empty())
+		{
 			return std::nullopt;
 		}
 
@@ -40,35 +93,43 @@ namespace commons {
 	}
 
 	std::optional<std::filesystem::path> to_project_relative(
-	const std::string& absPath,
-	const std::string& projectRoot){
+		const std::string &absPath,
+		const std::string &projectRoot)
+	{
 		return to_project_relative(
 			std::filesystem::path(absPath),
 			std::filesystem::path(projectRoot));
 	}
 
-	bool _validateSchemaAdherence(const std::string& path, const json& schema) {
+	bool _validateSchemaAdherence(const std::string &path, const json &schema)
+	{
 		std::ifstream data(path);
-		if (!data.is_open()) {
+		if (!data.is_open())
+		{
 			return false;
 		}
 
 		json data_json;
-		try {
+		try
+		{
 			// data >> data_json;
 			data_json = json::parse(data);
-		} catch (const json::parse_error& e) {
+		}
+		catch (const json::parse_error &e)
+		{
 			std::cerr << "JSON parse failed: " << e.what() << "\n";
 			return false;
 		}
 
 		validator.set_root_schema(schema);
-		try {
+		try
+		{
 			auto json_content = validator.validate(data_json);
 			std::cout << "Validation of file " << path << " succeeded\n";
 			return true;
 		}
-		catch (const std::exception& e) {
+		catch (const std::exception &e)
+		{
 			std::cerr << "Validation failed, here is why: " << e.what() << "\n";
 			return false;
 		}
@@ -82,11 +143,24 @@ namespace commons {
 		/// @param path - The relative path to the file.
 		/// @return A std::string contained in the file.
 		/// @note Works with Absolute paths too.
-		std::string extractSourceFromFile(const char *path) {
+		std::string extractSourceFromFile(const char *path, bool isEngineRelative)
+		{
+			if (path == nullptr || *path == '\0')
+			{
+				throw std::runtime_error("File Read Error. Path is empty.");
+			}
+
+			const auto resolvedPath = isEngineRelative
+										  ? resolve_engine_resource_impl(path)
+										  : std::filesystem::path(path);
+
 			// Open file with RAII; automatically closes when out of scope.
-			const std::ifstream file(path, std::ios::in);
-			if (!file) {
-				throw std::runtime_error("File Read Error.");
+			const std::ifstream file(resolvedPath, std::ios::in);
+			if (!file)
+			{
+				throw std::runtime_error(std::format(
+					"File Read Error. {0} does not exist or is not accessible.",
+					resolvedPath.string()));
 			}
 
 			// Read the entire file into a string using a stringstream.
@@ -102,30 +176,43 @@ namespace commons {
 		/// @brief Extract Accets, Scene, and Prefab raw source data from JSON
 		/// @param path - The Absolute path to the json file
 		/// @return A json object from the nlohmann library representing the unparsed schema-aligned contents of the file
-		std::optional<json> extractSourceFromJSON(const char* path)
+		std::optional<json> extractSourceFromJSON(const char *path)
 		{
-			if (path == nullptr || *path == '\0') { return std::nullopt; }
+			if (path == nullptr || *path == '\0')
+			{
+				return std::nullopt;
+			}
 			const auto real_path = std::filesystem::path(path);
 
-			if (!_validateFileExistence(real_path)){ return std::nullopt; }
+			if (!_validateFileExistence(real_path))
+			{
+				return std::nullopt;
+			}
 			std::ifstream data(real_path.c_str());
-			if (!data) { return std::nullopt; }
+			if (!data)
+			{
+				return std::nullopt;
+			}
 			// data >> data_json;
 
-			try {
+			try
+			{
 				json data_json = json::parse(data);
 				return data_json;
 			}
-			catch (const json::parse_error& e) {
+			catch (const json::parse_error &e)
+			{
 				std::cerr << "JSON parse failed: " << e.what() << "\n";
 				return std::nullopt;
 			}
 		}
 
 		// An example use case of this method is when creating or updating project files.
-		void write_file(json file_json, std::string rel_path) {
+		void write_file(json file_json, std::string rel_path)
+		{
 			std::fstream project_file(rel_path, std::ios::out | std::ios::trunc);
-			if (project_file.is_open()) {
+			if (project_file.is_open())
+			{
 				project_file << file_json.dump(4); // Example placeholder
 				project_file.close();
 			}

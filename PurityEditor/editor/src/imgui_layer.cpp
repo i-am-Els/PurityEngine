@@ -70,6 +70,17 @@ namespace editor::gui {
         io.ConfigViewportsNoTaskBarIcon = true;
 
         ImGui::StyleColorsDark();
+        // Change ImGui font
+        const auto fontPath = commons::resolve_engine_resource(
+            std::string("Resources/fonts/Consolas/CONSOLA.ttf"));
+        // std::string("Resources/fonts/Inter_18pt-Regular.ttf"));
+        ImFont *font = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 10.0f);
+        if (!font)
+        {
+            io.Fonts->AddFontDefault();
+            PLog::echoMessage(LogLevel::Warning, "Failed to load font: %s", fontPath.string().c_str());
+        }
+
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         ImGuiStyle& style = ImGui::GetStyle();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

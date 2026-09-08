@@ -6,12 +6,12 @@
 #include "papplication.h"
 #include "purity_exceptions.h"
 #include "data_hash_table.h"
-#include "fileio.h"
-
+#include "serialize_utilities.h"
 
 namespace purity::graphics
 {
-    PRendererService::PRendererService(GLFWwindow* window) : _window(window) {
+    PRendererService::PRendererService(GLFWwindow *window) : _window(window)
+    {
         vertexArray = new VertexArray();
         _vbo = nullptr;
         _ebo = nullptr;
@@ -24,7 +24,7 @@ namespace purity::graphics
         PRendererService::exit();
     }
 
-    void PRendererService::preInit(std::any& data)
+    void PRendererService::preInit(std::any &data)
     {
     }
 
@@ -65,12 +65,15 @@ namespace purity::graphics
 
     void PRendererService::render()
     {
-        if (glfwGetCurrentContext() != _window) {
+        if (glfwGetCurrentContext() != _window)
+        {
             PLog::echoMessage("Context is not current!", LogLevel::Error);
             throw OpenGlContextNotCurrentError();
         }
-        else {
-            if (hasSomethingToRender()) {
+        else
+        {
+            if (hasSomethingToRender())
+            {
                 // PLog::echoMessage("Has Something to Render.");
                 // vertexArray->bindVAO();
                 // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -93,53 +96,69 @@ namespace purity::graphics
     void PRendererService::exit()
     {
     }
-    
 
-    void PRendererService::SetUniformVec2(int uniformID, Vector2f vec2) {
+    void PRendererService::SetUniformVec2(int uniformID, Vector2f vec2)
+    {
         glUniform2fv(uniformID, 1, static_cast<float *>(vec2));
     }
 
-    void PRendererService::SetUniformVec3(int uniformID, Vector3f vec3) {
+    void PRendererService::SetUniformVec3(int uniformID, Vector3f vec3)
+    {
         glUniform3fv(uniformID, 1, static_cast<float *>(vec3));
     }
 
-    void PRendererService::clearWindow(GLbitfield masks, const graphics::Color color) {
+    void PRendererService::clearWindow(GLbitfield masks, const graphics::Color color)
+    {
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(masks);
     }
-    
-    void PRendererService::setUpShader() {
-        auto vert = PFileIO::extractSourceFromFile(purity::artifacts::hFiles["basic_shader_vert"]);
-        auto frag = PFileIO::extractSourceFromFile(purity::artifacts::hFiles["basic_shader_frag"]);
 
-        PShader::createShaders(shader, vert, frag);
+    void PRendererService::setUpShader()
+    {
+        try{
+            auto vert = commons::fileIO::extractSourceFromFile(
+                purity::artifacts::hFiles["basic_shader_vert"], true);
+            auto frag = commons::fileIO::extractSourceFromFile(
+                purity::artifacts::hFiles["basic_shader_frag"], true);
+            PShader::createShaders(shader, vert, frag);
+        } catch (const std::exception& e) {
+            PLog::echoMessage(LogLevel::Error, e.what());
+            throw;
+        }
+
         if (shader != nullptr && shader->GetShaderProgramID())
             PLog::echoMessage("PShader Up and Running!");
-        else PLog::echoMessage("PShader Set up failed!");
-
+        else
+            PLog::echoMessage("PShader Set up failed!");
     }
 
     /// @brief The shader needs to have been built in order for this to work correctly
     /// @param shaderProgram - a std::unique_ptr PShader
     /// @return bool - True or False concerning the success of the switch operation.
     /// @note The initial shader is not tempered with if the new is null
-    bool PRendererService::switchShader(std::unique_ptr<PShader> shaderProgram) {
-        if (shaderProgram == nullptr) return false;
+    bool PRendererService::switchShader(std::unique_ptr<PShader> shaderProgram)
+    {
+        if (shaderProgram == nullptr)
+            return false;
         shader = std::move(shaderProgram);
         shader->bindShader();
         return true;
     }
 
-    void PRendererService::SetUpBuffers(VertexBuffer *vbo, ElementBuffer *ebo) {
-        try{
-            if (vbo == nullptr || ebo == nullptr){
+    void PRendererService::SetUpBuffers(VertexBuffer *vbo, ElementBuffer *ebo)
+    {
+        try
+        {
+            if (vbo == nullptr || ebo == nullptr)
+            {
                 throw NullBufferError();
             }
 
             this->_vbo = vbo;
             this->_ebo = ebo;
         }
-        catch (std::exception& e){
+        catch (std::exception &e)
+        {
             PLog::echoMessage(LogLevel::Error, e.what());
         }
     }

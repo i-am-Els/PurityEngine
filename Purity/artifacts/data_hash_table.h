@@ -9,10 +9,10 @@
 
 namespace purity::artifacts{
     static std::map<std::string, const char*> hFiles{
-        {"basic_shader_vert", "Shaders/basicShader.vert"},
-        {"basic_shader_frag", "Shaders/basicShader.frag"},
-        {"basic_shader_Inv_vert", "Shaders/basicShaderInv.vert"},
-        {"basic_shader_Inv_frag", "Shaders/basicShaderInv.frag"}
+        {"basic_shader_vert", "Resources/shaders/basicShader.vert"},
+        {"basic_shader_frag", "Resources/shaders/basicShader.frag"},
+        {"basic_shader_Inv_vert", "Resources/shaders/basicShaderInv.vert"},
+        {"basic_shader_Inv_frag", "Resources/shaders/basicShaderInv.frag"}
     };
 
     static std::map<std::string, std::string> builtInLayerNames{

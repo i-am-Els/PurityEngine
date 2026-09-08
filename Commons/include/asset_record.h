@@ -11,7 +11,7 @@
 
 namespace commons
 {
-	struct COMMON_API AssetRecord final
+	struct AssetRecord final
 	{
 		int64_t id = -1; // DB assigned
 
@@ -33,9 +33,9 @@ namespace commons
 		int64_t createdAt = 0;
 		int64_t modifiedAt = 0;
 
-		operator bool() {
+		operator bool()
+		{
 			return (uuid != 0) && (!metaPath.empty());
 		}
 	};
 }
-

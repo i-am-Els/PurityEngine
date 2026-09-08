@@ -112,7 +112,6 @@ add_library(Purity
         ecs/include/transform_ecs.h
         
         #--------------------------------
-        fileIO/include/fileio.h
         fileIO/include/handle_base.h
         fileIO/include/importer.h
         fileIO/include/mesh_importer.h
@@ -154,14 +153,11 @@ add_library(Purity
         ecs/src/entity_handle.cpp
         ecs/src/entity_registry.cpp
         ecs/src/mesh.cpp
-        
-        
         ecs/src/scripting.cpp
         ecs/src/tag_comp.cpp
         ecs/src/transform_ecs.cpp
-        
+
         #--------------------------------
-        fileIO/src/fileio.cpp
         fileIO/src/importer.cpp
         fileIO/src/mesh_importer.cpp
         #--------------------------------
@@ -334,6 +330,9 @@ if(PURITY_INSTALL)
                 "${CMAKE_INSTALL_PREFIX}/bin"
         )
     endif ()
+
+    install(DIRECTORY "${CMAKE_SOURCE_DIR}/shaders"
+        DESTINATION ${CMAKE_INSTALL_BINDIR}/Resources)
 endif ()
 
 if(PURITY_EXPORT)

@@ -10,29 +10,25 @@ using namespace commons;
 constexpr int WIN_WIDTH = 1024;
 constexpr int WIN_HEIGHT = 512;
 
-//#define PURITY_MODE_DEBUG
-//extern purity::PApplication * purity::CreateApplication();
+// #define PURITY_MODE_DEBUG
+// extern purity::PApplication * purity::CreateApplication();
 
 #ifdef PURITY_PLATFORM_WINDOWS
-PURITY_API int main(int argc, const char* argv[]){
-    purity::PApplication* application;
+PURITY_API int main(int argc, const char *argv[])
+{
+    purity::PApplication *application;
+
 
 #ifndef PURITY_MODE_DEBUG
-    if (argc == 5) {
+    if (argc == 5)
+    {
         if ((
-                std::string(argv[1]) != "--projectFile" 
-                && std::string(argv[1]) != "-p"
-            )
-            || 
-                std::string(argv[2]).empty()
-            || 
-            (
-                std::string(argv[3]) != "--startUpScene"
-                && std::string(argv[3]) != "-s"
-            ) 
+                std::string(argv[1]) != "--projectFile" && std::string(argv[1]) != "-p") ||
+            std::string(argv[2]).empty() ||
+            (std::string(argv[3]) != "--startUpScene" && std::string(argv[3]) != "-s")
             // ||
             //     std::string(argv[4]).empty()
-            )
+        )
         {
             std::cout << "Unknown token" << std::endl;
             std::cout << argv[0] << " | " << argv[1] << " | " << argv[2] << " | " << argv[3] << " | " << argv[4] << " | " << std::endl;
@@ -48,7 +44,7 @@ PURITY_API int main(int argc, const char* argv[]){
             PLog::echoMessage("No StartUp Scene Specified");
             // FInd default scene and use it instead
             scene_path = "Assets/Scenes/DefaultScene.pscene";
-            if(!commons::_validateFileExistence(scene_path))
+            if (!commons::_validateFileExistence(scene_path))
             {
                 PLog::echoMessage("Default Scene Does Not Exist");
             }
@@ -61,7 +57,8 @@ PURITY_API int main(int argc, const char* argv[]){
         application->m_applicationInfo = appInfo;
         application->m_projectEditorInfo = peInfo;
     }
-    else {
+    else
+    {
         std::cout << "Cannot Instantiate Editor" << std::endl;
         std::cout << argc << " ==== " << argv << std::endl;
         return 1;
@@ -75,7 +72,8 @@ PURITY_API int main(int argc, const char* argv[]){
     application->m_projectEditorInfo = peInfo;
 #endif
 
-    if (!application->verify()) {
+    if (!application->verify())
+    {
         commons::PLog::echoMessage("Verification Process Failed", commons::LogLevel::Error);
         return 1;
     }
@@ -84,7 +82,7 @@ PURITY_API int main(int argc, const char* argv[]){
     application->init();
     application->postInit();
     application->start();
-    while(application->m_runningApp)
+    while (application->m_runningApp)
     {
         // Poll PInput
         application->process();
@@ -106,14 +104,13 @@ PURITY_API int main(int argc, const char* argv[]){
 // TODO Rendering textures and more shader abstractions
 
 #endif
-//#ifdef _WIN32
-//#include <windows.h>
+// #ifdef _WIN32
+// #include <windows.h>
 
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-//    return main(__argc, __argv);  // Call your main function
-//}
+// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+//     return main(__argc, __argv);  // Call your main function
+// }
 
-//#endif // _WIN32
+// #endif // _WIN32
 
-
-//#endif // PURITY_PLATFORM_WINDOWS
+// #endif // PURITY_PLATFORM_WINDOWS

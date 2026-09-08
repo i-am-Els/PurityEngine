@@ -10,3 +10,7 @@
 #else
 #error Commons only supports Windows right now
 #endif
+
+#define CMMN_NODISCARD [[nodiscard]]
+#define CMMN_INLINE __forceinline
+#define CMMN_MAYBE_UNUSED [[maybe_unused]]

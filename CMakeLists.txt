@@ -36,6 +36,16 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-Wall -Wextra)
 endif()
 
+# --- Put this BEFORE add_subdirectory ---
+# 1. Fixes Visual Studio & VS Code CMake Tools debugging
+set(CMAKE_VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
+# 2. Fixes modern IDE launchers (CMake 3.31+)
+if(POLICY CMP0178) # Ensures compatibility flags if active
+    cmake_policy(SET CMP0178 NEW)
+endif()
+set(CMAKE_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
 # Ensure the directories exist before installation
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin")
 file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/lib")

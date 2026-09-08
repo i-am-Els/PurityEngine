@@ -12,8 +12,8 @@ using json = nlohmann::json;
 using json_schema_validator = nlohmann::json_schema::json_validator;
 using ordered_json = nlohmann::basic_json<nlohmann::ordered_map>;
 
-
-namespace commons{
+namespace commons
+{
 	const json pProjectSchema = R"(
 	{
 		"$schema": "http://json-schema.org/draft-07/schema#",
@@ -88,27 +88,34 @@ namespace commons{
 	  }
 	})"_json;
 
-	bool COMMON_API _validateFileExistence(const std::string& path);
-	bool COMMON_API _validateFileExistence(const std::filesystem::path& path);
-	bool COMMON_API _validateSchemaAdherence(const std::string& path, const json& schema);
+	bool COMMON_API _validateFileExistence(const std::string &path);
+	bool COMMON_API _validateFileExistence(const std::filesystem::path &path);
+	bool COMMON_API _validateSchemaAdherence(const std::string &path, const json &schema);
 
-	bool COMMON_API is_project_file(const std::filesystem::path& path);
+	bool COMMON_API is_project_file(const std::filesystem::path &path);
+
+	std::filesystem::path COMMON_API resolve_engine_resource(
+		const std::filesystem::path &relativePath);
+
+	std::filesystem::path COMMON_API resolve_engine_resource(
+		const std::string &relativePath);
 
 	std::optional<std::filesystem::path> COMMON_API to_project_relative(
-	const std::filesystem::path& absPath,
-	const std::filesystem::path& projectRoot);
+		const std::filesystem::path &absPath,
+		const std::filesystem::path &projectRoot);
 
 	std::optional<std::filesystem::path> COMMON_API to_project_relative(
-	const std::string& absPath,
-	const std::string& projectRoot);
+		const std::string &absPath,
+		const std::string &projectRoot);
 
 	namespace fileIO
 	{
-		std::string COMMON_API extractSourceFromFile(const char *path);
+		std::string COMMON_API extractSourceFromFile(
+			const char *path,
+			bool isEngineRelative = false);
 		std::optional<json> COMMON_API extractSourceFromJSON(const char *path);
 		void COMMON_API write_file(json file_json, std::string rel_path);
 	}
-
 
 	// Create Scene File from default template.
 }

@@ -59,7 +59,7 @@ using namespace purity::graphics;
 namespace purity{
     bool PApplication::verify()
     {
-        return false;
+        return true;
     }
 
     void PApplication::process() {

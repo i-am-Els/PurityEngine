@@ -1,0 +1,5 @@
+{
+    "projectDB": "Assets/Loke.peDB",
+    "project_name": "Loke",
+    "start_up_scene": "Assets/Scenes/DefaultScene.pscene"
+}
