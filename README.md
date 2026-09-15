@@ -90,13 +90,6 @@ To resolve relative path issues, use the json snippet below to setup your `launc
     {
       "type": "default",
       "project": "CMakeLists.txt",
-      "projectTarget": "Game.exe (Install)",
-      "name": "Game.exe (Install)",
-      "currentDir": "${workspaceRoot}"
-    },
-    {
-      "type": "default",
-      "project": "CMakeLists.txt",
       "projectTarget": "PurityGem.exe (Install)",
       "name": "PurityGem.exe (Install)",
       "currentDir": "${workspaceRoot}"
@@ -114,7 +107,6 @@ Everything above is to configure `Visual Studio Community`. Do the following in 
     - Purity `dll`
     - PurityGem `exe`
     - Commons `dll`
-    - Game(Optional) `exe`
     - IsleMath `dll`
     - ImGuiFileDialog `lib`
 3. For all Targets of type `exe`, Set the `Executable` field to the target found in the `install` folder.
