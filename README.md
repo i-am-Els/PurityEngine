@@ -98,6 +98,51 @@ To resolve relative path issues, use the json snippet below to setup your `launc
 }
 ```
 
+## VS Code Setup
+Everything above also applies when using VS Code. Install the following extensions:
+
+- `CMake Tools` (`ms-vscode.cmake-tools`)
+- `C/C++` (`ms-vscode.cpptools`)
+- `Child Process Debugging` [Find it here](https://marketplace.visualstudio.com/items?itemName=albertziegenhagel.childdebugger)
+
+1. Open the repository root in VS Code.
+2. Make sure `VCPKG_ROOT` is available in the VS Code environment, or set it in `CMakeUserPresets.json` as described above.
+3. Open the Command Palette and run `CMake: Select Configure Preset`, then select `debug`.
+4. Run `CMake: Configure` and then `CMake: Build` from the Command Palette. The build preset produces the binaries under `out/build/debug`.
+5. Run `CMake: Install` before launching the editor or game. The runnable executables are installed under `out/install/debug/bin` so their runtime DLLs are available.
+6. Open the Run and Debug view and create a C++ launch configuration for the installed executable. Use the repository root as the working directory and select `PurityEditor.exe` or `PurityGem.exe` from `out/install/debug/bin`.
+7. Use the `Child Process Debugging` extension when the process being debugged starts additional executables. Start the parent process through the Run and Debug view so child-process attachment can be enabled by the extension.
+
+For a repeatable launch configuration, create `.vscode/launch.json` with the following and adjust the executable name when needed:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "PurityEditor (Install)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/install/debug/bin/PurityEditor.exe",
+      "cwd": "${workspaceFolder}/out/install/debug/bin",
+      "stopAtEntry": false,
+      "console": "externalTerminal",
+      "autoAttachChildProcess": true
+    },
+    {
+      "name": "PurityGem (Install)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/install/debug/bin/PurityGem.exe",
+      "cwd": "${workspaceFolder}/out/install/debug/bin",
+      "stopAtEntry": false,
+      "console": "externalTerminal",
+      "autoAttachChildProcess": true
+    }
+  ]
+}
+```
+
 ## CLion Setup
 Everything above is to configure `Visual Studio Community`. Do the following in addition if you wish to build the projects and contribute using either `CLion` or `VS Code`...
 ### CLion
